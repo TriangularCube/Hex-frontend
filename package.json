@@ -1,0 +1,25 @@
+{
+  "name": "hexahedron",
+  "version": "0.0.1",
+  "description": "A Cube management software",
+  "scripts": {
+    "dev": "parcel src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TriangularCube/Hex.git"
+  },
+  "author": "Michael Liu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TriangularCube/Hex/issues"
+  },
+  "homepage": "https://github.com/TriangularCube/Hex#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.11.0"
+  },
+  "dependencies": {
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
+  }
+}
