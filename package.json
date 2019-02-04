@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "A Cube management software",
   "scripts": {
-    "dev": "parcel src/index.html"
+    "dev": "parcel index.html --out-dir build/dev",
+    "build": "npx parcel build index.html --out-dir build/prod --public-url /hex/"
   },
   "repository": {
     "type": "git",
@@ -16,10 +17,13 @@
   },
   "homepage": "https://github.com/TriangularCube/Hex#readme",
   "devDependencies": {
-    "parcel-bundler": "^1.11.0"
-  },
-  "dependencies": {
+    "@material-ui/core": "^3.9.1",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.11.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0"
+  },
+  "dependencies": {
   }
 }
