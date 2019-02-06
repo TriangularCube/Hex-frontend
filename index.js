@@ -1,24 +1,32 @@
-import { AppBar, Toolbar } from "@material-ui/core";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/es/styles";
+import { Provider } from 'react-redux';
+import store from "./App/Redux/store";
 
-let theme = createMuiTheme({
-    typography: {
-        useNextVariants: true // Apparently default typography uses features being deprecated soon
+import App from "./App/App";
+
+class Index extends React.Component{
+
+    constructor(props){
+        super(props);
+
+        // Load fonts
+        WebFont.load({
+            google: {
+                families: [ 'Roboto:300,500,700' ]
+            }
+        });
+
     }
-});
 
-function App(){
-    return(
-        <React.Fragment>
-            <MuiThemeProvider theme={theme}>
-                <AppBar>
-                    <Toolbar>
-                        <p>Hey!</p>
-                    </Toolbar>
-                </AppBar>
-            </MuiThemeProvider>
-        </React.Fragment>
-    )
+    render(){
+        return(
+
+            <Provider store={store}>
+                <App />
+            </Provider>
+
+        )
+    }
+
 }
 
-ReactDOM.render( <App />, document.getElementById( 'root' ) );
+ReactDOM.render( <Index />, document.getElementById( 'root' ) );
