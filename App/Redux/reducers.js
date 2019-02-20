@@ -1,25 +1,31 @@
-import { combineReducers } from "redux"
-import { SHOW_DRAWER } from "./actionTypes"
+import { SET_USER, SHOW_DRAWER } from './actionTypes'
 
-function shouldShowDrawer( state = false, action ){
+/*
+Reducers are combined in Store
+
+Each function name is also the state name
+*/
+export function shouldShowDrawer( state = false, action ){
 
     if( action.type === SHOW_DRAWER ){
 
-
-        if( action.shouldShow === state ){
-            return state;
-        } else {
-            return action.shouldShow;
-        }
+        return action.shouldShow;
 
     }
     return state;
 
 }
 
-const reducers = combineReducers({
-    // This is the list of names in the State. Also function names above.
-    shouldShowDrawer
-});
+export function user( state = null, action ){
 
-export default reducers;
+    if( action.type === SET_USER ){
+        if( state !== action.newUser ){
+            return action.newUser;
+        } else {
+            return state;
+        }
+    }
+
+    return state;
+
+}

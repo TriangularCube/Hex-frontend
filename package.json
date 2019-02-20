@@ -17,15 +17,19 @@
   },
   "homepage": "https://github.com/TriangularCube/Hex#readme",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.3.3",
     "@babel/preset-react": "^7.0.0",
-    "@material-ui/core": "^3.9.1",
+    "@material-ui/core": "^3.9.2",
     "parcel-bundler": "^1.11.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-redux": "^6.0.0",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
+    "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@material-ui/icons": "^3.0.2",
+    "prop-types": "^15.7.2",
+    "redux-saga": "^1.0.1"
+  }
 }
