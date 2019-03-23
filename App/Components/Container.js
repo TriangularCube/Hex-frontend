@@ -4,7 +4,7 @@ const styles = {
     root: {
         marginTop: 60
     }
-}
+};
 
 class Container extends React.Component{
 
