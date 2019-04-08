@@ -14,7 +14,7 @@ import defaultThemeObject from "./Util/DefaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Redux Stuff
-import { requestLogin, setUser, showDrawer, checkCookie } from "./Redux/actionCreators";
+import { requestLogin, setUser, checkCookie } from "./Redux/actionCreators";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -24,41 +24,45 @@ class App extends React.Component{
     constructor( props ){
         super( props );
 
-        this.showUser = this.showUser.bind( this );
+        this.state = {
+            shouldShowDrawer: false
+        };
+
+        this.showDrawer = this.showDrawer.bind( this );
     }
 
 
     componentDidMount() {
         // TODO Get user data from server (theme, etc.)
-       this.showUser();
     }
 
-    showUser(){
-        console.log( this.props.user );
+    // UI States shouldn't be in Redux
+    showDrawer( shouldShow ){
+        this.setState({
+            shouldShowDrawer: shouldShow
+        });
     }
 
 
     render(){
 
-        let useTheme = defaultTheme;
-        if( this.props.user && this.props.user.theme ){
-            useTheme = this.props.user.theme;
-        }
+        // TODO pull this into a function
+        let useTheme = ( this.props.user && this.props.user.theme ) ? this.props.user.theme : defaultTheme;
 
         return(
 
             <MuiThemeProvider theme={ useTheme }>
                 <CssBaseline />
 
-                <Navbar />
-                <MenuDrawer />
+                <Navbar showDrawer={this.showDrawer} />
+                <MenuDrawer shouldShowDrawer={this.state.shouldShowDrawer} showDrawer={this.showDrawer} />
 
                 <CubeList />
 
                 {/*<Button onClick={this.testStore}>Test Store!</Button>*/}
-                <Button onClick={ this.showUser }>Show User</Button>
-                <Button onClick={ this.props.requestLogin }>Request Login</Button>
-                <Button onClick={ this.props.checkCookie }>Check Cookie</Button>
+                {/*<Button onClick={ this.showUser }>Show User</Button>*/}
+                {/*<Button onClick={ this.props.requestLogin }>Request Login</Button>*/}
+                {/*<Button onClick={ this.props.checkCookie }>Check Cookie</Button>*/}
 
 
             </MuiThemeProvider>
@@ -73,7 +77,6 @@ function mapStateToProps( state ){
     return {
 
         user: state.user,
-        shouldShowDrawer: state.shouldShowDrawer
 
     }
 }
@@ -83,7 +86,6 @@ function mapDispatchToProps( dispatch ){
         {
             requestLogin,
             setUser,
-            showDrawer,
             checkCookie
         },
         dispatch

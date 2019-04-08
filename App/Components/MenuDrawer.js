@@ -1,8 +1,11 @@
-import { SwipeableDrawer, Button } from '@material-ui/core'
-import { showDrawer } from "../Redux/actionCreators";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import {SwipeableDrawer, Button} from '@material-ui/core'
+import withStyles from "@material-ui/core/es/styles/withStyles";
 
+const styles = {
+    divider: {
+        flexGrow: 1
+    }
+};
 
 class MenuDrawer extends React.Component{
 
@@ -10,6 +13,10 @@ class MenuDrawer extends React.Component{
         return(
 
             <SwipeableDrawer open={ this.props.shouldShowDrawer } onClose={ () => this.props.showDrawer( false ) } onOpen={ () => this.props.showDrawer( true ) }>
+
+                <Button onClick={ () => this.props.showDrawer( false ) }>Close Drawer!</Button>
+
+                <div className={this.props.classes.divider}/>
 
                 <Button onClick={ () => this.props.showDrawer( false ) }>Close Drawer!</Button>
 
@@ -21,21 +28,5 @@ class MenuDrawer extends React.Component{
 }
 
 
-function mapStateToProps( state ){
-    return{
-
-        shouldShowDrawer: state.shouldShowDrawer
-
-    }
-}
-
-function mapDispatchToProps( dispatch ){
-    return bindActionCreators(
-        {
-            showDrawer
-        },
-        dispatch
-    )
-}
-
-export default connect( mapStateToProps, mapDispatchToProps )( MenuDrawer );
+let ws = withStyles( styles )( MenuDrawer );
+export default ws;

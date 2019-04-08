@@ -10,11 +10,6 @@ export const setUser = ( newUser ) =>  ({
     newUser
 });
 
-export const showDrawer = ( shouldShow ) => ({
-    type: SHOW_DRAWER,
-    shouldShow
-});
-
 export const checkCookie = () => ({
     type: CHECK_COOKIE
 });

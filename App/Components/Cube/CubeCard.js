@@ -1,15 +1,21 @@
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 
-import {Card, Typography, Grid, Paper, CardContent} from "@material-ui/core";
+import {Card, Typography, Grid, CardContent, Chip} from "@material-ui/core";
 
 const styles = theme => ({
 
     card: {
-        margin: theme.spacing.unit,
-
-        textAlign: 'center',
-        //margin: 'auto'
+        margin: theme.spacing.unit / 2,
+    },
+    content: {
+        padding: theme.spacing.unit * 2,
+        "&:last-child": {
+            paddingBottom: theme.spacing.unit * 2
+        }
+    },
+    chip: {
+        height: 20
     }
 
 });
@@ -21,11 +27,15 @@ class CubeCard extends React.Component{
         return(
 
             <Grid item>
-                <Card className={ classes.card }>
-                    <CardContent>
-                        <Typography paragraph>
+                <Card className={ classes.card } square={true}>
+                    <CardContent className={ classes.content }>
+                        <Typography component="h5" variant="h5">
                             This is a Cube Card!
                         </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                            This is a Cube Description!
+                        </Typography>
+                        <Chip className={classes.chip} color="primary" label="Tag!" />
                     </CardContent>
                 </Card>
             </Grid>

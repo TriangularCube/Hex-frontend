@@ -1,20 +1,11 @@
-import { SET_USER, SHOW_DRAWER } from './actionTypes'
+import { SET_USER } from './actionTypes'
 
 /*
 Reducers are combined in Store
 
 Each function name is also the state name
 */
-export function shouldShowDrawer( state = false, action ){
 
-    if( action.type === SHOW_DRAWER ){
-
-        return action.shouldShow;
-
-    }
-    return state;
-
-}
 
 export function user( state = null, action ){
 
@@ -26,6 +17,7 @@ export function user( state = null, action ){
         }
     }
 
+    // Default return state
     return state;
 
 }
