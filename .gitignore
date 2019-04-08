@@ -4,3 +4,4 @@ dist/
 .cache/
 build/
 App/Redux/Old/
+package-lock.json
