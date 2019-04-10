@@ -3,13 +3,13 @@ import { MuiThemeProvider } from "@material-ui/core/es/styles";
 import { CssBaseline } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/es/styles";
 
-// Components
-import {Button, SwipeableDrawer} from "@material-ui/core";
-
 // Custom components
 import Navbar from "./Components/Navbar/Navbar";
 import MenuDrawer from "./Components/MenuDrawer";
-import CubeList from "./Components/CubeList";
+import CubeList from "./Components/Pages/Cubes/CubeList";
+import Splash from "./Components/Pages/Splash/Splash";
+
+// Theme
 import defaultThemeObject from "./Util/DefaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
@@ -17,6 +17,13 @@ const defaultTheme = createMuiTheme( defaultThemeObject );
 import { requestLogin, setUser, checkCookie } from "./Redux/actionCreators";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
+// Router
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+// With Width
+import withWidth from '@material-ui/core/withWidth';
+
 
 
 class App extends React.Component{
@@ -36,6 +43,8 @@ class App extends React.Component{
         // TODO Get user data from server (theme, etc.)
     }
 
+
+
     // UI States shouldn't be in Redux
     showDrawer( shouldShow ){
         this.setState({
@@ -49,23 +58,28 @@ class App extends React.Component{
         // TODO pull this into a function
         let useTheme = ( this.props.user && this.props.user.theme ) ? this.props.user.theme : defaultTheme;
 
+
+        let contentMargin = this.state.shouldShowDrawer ? 146 : 0;
+        // console.log( this.state.shouldShowDrawer );
+
         return(
 
-            <MuiThemeProvider theme={ useTheme }>
-                <CssBaseline />
+            <Router>
+                <MuiThemeProvider theme={ useTheme }>
+                    <CssBaseline />
 
-                <Navbar showDrawer={this.showDrawer} />
-                <MenuDrawer shouldShowDrawer={this.state.shouldShowDrawer} showDrawer={this.showDrawer} />
+                    <Navbar showDrawer={this.showDrawer} />
+                    <MenuDrawer shouldShowDrawer={this.state.shouldShowDrawer} showDrawer={this.showDrawer} />
 
-                <CubeList />
+                    <div style={ { marginLeft: 146 } }> {/* TODO Replace this with an implementation that uses ShowDrawer*/}
+                        <Switch>
+                            <Route path="/cubes" component={CubeList} />
+                            <Route exact path="/" component={Splash} />
+                        </Switch>
+                    </div>
 
-                {/*<Button onClick={this.testStore}>Test Store!</Button>*/}
-                {/*<Button onClick={ this.showUser }>Show User</Button>*/}
-                {/*<Button onClick={ this.props.requestLogin }>Request Login</Button>*/}
-                {/*<Button onClick={ this.props.checkCookie }>Check Cookie</Button>*/}
-
-
-            </MuiThemeProvider>
+                </MuiThemeProvider>
+            </Router>
 
         )
     }
@@ -93,4 +107,5 @@ function mapDispatchToProps( dispatch ){
 }
 
 
-export default connect( mapStateToProps, mapDispatchToProps )( App );
+let ww = withWidth()(App);
+export default connect( mapStateToProps, mapDispatchToProps )( ww );

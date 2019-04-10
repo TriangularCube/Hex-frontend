@@ -6,7 +6,8 @@ import { withStyles } from "@material-ui/core/es/styles";
 
 const styles = theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        zIndex: theme.zIndex.drawer + 1
     },
     grow: {
         flexGrow: 1
@@ -14,12 +15,12 @@ const styles = theme => ({
 });
 
 
-class Navbar extends React.Component{
+class Navbar extends React.PureComponent{
 
     render(){
         const { classes } = this.props;
         return(
-            <React.Fragment>
+            <>
 
                 <AppBar position="sticky" className={classes.root}>
                     <Toolbar>
@@ -37,7 +38,7 @@ class Navbar extends React.Component{
                     </Toolbar>
                 </AppBar>
 
-            </React.Fragment>
+            </>
         )
     }
 

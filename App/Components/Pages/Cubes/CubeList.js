@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import {Grid, Typography} from '@material-ui/core';
 
-import CubeCard from './Cube/CubeCard';
+import CubeCard from './CubeCard';
 
 
 
@@ -23,7 +23,11 @@ const styles = theme => ({
 });
 
 
-class CubeList extends React.Component{
+class CubeList extends React.PureComponent{
+
+    componentDidMount() {
+        document.title = 'Your Cubes';
+    }
 
     render(){
         const { classes } = this.props;

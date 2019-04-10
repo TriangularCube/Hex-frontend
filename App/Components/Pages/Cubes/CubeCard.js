@@ -20,7 +20,7 @@ const styles = theme => ({
 
 });
 
-class CubeCard extends React.Component{
+class CubeCard extends React.PureComponent{
 
     render(){
         const { classes } = this.props;
