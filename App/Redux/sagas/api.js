@@ -1,7 +1,9 @@
 import 'regenerator-runtime/runtime'
 
 import { takeLatest, takeEvery, call, put } from 'redux-saga/effects';
-import { REQUEST_LOGIN, CHECK_COOKIE } from '../actionTypes';
+import { REQUEST_LOGIN, CHECK_COOKIE } from '../Actions/actionTypes';
+
+const API = process.env.API_URL;
 
 async function fetchJson( url, options = {} ){
 	let resp;
@@ -18,7 +20,7 @@ function* login( action ){
 
 	console.log( action );// DEBUG
 	try{
-		const response = yield call( fetchJson, process.env.API_URL + 'login', {
+		const response = yield call( fetchJson, API + 'login', {
 			method: 'POST',
 			mode: "cors",
 			cache: "default",

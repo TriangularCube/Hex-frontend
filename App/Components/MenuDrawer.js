@@ -4,12 +4,14 @@ import withStyles from '@material-ui/core/es/styles/withStyles';
 
 import {withRouter, Link} from 'react-router-dom';
 
-const appBarHeight = 64;
+import {toggleDrawer, toggleMobileDrawer} from "../Redux/Actions/UIActionCreators";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 
-const styles = {
+const styles = theme => ({
     drawerPaper:{
-        paddingTop: appBarHeight,
-        width: 200
+        paddingTop: theme.appBarHeight,
+        width: theme.drawerWidth
     },
     drawerButton: {
         flexGrow: 1
@@ -17,56 +19,42 @@ const styles = {
     divider: {
         flexGrow: 1
     }
-};
+});
 
 function LinkButton( props ){
     return(
-        <Button component={Link} to={ props.to } onClick={ () => props.showDrawer( false ) }>{props.name}</Button>
+        <Button component={Link} to={ props.to } onClick={ () => props.toggleDrawer() }>{props.name}</Button>
     )
 }
 
 class MenuDrawer extends React.PureComponent{
 
-    constructor( props ){
-        super( props );
-
-        this.redirect = this.redirect.bind(this);
-    }
-
-    redirect( location ){
-        this.props.showDrawer( false );
-
-        // TODO This will add another entry if redirecting to the same location. Work on Fix
-        // https://github.com/ReactTraining/history/pull/570
-        this.props.history.push( location );
-    }
-
     render(){
-        const {classes} = this.props;
+        const {classes, toggleDrawer, shouldShowDrawer, toggleMobileDrawer, shouldShowMobileDrawer} = this.props;
 
         const drawer = (
             <>
-                <LinkButton name="Main Page" to="/" showDrawer={this.props.showDrawer}/>
+                <LinkButton name="Main Page" to="/" toggleDrawer={toggleDrawer}/>
 
-                <LinkButton name="Your Cubes" to="/cubes" showDrawer={this.props.showDrawer}/>
+                <LinkButton name="Your Cubes" to="/cubes" toggleDrawer={toggleDrawer}/>
 
-                <div className={this.props.classes.divider}/>
+                <div className={classes.divider}/>
 
-                <Button onClick={ () => this.props.showDrawer( false ) }>Close Drawer!</Button>
+                <Button onClick={ this.props.isLarge? () => toggleDrawer() : () => toggleMobileDrawer() }>Close Drawer!</Button>
             </>
         );
 
         return(
 
             <>
-                <Hidden smUp implementation="css">
-                    <SwipeableDrawer open={ this.props.shouldShowDrawer } onClose={ () => this.props.showDrawer( false ) } onOpen={ () => this.props.showDrawer( true ) }>
+                <Hidden mdUp implementation="js">
+                    <SwipeableDrawer open={ shouldShowMobileDrawer } onClose={ () => toggleMobileDrawer() } onOpen={ () => toggleMobileDrawer() }>
                         {drawer}
                     </SwipeableDrawer>
                 </Hidden>
 
-                <Hidden xsDown implementation="css">
-                    <Drawer variant='persistent' open={true} classes={{paper: classes.drawerPaper}}>
+                <Hidden smDown implementation="js">
+                    <Drawer variant='persistent' transitionDuration={0} open={ shouldShowDrawer } classes={{paper: classes.drawerPaper}}>
                         {drawer}
                     </Drawer>
                 </Hidden>
@@ -76,6 +64,20 @@ class MenuDrawer extends React.PureComponent{
 
 }
 
+function mapStateToProps( state ){
+    return {
+        isLarge: state.UI.isLarge,
+        shouldShowDrawer: state.UI.shouldShowDrawer,
+        shouldShowMobileDrawer: state.UI.shouldShowMobileDrawer
+    };
+}
+
+function mapDispatchToProps( dispatch ){
+    return bindActionCreators({
+        toggleDrawer, toggleMobileDrawer
+    }, dispatch );
+}
+
 
 let ws = withStyles( styles )( MenuDrawer );
-export default withRouter( ws );
+export default connect( mapStateToProps, mapDispatchToProps )( withRouter( ws ) );

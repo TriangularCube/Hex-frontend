@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import * as reducers from './reducers';
+import * as reducers from './rootReducers';
 
 import { watchLogin, watchCookies } from './sagas/api';
 

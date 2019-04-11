@@ -1,4 +1,4 @@
-import { SET_USER } from './actionTypes'
+import {SET_USER} from './Actions/actionTypes'
 
 /*
 Reducers are combined in Store
@@ -21,3 +21,11 @@ export function user( state = null, action ){
     return state;
 
 }
+
+// UI Reducers
+import * as UIReducers from './UIReducers';
+import {combineReducers} from "redux";
+
+let UI = combineReducers( UIReducers );
+
+export { UI };
