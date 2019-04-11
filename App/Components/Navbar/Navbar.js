@@ -1,7 +1,7 @@
-import {AppBar, Button, Toolbar, Typography, IconButton } from "@material-ui/core";
+import {AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/es/styles";
-//import { AccountCircle as AccIcon, Menu as MenuIcon } from "@material-ui/icons"
+// import { AccountCircle as AccIcon, Menu as MenuIcon } from "@material-ui/icons"
 
 
 const styles = theme => ({
@@ -27,7 +27,7 @@ class Navbar extends React.PureComponent{
                         <IconButton
                             color = 'inherit'
                             aria-label = 'Open Drawer'
-                            onClick={ () => this.props.showDrawer( true ) }
+                            onClick={ () => this.props.toggleDrawer() }
                         >
                             {/*<MenuIcon />*/}
                         </IconButton>

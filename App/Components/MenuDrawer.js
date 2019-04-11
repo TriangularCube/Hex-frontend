@@ -4,12 +4,11 @@ import withStyles from '@material-ui/core/es/styles/withStyles';
 
 import {withRouter, Link} from 'react-router-dom';
 
-const appBarHeight = 64;
 
-const styles = {
+const styles = theme => ({
     drawerPaper:{
-        paddingTop: appBarHeight,
-        width: 200
+        paddingTop: theme.appBarHeight,
+        width: theme.drawerWidth
     },
     drawerButton: {
         flexGrow: 1
@@ -17,56 +16,43 @@ const styles = {
     divider: {
         flexGrow: 1
     }
-};
+});
 
 function LinkButton( props ){
     return(
-        <Button component={Link} to={ props.to } onClick={ () => props.showDrawer( false ) }>{props.name}</Button>
+        <Button component={Link} to={ props.to } onClick={ () => props.turnOffMobileDrawer() }>{props.name}</Button>
     )
 }
 
 class MenuDrawer extends React.PureComponent{
 
-    constructor( props ){
-        super( props );
-
-        this.redirect = this.redirect.bind(this);
-    }
-
-    redirect( location ){
-        this.props.showDrawer( false );
-
-        // TODO This will add another entry if redirecting to the same location. Work on Fix
-        // https://github.com/ReactTraining/history/pull/570
-        this.props.history.push( location );
-    }
 
     render(){
-        const {classes} = this.props;
+        const {classes, shouldShowDrawer, shouldShowMobileDrawer, toggleDrawer, turnOffMobileDrawer} = this.props;
 
         const drawer = (
             <>
-                <LinkButton name="Main Page" to="/" showDrawer={this.props.showDrawer}/>
+                <LinkButton name="Main Page" to="/" turnOffMobileDrawer={turnOffMobileDrawer} />
 
-                <LinkButton name="Your Cubes" to="/cubes" showDrawer={this.props.showDrawer}/>
+                <LinkButton name="Your Cubes" to="/cubes" turnOffMobileDrawer={turnOffMobileDrawer} />
 
-                <div className={this.props.classes.divider}/>
+                <div className={classes.divider}/>
 
-                <Button onClick={ () => this.props.showDrawer( false ) }>Close Drawer!</Button>
+                <Button onClick={ () => toggleDrawer() }>Close Drawer!</Button>
             </>
         );
 
         return(
 
             <>
-                <Hidden smUp implementation="css">
-                    <SwipeableDrawer open={ this.props.shouldShowDrawer } onClose={ () => this.props.showDrawer( false ) } onOpen={ () => this.props.showDrawer( true ) }>
+                <Hidden smUp implementation="js">
+                    <SwipeableDrawer open={ shouldShowMobileDrawer } onClose={ () => toggleDrawer() } onOpen={ () => toggleDrawer() }>
                         {drawer}
                     </SwipeableDrawer>
                 </Hidden>
 
-                <Hidden xsDown implementation="css">
-                    <Drawer variant='persistent' open={true} classes={{paper: classes.drawerPaper}}>
+                <Hidden xsDown implementation="js">
+                    <Drawer variant='persistent' open={ shouldShowDrawer } classes={{paper: classes.drawerPaper}}>
                         {drawer}
                     </Drawer>
                 </Hidden>
