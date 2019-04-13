@@ -9,6 +9,33 @@
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
     >
 
+    <!-- Loading Spinner -->
+    <style type="text/css">
+        .loading:empty {
+            position: absolute;
+            content: " ";
+            display: block;
+            width: 80px;
+            height: 80px;
+            top: 30%;
+            left: 50%;
+            margin-left: -40px;
+            margin-top: -40px;
+            border-radius: 50%;
+            border: 5px solid;
+            border-color: #000000 transparent #000000 transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+        @keyframes loading {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
 </head>
 <body>
 
@@ -19,7 +46,7 @@
     <!-- Web Font Loader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
 
-    <div id="root" ></div>
+    <div id="root" class="loading"></div>
     <script src="index.js"></script>
 
 </body>
