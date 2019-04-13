@@ -95,15 +95,20 @@ class AppWithTheme extends React.Component{
 
 
 	render(){
-		let contentMargin = this.state.isLarge && this.state.shouldShowDrawer ? this.props.theme.drawerWidth : 0;
+		const contentMargin = this.state.isLarge && this.state.shouldShowDrawer ? this.props.theme.drawerWidth : 0;
 
 
 		return(
 
-			<Router>
+			<Router basename={process.env.URL_BASE_NAME} >
 				<>
 					<Navbar toggleDrawer={this.toggleDrawer} />
-					<MenuDrawer shouldShowDrawer={this.state.shouldShowDrawer} shouldShowMobileDrawer={this.state.shouldShowMobileDrawer} toggleDrawer={this.toggleDrawer} turnOffMobileDrawer={this.turnOffMobileDrawer} />
+					<MenuDrawer
+						shouldShowDrawer={this.state.shouldShowDrawer}
+						shouldShowMobileDrawer={this.state.shouldShowMobileDrawer}
+						toggleDrawer={this.toggleDrawer}
+						turnOffMobileDrawer={this.turnOffMobileDrawer}
+					/>
 
 					<div style={ { marginLeft: contentMargin } }>
 						<Switch>
