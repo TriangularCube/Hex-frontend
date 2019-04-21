@@ -1,6 +1,8 @@
+import React from 'react';
+
 // Custom components
 import Navbar from "./Components/Navbar/Navbar";
-import MenuDrawer from "./Components/MenuDrawer";
+import MenuDrawer from "./Components/Drawer/MenuDrawer";
 import CubeList from "./Components/Pages/Cubes/CubeList";
 import Splash from "./Components/Pages/Splash/Splash";
 
@@ -100,6 +102,7 @@ class AppWithTheme extends React.Component{
 
 		return(
 
+			/* Kept around for staging */
 			<Router basename={process.env.URL_BASE_NAME} >
 				<>
 					<Navbar toggleDrawer={this.toggleDrawer} />

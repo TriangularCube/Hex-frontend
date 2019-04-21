@@ -1,3 +1,5 @@
+import React from 'react';
+
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 
@@ -33,7 +35,7 @@ class CubeList extends React.PureComponent{
         const { classes } = this.props;
         return(
 
-            <React.Fragment>
+            <>
                 <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start' className={classes.root}>
 
                     <Typography className={ classes.title } color="textPrimary" variant="h4" component="h2">Your Cubes</Typography>
@@ -43,7 +45,7 @@ class CubeList extends React.PureComponent{
                     <CubeCard/>
 
                 </Grid>
-            </React.Fragment>
+            </>
 
         )
     }

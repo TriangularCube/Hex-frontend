@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {MuiThemeProvider} from "@material-ui/core/es";
 import {CssBaseline} from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/es/styles";

@@ -3,6 +3,6 @@ export default {
         useNextVariants: true // Apparently default typography uses features being deprecated soon
     },
     appBarHeight: 70,
-    drawerWidth: 200,
+    drawerWidth: 220,
     isLarge: 'sm'
 };
