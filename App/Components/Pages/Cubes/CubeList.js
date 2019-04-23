@@ -5,9 +5,10 @@ import { withStyles } from "@material-ui/core/styles";
 
 import {Grid, Typography} from '@material-ui/core';
 
+import Navbar from '../../Navbar/Navbar';
 import CubeCard from './CubeCard';
 
-
+const pageName = 'My Cubes'
 
 const styles = theme => ({
     root: {
@@ -28,7 +29,7 @@ const styles = theme => ({
 class CubeList extends React.PureComponent{
 
     componentDidMount() {
-        document.title = 'Your Cubes';
+        document.title = pageName;
     }
 
     render(){
@@ -36,9 +37,9 @@ class CubeList extends React.PureComponent{
         return(
 
             <>
+                <Navbar pageName={pageName} />
+                <div style={{ height: 30 }} />
                 <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start' className={classes.root}>
-
-                    <Typography className={ classes.title } color="textPrimary" variant="h4" component="h2">Your Cubes</Typography>
 
                     <CubeCard/>
                     <CubeCard/>

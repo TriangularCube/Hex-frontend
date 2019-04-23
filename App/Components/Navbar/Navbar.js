@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {withRouter} from 'react-router-dom';
+
 import {AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/es/styles";
@@ -11,6 +13,7 @@ const styles = theme => ({
         flexGrow: 1,
         zIndex: theme.zIndex.drawer + 1
     },
+    toolbar: theme.mixins.toolbar,
     grow: {
         flexGrow: 1
     }
@@ -20,12 +23,12 @@ const styles = theme => ({
 class Navbar extends React.PureComponent{
 
     render(){
-        const { classes } = this.props;
+        const { classes, pageName } = this.props;
         return(
             <>
 
                 <AppBar position="sticky" className={classes.root}>
-                    <Toolbar>
+                    <Toolbar className={classes.toolbar}>
                         <IconButton
                             color = 'inherit'
                             aria-label = 'Open Drawer'
@@ -33,7 +36,12 @@ class Navbar extends React.PureComponent{
                         >
                             {/*<MenuIcon />*/}
                         </IconButton>
-                        <Typography variant='h6' color='inherit' className={classes.grow}>Hexahedron</Typography>
+
+                        {/* Location Name */}
+                        <Typography variant='h6' color='inherit' className={classes.grow}>
+                            {pageName}
+                        </Typography>
+
                         <IconButton color='inherit'>
                             {/*<AccIcon/>*/}
                         </IconButton>
@@ -53,4 +61,4 @@ Navbar.propTypes = {
 
 
 let withAddedStyle = withStyles(styles)(Navbar);
-export default withAddedStyle;
+export default withRouter( withAddedStyle );

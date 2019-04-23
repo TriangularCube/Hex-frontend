@@ -8,7 +8,7 @@ import {
     List,
     ListItem,
     ListItemText,
-    ListItemIcon,
+    Typography,
     Divider
 } from '@material-ui/core'
 
@@ -19,8 +19,16 @@ import {withRouter, Link} from 'react-router-dom';
 
 const styles = theme => ({
     drawerPaper:{
-        paddingTop: theme.appBarHeight,
         width: theme.drawerWidth
+    },
+    headerParent: {
+        height: theme.appBarHeight,
+        display: 'table'
+    },
+    headerChild: {
+        display: 'table-cell',
+        textAlign: 'center',
+        verticalAlign: 'middle'
     },
     drawerButton: {
         flexGrow: 1
@@ -37,14 +45,24 @@ function LinkButton( props ){
 }
 
 function DrawerList( props ){
+    const { classes } = props;
+
     return(
         <>
+            <div className={classes.headerParent}>
+                <Typography paragraph variant="h6" className={ classes.headerChild }>
+                    Hexahedron
+                </Typography>
+            </div>
+
+            <Divider />
+
             {/* Possibly use with List */}
             <LinkButton name="Main Page" to="/" turnOffMobileDrawer={ props.turnOffMobileDrawer} />
 
-            <LinkButton name="Your Cubes" to="/cubes" turnOffMobileDrawer={ props.turnOffMobileDrawer} />
+            <LinkButton name="My Cubes" to="/cubes" turnOffMobileDrawer={ props.turnOffMobileDrawer} />
 
-            <div className={props.classes.divider}/>
+            <div className={classes.divider}/>
 
             <Divider />
             <List>
