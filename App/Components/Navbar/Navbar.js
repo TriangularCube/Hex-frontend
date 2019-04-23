@@ -1,15 +1,20 @@
 import React from 'react';
 
-import {AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import {Link as RouterLink} from "react-router-dom";
+
+import {AppBar, Toolbar, Link, IconButton, Button} from "@material-ui/core";
 import PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core/es/styles";
-// import { AccountCircle as AccIcon, Menu as MenuIcon } from "@material-ui/icons"
+import { withStyles } from "@material-ui/core/styles";
+import { AccountCircle as AccIcon } from "@material-ui/icons"
 
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
         zIndex: theme.zIndex.drawer + 1
+    },
+    hexText: {
+        width: 150
     },
     grow: {
         flexGrow: 1
@@ -21,21 +26,25 @@ class Navbar extends React.PureComponent{
 
     render(){
         const { classes } = this.props;
+
+
         return(
             <>
 
-                <AppBar position="sticky" className={classes.root}>
+                <AppBar position="sticky">
                     <Toolbar>
-                        <IconButton
-                            color = 'inherit'
-                            aria-label = 'Open Drawer'
-                            onClick={ () => this.props.toggleDrawer() }
-                        >
-                            {/*<MenuIcon />*/}
-                        </IconButton>
-                        <Typography variant='h6' color='inherit' className={classes.grow}>Hexahedron</Typography>
+                        <Link component={RouterLink} to='/' color='inherit' variant='h6' underline='none'>
+                            Hexahedron
+                        </Link>
+
+                        <div className={classes.grow} />
+
+                        <Button color='inherit'>Featured</Button>
+                        <Button component={RouterLink} to={'/cubes'} color='inherit'>My Cubes</Button>
+                        <Button color='inherit'>Advanced Search</Button>
+
                         <IconButton color='inherit'>
-                            {/*<AccIcon/>*/}
+                            <AccIcon/>
                         </IconButton>
                     </Toolbar>
                 </AppBar>
