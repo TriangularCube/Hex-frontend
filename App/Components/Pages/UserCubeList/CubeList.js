@@ -1,10 +1,14 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core/styles";
 
-import {Grid, Typography} from '@material-ui/core';
+// Material UI Utils
+import withStyles from '@material-ui/core/styles/withStyles';
 
+// Material UI Components
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
+// Custom Components
 import CubeCard from './CubeCard';
 
 

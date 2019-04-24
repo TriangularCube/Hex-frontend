@@ -1,21 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    SwipeableDrawer,
-    Button,
-    Hidden,
-    Drawer,
-    List,
-    ListItem,
-    ListItemText,
-    ListItemIcon,
-    Divider
-} from '@material-ui/core'
+// Router
+import {Link} from 'react-router-dom';
 
+// Material UI Utils
 import withStyles from '@material-ui/core/es/styles/withStyles';
 
-import {Link} from 'react-router-dom';
+// Material UI Components
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+
 
 
 const styles = theme => ({

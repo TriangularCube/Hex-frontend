@@ -1,23 +1,23 @@
 import React from 'react';
 
-// Custom components
-import Navbar from "./Components/Navbar/Navbar";
-import MenuDrawer from "./Components/Drawer/MenuDrawer";
-import CubeList from "./Components/Pages/UserCubeList/CubeList";
-import Splash from "./Components/Pages/Splash/Splash";
-
 // Redux Stuff
-import { requestLogin, setUser, checkCookie } from "./Redux/actionCreators";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { requestLogin, setUser, checkCookie } from './Redux/actionCreators';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // Router
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-
+// Material UI Utils
 import withWidth, {isWidthUp} from '@material-ui/core/withWidth';
-import {withTheme} from '@material-ui/core/styles'
-import DisplayCube from "./Components/Pages/DisplayCube/DisplayCube";
+import withTheme from '@material-ui/core/styles/withTheme'
+
+// Custom components
+import Navbar from './Components/Navbar/Navbar';
+import MenuDrawer from './Components/Drawer/MenuDrawer';
+import CubeList from './Components/Pages/UserCubeList/CubeList';
+import Splash from './Components/Pages/Splash/Splash';
+import DisplayCube from './Components/Pages/DisplayCube/DisplayCube';
 
 
 class AppWithTheme extends React.Component{

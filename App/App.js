@@ -1,16 +1,18 @@
 import React from 'react';
 
-import {MuiThemeProvider} from "@material-ui/core/es";
-import {CssBaseline} from "@material-ui/core";
-import { createMuiTheme } from "@material-ui/core/es/styles";
-
-// Redux
-import { connect } from "react-redux";
+// Material UI
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 // Theme
 import defaultThemeObject from "./Util/DefaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
+// Redux
+import { connect } from "react-redux";
+
+// The App
 import AppWithTheme from "./AppWithTheme";
 
 class App extends React.Component{
