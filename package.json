@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "parcel index.html --out-dir build/dev",
     "stage": "cross-env NODE_ENV=staging parcel build index.html --out-dir build/stage --public-url /beta/",
-    "build": "parcel build index.html --out-dir build/prod"
+    "build": "parcel build index.html --out-dir build/prod",
+    "buildHoist": "parcel build index.html --out-dir build/prod2 --experimental-scope-hoisting"
   },
   "repository": {
     "type": "git",

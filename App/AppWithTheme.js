@@ -3,7 +3,7 @@ import React from 'react';
 // Custom components
 import Navbar from "./Components/Navbar/Navbar";
 import MenuDrawer from "./Components/Drawer/MenuDrawer";
-import CubeList from "./Components/Pages/Cubes/CubeList";
+import CubeList from "./Components/Pages/UserCubeList/CubeList";
 import Splash from "./Components/Pages/Splash/Splash";
 
 // Redux Stuff
@@ -105,7 +105,7 @@ class AppWithTheme extends React.Component{
 			/* Kept around for staging */
 			<Router basename={process.env.URL_BASE_NAME} >
 				<>
-					<Navbar toggleDrawer={this.toggleDrawer} />
+                    <Navbar toggleDrawer={this.toggleDrawer} />
 					<MenuDrawer
 						shouldShowDrawer={this.state.shouldShowDrawer}
 						shouldShowMobileDrawer={this.state.shouldShowMobileDrawer}
@@ -114,6 +114,7 @@ class AppWithTheme extends React.Component{
 					/>
 
 					<div style={ { marginLeft: contentMargin } }>
+
 						<Switch>
 							<Route path="/cubes" component={CubeList} />
 							<Route exact path="/" component={Splash} />

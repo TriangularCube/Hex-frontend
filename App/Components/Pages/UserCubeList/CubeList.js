@@ -28,14 +28,18 @@ const styles = theme => ({
 class CubeList extends React.PureComponent{
 
     componentDidMount() {
+        // Update Document Title
         document.title = 'Your Cubes';
     }
+
+    // TODO Fetch user cube list
 
     render(){
         const { classes } = this.props;
         return(
 
             <>
+                {/* Grid of Cube List */}
                 <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start' className={classes.root}>
 
                     <Typography className={ classes.title } color="textPrimary" variant="h4" component="h2">Your Cubes</Typography>
