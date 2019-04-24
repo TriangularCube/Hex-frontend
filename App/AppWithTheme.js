@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import withWidth, {isWidthUp} from '@material-ui/core/withWidth';
 import {withTheme} from '@material-ui/core/styles'
+import DisplayCube from "./Components/Pages/DisplayCube/DisplayCube";
 
 
 class AppWithTheme extends React.Component{
@@ -117,6 +118,7 @@ class AppWithTheme extends React.Component{
 
 						<Switch>
 							<Route path="/cubes" component={CubeList} />
+							<Route path="/cube/:id/:edit?" component={DisplayCube} />
 							<Route exact path="/" component={Splash} />
 						</Switch>
 					</div>

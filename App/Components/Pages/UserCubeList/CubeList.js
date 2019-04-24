@@ -42,8 +42,10 @@ class CubeList extends React.PureComponent{
                 {/* Grid of Cube List */}
                 <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start' className={classes.root}>
 
+                    {/* Page Title */}
                     <Typography className={ classes.title } color="textPrimary" variant="h4" component="h2">Your Cubes</Typography>
 
+                    {/* TODO Replace with list of cubes from User*/}
                     <CubeCard/>
                     <CubeCard/>
                     <CubeCard/>

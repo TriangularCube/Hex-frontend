@@ -2,7 +2,13 @@ import React from 'react';
 
 class DisplayCube extends React.PureComponent{
 
+    render(){
+        return(
+            <>
 
+            </>
+        )
+    }
 
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
     SwipeableDrawer,
@@ -14,7 +15,7 @@ import {
 
 import withStyles from '@material-ui/core/es/styles/withStyles';
 
-import {withRouter, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 const styles = theme => ({
@@ -30,53 +31,55 @@ const styles = theme => ({
     }
 });
 
-function LinkButton( props ){
-    return(
-        <Button component={Link} to={ props.to } onClick={ () => props.turnOffMobileDrawer() }>{props.name}</Button>
-    )
-}
-
-function DrawerList( props ){
-    return(
-        <>
-            {/* Possibly use with List */}
-            <LinkButton name="Main Page" to="/" turnOffMobileDrawer={ props.turnOffMobileDrawer} />
-
-            <LinkButton name="Your Cubes" to="/cubes" turnOffMobileDrawer={ props.turnOffMobileDrawer} />
-
-            <div className={props.classes.divider}/>
-
-            <Divider />
-            <List>
-                <ListItem button onClick={ () => console.log( process.env.URL_BASE_NAME + " | " + process.env.NODE_ENV ) }>
-                    {/*<ListItemIcon />*/}
-                    <ListItemText>
-                        Credits or something!
-                    </ListItemText>
-                </ListItem>
-            </List>
-        </>
-    )
-}
-
 class MenuDrawer extends React.PureComponent{
 
 
     render(){
         const {classes, shouldShowDrawer, shouldShowMobileDrawer, toggleDrawer, turnOffMobileDrawer} = this.props;
 
+        // Link Button, used in Drawer
+        const LinkButton = (name, to) => (
+            <Button component={Link} to={to} onClick={ () => turnOffMobileDrawer() }>{name}</Button>
+        );
+
+        // List of components to display in Drawer. Separated here since it's used twice
+        const DrawerList = (
+            <>
+                {/* Possibly use with List */}
+                {LinkButton( 'Main Page', '/' )}
+
+                {LinkButton( 'My Cubes', '/cubes' )}
+
+                {LinkButton( 'A Cube', '/cube/0' )}
+
+                <div className={classes.divider}/>
+
+                <Divider />
+                <List>
+                    <ListItem button>
+                        {/*<ListItemIcon />*/}
+                        <ListItemText>
+                            Credits or something!
+                        </ListItemText>
+                    </ListItem>
+                </List>
+            </>
+        );
+
         return(
 
             <>
+                {/* First the Mobile Drawer */}
                 <Hidden smUp implementation="js">
                     <SwipeableDrawer open={ shouldShowMobileDrawer } onClose={ () => toggleDrawer() } onOpen={ () => toggleDrawer() }>
-                        <DrawerList turnOffMobileDrawer={turnOffMobileDrawer} toggleDrawer={toggleDrawer} classes={classes} />
+                        {DrawerList}
                     </SwipeableDrawer>
                 </Hidden>
 
+                {/* Then the large sized Drawer */}
                 <Hidden xsDown implementation="js">
                     <Drawer variant='persistent' open={ shouldShowDrawer } classes={{paper: classes.drawerPaper}}>
-                        <DrawerList turnOffMobileDrawer={turnOffMobileDrawer} toggleDrawer={toggleDrawer} classes={classes} />
+                        {DrawerList}
                     </Drawer>
                 </Hidden>
             </>
@@ -85,6 +88,13 @@ class MenuDrawer extends React.PureComponent{
 
 }
 
+MenuDrawer.propTypes = {
+    classes: PropTypes.object.isRequired,
+    shouldShowDrawer: PropTypes.bool.isRequired,
+    shouldShowMobileDrawer: PropTypes.bool.isRequired,
+    toggleDrawer: PropTypes.func.isRequired,
+    turnOffMobileDrawer: PropTypes.func.isRequired
+};
 
 let ws = withStyles( styles )( MenuDrawer );
-export default withRouter( ws );
+export default ws;

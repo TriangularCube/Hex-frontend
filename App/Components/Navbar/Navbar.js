@@ -28,9 +28,13 @@ class Navbar extends React.PureComponent{
         return(
             <>
 
+                {/* App Bar, sticky so as to take up space. Grows, and has +1 index over Drawer */}
                 <AppBar position="sticky" className={classes.root}>
+
+                    {/* Toolbar needed to arrange items in Horizontal direction */}
                     <Toolbar>
 
+                        {/* Menu Icon */}
                         <IconButton
                             color = 'inherit'
                             aria-label = 'Open Drawer'
@@ -39,11 +43,14 @@ class Navbar extends React.PureComponent{
                         >
                             <MenuIcon />
                         </IconButton>
+
+                        {/* Site Title */}
                         <Typography variant='h6' color='inherit'>Hexahedron</Typography>
 
-
+                        {/* Spacer */}
                         <div className={classes.grow} />
 
+                        {/* User button */}
                         <IconButton color='inherit'>
                             <AccIcon/>
                         </IconButton>
