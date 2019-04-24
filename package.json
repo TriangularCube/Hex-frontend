@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "parcel index.html --out-dir build/dev",
     "stage": "cross-env NODE_ENV=staging parcel build index.html --out-dir build/stage --public-url /beta/",
-    "build": "parcel build index.html --out-dir build/prod",
+    "build": "parcel build index.html --out-dir build/prod --no-source-maps",
     "buildHoist": "parcel build index.html --out-dir build/prod2 --experimental-scope-hoisting"
   },
   "repository": {
@@ -29,10 +29,10 @@
     "@material-ui/icons": "^3.0.2",
     "prop-types": "^15.7.2",
     "redux-saga": "^1.0.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }

@@ -1,10 +1,19 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core/styles/index";
 
-import {Card, Typography, Grid, CardContent, Chip, CardActionArea, IconButton} from "@material-ui/core";
-import {Edit as EditIcon} from "@material-ui/icons";
+// Material UI Utils
+import withStyles from "@material-ui/core/styles/withStyles";
+
+// Material UI Components
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Chip from '@material-ui/core/Chip';
+
+// Icons
+import EditIcon from "@material-ui/icons/Edit";
 
 const styles = theme => ({
 

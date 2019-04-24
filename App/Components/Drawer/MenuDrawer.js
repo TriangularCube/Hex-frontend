@@ -34,7 +34,6 @@ const styles = theme => ({
 
 class MenuDrawer extends React.PureComponent{
 
-
     render(){
         const {classes, shouldShowDrawer, shouldShowMobileDrawer, toggleDrawer, turnOffMobileDrawer} = this.props;
 
