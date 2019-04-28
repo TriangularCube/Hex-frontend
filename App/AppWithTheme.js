@@ -1,24 +1,25 @@
-import React from 'react';
+import React from "react";
 
 // Redux Stuff
-import { requestLogin, setUser, checkCookie } from './Redux/actionCreators';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
+import { connect } from "react-redux";
 // Router
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Material UI Utils
-import withWidth, {isWidthUp} from '@material-ui/core/withWidth';
-import withTheme from '@material-ui/core/styles/withTheme'
+import withWidth, {isWidthUp} from "@material-ui/core/withWidth";
+import withTheme from "@material-ui/core/styles/withTheme"
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // Custom components
-import Navbar from './Components/Navbar/Navbar';
-import MenuDrawer from './Components/Drawer/MenuDrawer';
-import CubeList from './Components/Pages/UserCubeList/CubeList';
-import Splash from './Components/Pages/Splash/Splash';
-import DisplayCube from './Components/Pages/DisplayCube/DisplayCube';
+import Navbar from "./Components/Navbar";
+import MenuDrawer from "./Components/MenuDrawer";
+import CubeList from "./Components/Pages/UserCubeList/CubeList";
+import Splash from "./Components/Pages/Splash/Splash";
+import DisplayCube from "./Components/Pages/DisplayCube/DisplayCube";
 
+const styles = ( theme ) => ({
+	pageContainer: theme.mixins.pageContainer
+});
 
 class AppWithTheme extends React.Component{
 
@@ -115,12 +116,13 @@ class AppWithTheme extends React.Component{
 					/>
 
 					<div style={ { marginLeft: contentMargin } }>
-
-						<Switch>
-							<Route path="/cubes" component={CubeList} />
-							<Route path="/cube/:id/:edit?" component={DisplayCube} />
-							<Route exact path="/" component={Splash} />
-						</Switch>
+						<div className={this.props.classes.pageContainer}>
+							<Switch>
+								<Route path="/cubes" component={CubeList} />
+								<Route path="/cube/:id/:edit?" component={DisplayCube} />
+								<Route exact path="/" component={Splash} />
+							</Switch>
+						</div>
 					</div>
 				</>
 			</Router>
@@ -139,18 +141,6 @@ function mapStateToProps( state ){
 	}
 }
 
-// Not used at the moment
-function mapDispatchToProps( dispatch ){
-	return bindActionCreators(
-		{
-			requestLogin,
-			setUser,
-			checkCookie
-		},
-		dispatch
-	);
-}
 
-
-let wtww = withTheme()( withWidth( { withTheme: true } )( AppWithTheme ) );
-export default connect( mapStateToProps, mapDispatchToProps )( wtww );
+let wtww = withTheme()( withWidth( { withTheme: true } )( withStyles(styles)(AppWithTheme) ) );
+export default connect( mapStateToProps )( wtww );
