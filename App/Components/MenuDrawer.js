@@ -1,27 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 // Router
-import {Link} from 'react-router-dom';
+import {Link} from "react-router-dom";
 
 // Material UI Utils
-import withStyles from '@material-ui/core/es/styles/withStyles';
+import withStyles from "@material-ui/core/es/styles/withStyles";
 
 // Material UI Components
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer/index";
+import Button from "@material-ui/core/Button/index";
+import Hidden from "@material-ui/core/Hidden/index";
+import Drawer from "@material-ui/core/Drawer/index";
+import List from "@material-ui/core/List/index";
+import ListItem from "@material-ui/core/ListItem/index";
+import ListItemText from "@material-ui/core/ListItemText/index";
+import Divider from "@material-ui/core/Divider/index";
 
 
 
 const styles = theme => ({
+    spacer: {
+        ...theme.mixins.toolbar
+    },
     drawerPaper:{
-        paddingTop: theme.appBarHeight,
         width: theme.drawerWidth
     },
     drawerButton: {
@@ -45,6 +47,10 @@ class MenuDrawer extends React.PureComponent{
         // List of components to display in Drawer. Separated here since it's used twice
         const DrawerList = (
             <>
+                {/* Shim for proper spacing under the appbar */}
+                <div className={classes.spacer} />
+                <div style={{ height: 4 }} />
+
                 {/* Possibly use with List */}
                 {LinkButton( 'Main Page', '/' )}
 

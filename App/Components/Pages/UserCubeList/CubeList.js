@@ -1,53 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-// Material UI Utils
-import withStyles from '@material-ui/core/styles/withStyles';
+import React from "react";
 
 // Material UI Components
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Grid from "@material-ui/core/Grid";
 
 // Custom Components
-import CubeCard from './CubeCard';
+import CubeCard from "./CubeCard";
+import PageTitle from "../../Common/PageTitle";
 
 
-
-const styles = theme => ({
-    root: {
-        //padding: theme.spacing.unit * 2,
-        maxWidth: '900px',
-        margin: '2vh auto'
-    },
-    title: {
-        margin: '20px 5px 10px'
-    },
-    paper: {
-        padding: theme.spacing.unit * 2,
-        width: '100%'
-    }
-});
-
+const pageName = 'My Cubes';
 
 class CubeList extends React.PureComponent{
 
     componentDidMount() {
         // Update Document Title
-        document.title = 'Your Cubes';
+        document.title = pageName;
     }
 
     // TODO Fetch user cube list
 
     render(){
-        const { classes } = this.props;
         return(
 
             <>
-                {/* Grid of Cube List */}
-                <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start' className={classes.root}>
+                <PageTitle>{pageName}</PageTitle>
 
-                    {/* Page Title */}
-                    <Typography className={ classes.title } color="textPrimary" variant="h4" component="h2">Your Cubes</Typography>
+                {/* Grid of Cube List */}
+                <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start'>
+
+
 
                     {/* TODO Replace with list of cubes from User*/}
                     <CubeCard/>
@@ -62,10 +43,4 @@ class CubeList extends React.PureComponent{
 
 }
 
-
-CubeList.propTypes = {
-    classes: PropTypes.object.isRequired
-};
-
-let withAddedStyle = withStyles(styles)(CubeList);
-export default withAddedStyle;
+export default CubeList;
