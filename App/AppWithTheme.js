@@ -101,7 +101,6 @@ class AppWithTheme extends React.Component{
 	render(){
 		const contentMargin = this.state.isLarge && this.state.shouldShowDrawer ? this.props.theme.drawerWidth : 0;
 
-
 		return(
 
 			/* Kept around for staging */

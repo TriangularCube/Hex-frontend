@@ -18,10 +18,12 @@ import ListItemText from "@material-ui/core/ListItemText/index";
 import Divider from "@material-ui/core/Divider/index";
 
 
-
 const styles = theme => ({
     spacer: {
         ...theme.mixins.toolbar
+    },
+    spacerPadding: {
+        height: 2
     },
     drawerPaper:{
         width: theme.drawerWidth
@@ -49,7 +51,7 @@ class MenuDrawer extends React.PureComponent{
             <>
                 {/* Shim for proper spacing under the appbar */}
                 <div className={classes.spacer} />
-                <div style={{ height: 4 }} />
+                <div className={classes.spacerPadding} />
 
                 {/* Possibly use with List */}
                 {LinkButton( 'Main Page', '/' )}
