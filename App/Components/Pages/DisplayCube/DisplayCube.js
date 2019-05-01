@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 
 // Material UI Utils
-import withStyles  from "@material-ui/core/styles/withStyles";
+import makeStyles from "@material-ui/styles/makeStyles";
 
 // Material UI Components
 import Typography from "@material-ui/core/Typography";
@@ -11,7 +11,7 @@ import Paper from "@material-ui/core/Paper";
 // Custom Components
 import PageTitle from "../../Common/PageTitle";
 
-const styles = (theme) => ({
+const useStyles = makeStyles( theme => ({
     horizontalSplit: {
         display: 'flex'
     },
@@ -29,45 +29,46 @@ const styles = (theme) => ({
             display: 'block'
         }
     }
-});
+}));
 
-class DisplayCube extends React.PureComponent{
+function DisplayCube(){
 
-    render(){
-        const { match, classes } = this.props;
+    const classes = useStyles();
 
-        return(
-            <>
-                <PageTitle>
-                    Cube A
-                </PageTitle>
+    useEffect( () => {
+        document.title = 'Cube A'; // TODO This should be based on cube name
+    });
 
-                {/* Root div for max width */}
-                <div className={classes.horizontalSplit}>
+    return(
+        <>
+            <PageTitle>
+                Cube A
+            </PageTitle>
 
-                    {/* Search Column */}
-                    <div className={classes.searchColumn}>
-                        <Paper>
-                            Something!
-                        </Paper>
-                    </div>
+            {/* Root div for max width */}
+            <div className={classes.horizontalSplit}>
 
-                    {/* Main Column */}
-                    <main className={classes.main}>
-                        <Paper>
-                            Cube A
-                        </Paper>
-                    </main>
+                {/* Search Column */}
+                <div className={classes.searchColumn}>
+                    <Paper>
+                        Something!
+                    </Paper>
                 </div>
-            </>
-        )
-    }
+
+                {/* Main Column */}
+                <main className={classes.main}>
+                    <Paper>
+                        Cube A
+                    </Paper>
+                </main>
+            </div>
+        </>
+    )
 
 }
 
 DisplayCube.propTypes = {
-    classes: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)( DisplayCube );
+export default DisplayCube;

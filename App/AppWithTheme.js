@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // Redux Stuff
 import { connect } from "react-redux";
+
 // Router
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Material UI Utils
-import withWidth, {isWidthUp} from "@material-ui/core/withWidth";
-import withTheme from "@material-ui/core/styles/withTheme"
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles, useTheme } from "@material-ui/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Custom components
 import Navbar from "./Components/Navbar";
@@ -17,117 +17,77 @@ import CubeList from "./Components/Pages/UserCubeList/CubeList";
 import Splash from "./Components/Pages/Splash/Splash";
 import DisplayCube from "./Components/Pages/DisplayCube/DisplayCube";
 
-const styles = ( theme ) => ({
+const useStyles = makeStyles( theme => ({
 	pageContainer: theme.mixins.pageContainer
-});
+}));
 
-class AppWithTheme extends React.Component{
+function AppWithTheme(){
 
-	constructor( props ){
-		super( props );
+	// Fetch state from LocalStorage
+	let shouldShowDrawer = JSON.parse( localStorage.getItem( 'UIStateShouldShowDrawer' ) ) || true;
 
-		// Fetch state from LocalStorage
-		let shouldShowDrawer = JSON.parse( localStorage.getItem( 'UIStateShouldShowDrawer' ) ) || true;
+	// Show Drawer State Hooks
+	const [showDeskDrawer, setDeskDrawer] = useState( shouldShowDrawer );
+	const [showMobileDrawer, setMobileDrawer] = useState( false );
 
-		this.state = {
-			shouldShowDrawer: shouldShowDrawer,
-			shouldShowMobileDrawer: false,
-			isLarge: isWidthUp( props.theme.isLarge, props.width )
-		};
+	// Fetch the Theme with a Hook
+	const theme = useTheme();
 
-		this.toggleDrawer = this.toggleDrawer.bind( this );
-		this.turnOffMobileDrawer = this.turnOffMobileDrawer.bind( this );
-	}
+	// Use Media Query
+	const isLarge = useMediaQuery( theme.breakpoints.up( theme.isLarge ) );
 
+	// Turn mobile drawer off if we've switched to Desktop view
+	useEffect( () => {
 
-	componentDidMount() {
-		// TODO Get user data from server (theme, etc.)
-	}
-
-	static getDerivedStateFromProps( props, state ){
-
-		const isLarge = isWidthUp( props.theme.isLarge, props.width );
-		const wasLarge = state.isLarge;
-
-		if( isLarge && !wasLarge ){
-			localStorage.setItem( 'UIStateShouldShowMobileDrawer', JSON.stringify( false ) );
-			return {
-				shouldShowMobileDrawer: false,
-				isLarge: true
-			};
+		if( isLarge ){
+			// If we're now large, but was not before
+			setMobileDrawer( false ); // Retract the mobile drawer
 		}
 
-		if( !isLarge && wasLarge ){
-			return {
-				isLarge: false
-			}
+		// Else do nothing
+
+	}, [isLarge] );
+
+	// Determine if there should be a margin for page content
+	const contentMargin = isLarge && showDeskDrawer ? theme.drawerWidth : 0;
+
+	// Drawer toggle based on size
+	const toggleDrawer = () => {
+		if( isLarge ){
+			setDeskDrawer( !showDeskDrawer );
+		} else {
+			setMobileDrawer( !showMobileDrawer );
 		}
+	};
 
-		return null;
+	const classes = useStyles();
 
-	}
+	return(
 
-	/* UI States shouldn't be in Redux
-	 *
-	 * A width aware toggle for drawer
-	 */
-	toggleDrawer(){
-		this.setState( ( state ) => {
-			if( state.isLarge ){
-				let newState = !state.shouldShowDrawer;
+		/* Kept around for staging */
+		<Router basename={process.env.URL_BASE_NAME} >
+			<>
+				<Navbar toggleDrawer={toggleDrawer} />
+				<MenuDrawer
+					showDeskDrawer={showDeskDrawer}
+					showMobileDrawer={showMobileDrawer}
+					toggleDrawer={toggleDrawer}
+					retractMobileDrawer={() => setMobileDrawer( false )}
+				/>
 
-				localStorage.setItem( 'UIStateShouldShowDrawer', JSON.stringify( newState ) );
-				return {
-					shouldShowDrawer: newState
-				};
-			} else {
-				return {
-					shouldShowMobileDrawer: !state.shouldShowMobileDrawer
-				};
-			}
-		});
-	}
-
-	/* Specifically for the Menu Buttons in Small Configuration
-	 * Will turn off Mobile Drawer once navigated
-	 */
-	turnOffMobileDrawer(){
-		this.setState({
-			shouldShowMobileDrawer: false
-		});
-	}
-
-
-	render(){
-		const contentMargin = this.state.isLarge && this.state.shouldShowDrawer ? this.props.theme.drawerWidth : 0;
-
-		return(
-
-			/* Kept around for staging */
-			<Router basename={process.env.URL_BASE_NAME} >
-				<>
-                    <Navbar toggleDrawer={this.toggleDrawer} />
-					<MenuDrawer
-						shouldShowDrawer={this.state.shouldShowDrawer}
-						shouldShowMobileDrawer={this.state.shouldShowMobileDrawer}
-						toggleDrawer={this.toggleDrawer}
-						turnOffMobileDrawer={this.turnOffMobileDrawer}
-					/>
-
-					<div style={ { marginLeft: contentMargin } }>
-						<div className={this.props.classes.pageContainer}>
-							<Switch>
-								<Route path="/cubes" component={CubeList} />
-								<Route path="/cube/:id/:edit?" component={DisplayCube} />
-								<Route exact path="/" component={Splash} />
-							</Switch>
-						</div>
+				<div style={ { marginLeft: contentMargin } }>
+					<div className={classes.pageContainer}>
+						<Switch>
+							<Route path="/cubes" component={CubeList} />
+							<Route path="/cube/:id/:edit?" component={DisplayCube} />
+							<Route exact path="/" component={Splash} />
+						</Switch>
 					</div>
-				</>
-			</Router>
+				</div>
+			</>
+		</Router>
 
-		)
-	}
+	)
 
 }
 
@@ -141,5 +101,4 @@ function mapStateToProps( state ){
 }
 
 
-let wtww = withTheme()( withWidth( { withTheme: true } )( withStyles(styles)(AppWithTheme) ) );
-export default connect( mapStateToProps )( wtww );
+export default connect( mapStateToProps )( AppWithTheme );

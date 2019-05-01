@@ -1,38 +1,37 @@
 {
   "name": "hexahedron",
   "version": "0.0.1",
-  "description": "A Cube management software",
+  "description": "A Cube Management software built with React and Material UI",
+  "main": "index.html",
   "scripts": {
     "dev": "parcel index.html --out-dir build/dev",
     "stage": "cross-env NODE_ENV=staging parcel build index.html --out-dir build/stage --public-url /beta/",
-    "build": "parcel build index.html --out-dir build/prod --no-source-maps",
-    "buildHoist": "parcel build index.html --out-dir build/prod2 --experimental-scope-hoisting"
+    "build": "parcel build index.html --out-dir build/prod --no-source-maps"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TriangularCube/Hex.git"
+    "url": "git+https://github.com/TriangularCube/Hex-frontend.git"
   },
   "author": "Michael Liu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TriangularCube/Hex/issues"
+    "url": "https://github.com/TriangularCube/Hex-frontend/issues"
   },
-  "homepage": "https://github.com/TriangularCube/Hex#readme",
-  "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/preset-react": "^7.0.0",
-    "cross-env": "^5.2.0",
-    "parcel-bundler": "^1.12.3"
-  },
+  "homepage": "https://github.com/TriangularCube/Hex-frontend#readme",
   "dependencies": {
-    "@material-ui/core": "^3.9.3",
-    "@material-ui/icons": "^3.0.2",
+    "@material-ui/core": "^4.0.0-beta.0",
+    "@material-ui/styles": "^4.0.0-beta.0",
     "prop-types": "^15.7.2",
-    "redux-saga": "^1.0.2",
-    "react-redux": "^7.0.2",
-    "react-router-dom": "^5.0.0",
-    "redux": "^4.0.1",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.0",
+    "redux-saga": "^1.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "cross-env": "^5.2.0"
   }
 }

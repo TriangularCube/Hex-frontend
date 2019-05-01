@@ -6,30 +6,18 @@ import store from "./App/Redux/store";
 
 import App from "./App/App";
 
-class Index extends React.Component{
-
-    constructor(props){
-        super(props);
-
-        // Load fonts
-        WebFont.load({
-            google: {
-                families: [ 'Roboto:300,500,700' ]
-            }
-        });
-
+WebFont.load({
+    google: {
+        families: [ 'Roboto:300,500,700' ]
     }
+});
 
-    render(){
-        return(
-
-            <Provider store={store}>
-                <App />
-            </Provider>
-
-        )
-    }
-
+function Index(){
+    return(
+        <Provider store={store}>
+            <App />
+        </Provider>
+    );
 }
 
 ReactDOM.render( <Index />, document.getElementById( 'root' ) );

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 
 // Material UI Utils
-import withStyles from "@material-ui/core/es/styles/withStyles";
+import makeStyles from "@material-ui/styles/makeStyles";
 
 // Material UI Components
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer/index";
@@ -18,7 +18,7 @@ import ListItemText from "@material-ui/core/ListItemText/index";
 import Divider from "@material-ui/core/Divider/index";
 
 
-const styles = theme => ({
+const useStyles = makeStyles( theme => ({
     spacer: {
         ...theme.mixins.toolbar
     },
@@ -34,75 +34,75 @@ const styles = theme => ({
     divider: {
         flexGrow: 1
     }
-});
+}));
 
-class MenuDrawer extends React.PureComponent{
 
-    render(){
-        const {classes, shouldShowDrawer, shouldShowMobileDrawer, toggleDrawer, turnOffMobileDrawer} = this.props;
+function MenuDrawer( props ){
 
-        // Link Button, used in Drawer
-        const LinkButton = (name, to) => (
-            <Button component={Link} to={to} onClick={ () => turnOffMobileDrawer() }>{name}</Button>
-        );
+    const classes = useStyles();
+    const { showMobileDrawer, showDeskDrawer, toggleDrawer, retractMobileDrawer } = props;
 
-        // List of components to display in Drawer. Separated here since it's used twice
-        const DrawerList = (
-            <>
-                {/* Shim for proper spacing under the appbar */}
-                <div className={classes.spacer} />
-                <div className={classes.spacerPadding} />
+    // Link Button, used in Drawer
+    const LinkButton = (name, to) => (
+        <Button component={Link} to={to} onClick={ () => retractMobileDrawer() }>{name}</Button>
+    );
 
-                {/* Possibly use with List */}
-                {LinkButton( 'Main Page', '/' )}
+    // List of components to display in Drawer. Separated here since it's used twice
+    const DrawerList = (
+        <>
+            {/* Shim for proper spacing under the App Bar  */}
+            <div className={classes.spacer} />
+            <div className={classes.spacerPadding} />
 
-                {LinkButton( 'My Cubes', '/cubes' )}
+            {/* Possibly use with List */}
+            {LinkButton( 'Main Page', '/' )}
 
-                {LinkButton( 'A Cube', '/cube/0' )}
+            {LinkButton( 'My Cubes', '/cubes' )}
 
-                <div className={classes.divider}/>
+            {LinkButton( 'A Cube', '/cube/0' )}
 
-                <Divider />
-                <List>
-                    <ListItem button>
-                        {/*<ListItemIcon />*/}
-                        <ListItemText>
-                            Credits or something!
-                        </ListItemText>
-                    </ListItem>
-                </List>
-            </>
-        );
+            <div className={classes.divider}/>
 
-        return(
+            <Divider />
+            <List>
+                <ListItem button>
+                    {/*<ListItemIcon />*/}
+                    <ListItemText>
+                        Credits or something!
+                    </ListItemText>
+                </ListItem>
+            </List>
+        </>
+    );
 
-            <>
-                {/* First the Mobile Drawer */}
-                <Hidden smUp implementation="js">
-                    <SwipeableDrawer open={ shouldShowMobileDrawer } onClose={ () => toggleDrawer() } onOpen={ () => toggleDrawer() }>
-                        {DrawerList}
-                    </SwipeableDrawer>
-                </Hidden>
+    return(
 
-                {/* Then the large sized Drawer */}
-                <Hidden xsDown implementation="js">
-                    <Drawer variant='persistent' open={ shouldShowDrawer } classes={{paper: classes.drawerPaper}}>
-                        {DrawerList}
-                    </Drawer>
-                </Hidden>
-            </>
-        );
-    }
+        <>
+            {/* First the Mobile Drawer */}
+            <Hidden smUp implementation="js">
+                <SwipeableDrawer open={ showMobileDrawer } onClose={ () => retractMobileDrawer } onOpen={ () => toggleDrawer() }>
+                    {DrawerList}
+                </SwipeableDrawer>
+            </Hidden>
+
+            {/* Then the large sized Drawer */}
+            <Hidden xsDown implementation="js">
+                <Drawer variant='persistent' open={ showDeskDrawer } classes={{paper: classes.drawerPaper}}>
+                    {DrawerList}
+                </Drawer>
+            </Hidden>
+        </>
+    );
 
 }
 
+
+
 MenuDrawer.propTypes = {
-    classes: PropTypes.object.isRequired,
-    shouldShowDrawer: PropTypes.bool.isRequired,
-    shouldShowMobileDrawer: PropTypes.bool.isRequired,
+    showDeskDrawer: PropTypes.bool.isRequired,
+    showMobileDrawer: PropTypes.bool.isRequired,
     toggleDrawer: PropTypes.func.isRequired,
-    turnOffMobileDrawer: PropTypes.func.isRequired
+    retractMobileDrawer: PropTypes.func.isRequired
 };
 
-let ws = withStyles( styles )( MenuDrawer );
-export default ws;
+export default MenuDrawer;

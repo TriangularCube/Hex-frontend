@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // Material UI Utils
-import withStyles from "@material-ui/core/styles/withStyles";
+import makeStyles from "@material-ui/styles/makeStyles";
 
 // Material UI Components
 import Card from "@material-ui/core/Card";
@@ -13,9 +13,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Chip from "@material-ui/core/Chip";
 
 // Icons
-import EditIcon from "@material-ui/icons/Edit";
+// import EditIcon from "@material-ui/icons/Edit";
 
-const styles = theme => ({
+const useStyles = makeStyles( theme => ({
 
     card: {
         margin: 2,
@@ -27,7 +27,7 @@ const styles = theme => ({
         }
     },
     contentPad: {
-        padding: theme.spacing.unit * 2
+        padding: theme.spacing( 2 )
     },
     cubeInfo: {
         flexGrow: 1
@@ -39,73 +39,65 @@ const styles = theme => ({
         height: 20
     }
 
-});
+}));
 
-class CubeCard extends React.PureComponent{
 
-    render(){
-        // TODO Shim
-        const { classes } = this.props;
-        return(
+function CubeCard(){
 
-            // Grid item to be placed in a grid from parent
-            <Grid item>
+    const classes = useStyles();
 
-                {/* Display card, sharp corners */}
-                <Card className={ classes.card } square={true}>
+    return(
 
-                    {/* I would normally put a CardContent here, but it doesn't seem like its needed */}
+        // Grid item to be placed in a grid from parent
+        <Grid item>
 
-                    {/* Another grid inside the card*/}
-                    <Grid item container spacing={8}>
+            {/* Display card, sharp corners */}
+            <Card className={ classes.card } square={true}>
 
-                        {/* First item, the Left side of the card*/}
-                        <Grid item className={classes.cubeInfo}>
+                {/* I would normally put a CardContent here, but it doesn't seem like its needed */}
 
-                            {/* Action area, so the whole left side is clickable */}
-                            <CardActionArea>
+                {/* Another grid inside the card*/}
+                <Grid item container spacing={8}>
 
-                                {/* Add back the padding normally in a CardContent */}
-                                <div className={classes.contentPad}>
+                    {/* First item, the Left side of the card*/}
+                    <Grid item className={classes.cubeInfo}>
 
-                                    {/* Cube Name! */}
-                                    <Typography component="h5" variant="h5">
-                                        This is a Cube Card!
-                                    </Typography>
+                        {/* Action area, so the whole left side is clickable */}
+                        <CardActionArea>
 
-                                    {/* Cube Description! */}
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                        This is a Cube Description!
-                                    </Typography>
+                            {/* Add back the padding normally in a CardContent */}
+                            <div className={classes.contentPad}>
 
-                                    {/* Chips for cube tags! May remove later TODO*/}
-                                    <Chip className={classes.chip} color="primary" label="Tag!" />
-                                </div>
-                            </CardActionArea>
-                        </Grid>
+                                {/* Cube Name! */}
+                                <Typography component="h5" variant="h5">
+                                    This is a Cube Card!
+                                </Typography>
 
-                        {/* Second Grid Item, for Buttons */}
-                        <Grid item>
+                                {/* Cube Description! */}
+                                <Typography variant="subtitle1" color="textSecondary">
+                                    This is a Cube Description!
+                                </Typography>
 
-                            {/* The Edit Button, aligned to the right */}
-                            <IconButton className={classes.editButton}>
-                                <EditIcon />
-                            </IconButton>
-                        </Grid>
-
+                                {/* Chips for cube tags! May remove later TODO*/}
+                                <Chip className={classes.chip} color="primary" label="Tag!" />
+                            </div>
+                        </CardActionArea>
                     </Grid>
-                </Card>
-            </Grid>
-        )
-    }
+
+                    {/* Second Grid Item, for Buttons */}
+                    <Grid item>
+
+                        {/* The Edit Button, aligned to the right */}
+                        <IconButton className={classes.editButton}>
+                            {/*<EditIcon />*/}
+                        </IconButton>
+                    </Grid>
+
+                </Grid>
+            </Card>
+        </Grid>
+    )
 
 }
 
-CubeCard.propTypes = {
-    classes: PropTypes.object.isRequired
-};
-
-
-let withAddedStyle = withStyles( styles )( CubeCard );
-
-export default withAddedStyle;
+export default CubeCard;

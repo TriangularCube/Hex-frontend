@@ -1,9 +1,6 @@
 const spacing = 8;
 
 export default {
-    spacing: {
-        unit: spacing
-    },
     typography: {
         useNextVariants: true // Apparently default typography uses features being deprecated soon
     },
@@ -14,6 +11,7 @@ export default {
         }
     },
     drawerWidth: 220,
+    // Have to change Menu Drawer Hidden implementation as well
     isLarge: 'sm',
     pageMaxWidth: 900
 };

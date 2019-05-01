@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Material UI
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
@@ -22,11 +22,11 @@ class App extends React.Component{
         let useTheme = ( this.props.user && this.props.user.theme ) ? this.props.user.theme : defaultTheme;
 
         return(
-            <MuiThemeProvider theme={ useTheme }>
+            <ThemeProvider theme={ useTheme }>
                 <CssBaseline />
 
                 <AppWithTheme />
-            </MuiThemeProvider>
+            </ThemeProvider>
         )
     }
 

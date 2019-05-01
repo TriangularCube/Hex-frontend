@@ -1,42 +1,38 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 // Material UI Utils
-import withStyles from "@material-ui/core/styles/withStyles"
+import makeStyles from "@material-ui/styles/makeStyles";
 
 // Material UI Components
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-const styles = {
-
+const useStyles = makeStyles({
 	paper: {
 		textAlign: 'center'
 	}
+});
 
-};
+function Splash(){
 
-class Splash extends React.PureComponent{
+	const classes = useStyles();
 
-	componentDidMount() {
+	// Set title in a hook
+	useEffect(() => {
 		document.title = 'Hexahedron';
-	}
+	}, [] );
 
-	render(){
-		const { classes } = this.props;
+	// TODO Placeholder page
+	return(
 
-		// TODO Placeholder page
-		return(
+		<Paper className={classes.paper}>
+			<Typography>
+				Splash Page
+			</Typography>
+		</Paper>
 
-			<Paper className={classes.paper}>
-				<Typography>
-					Splash Page
-				</Typography>
-			</Paper>
-
-		)
-	}
+	)
 
 }
 
-let ws = withStyles( styles )( Splash );
-export default ws;
+export default Splash;

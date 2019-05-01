@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Material UI Components
 import Grid from "@material-ui/core/Grid";
@@ -10,36 +10,30 @@ import PageTitle from "../../Common/PageTitle";
 
 const pageName = 'My Cubes';
 
-class CubeList extends React.PureComponent{
+function CubeList(){
 
-    componentDidMount() {
-        // Update Document Title
+    // Document Title
+    useEffect( () => {
         document.title = pageName;
-    }
+    }, [] );
 
-    // TODO Fetch user cube list
+    return(
 
-    render(){
-        return(
+        <>
+            <PageTitle>{pageName}</PageTitle>
 
-            <>
-                <PageTitle>{pageName}</PageTitle>
+            {/* Grid of Cube List */}
+            <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start'>
 
-                {/* Grid of Cube List */}
-                <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start'>
+                {/* TODO Replace with list of cubes from User*/}
+                <CubeCard/>
+                <CubeCard/>
+                <CubeCard/>
 
+            </Grid>
+        </>
 
-
-                    {/* TODO Replace with list of cubes from User*/}
-                    <CubeCard/>
-                    <CubeCard/>
-                    <CubeCard/>
-
-                </Grid>
-            </>
-
-        )
-    }
+    )
 
 }
 
