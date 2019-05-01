@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-// Material UI
+// Material UI Utils
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import {makeStyles} from "@material-ui/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery/useMediaQuery";
 
 // Theme
 import defaultThemeObject from "./Util/DefaultTheme";
@@ -12,23 +14,99 @@ const defaultTheme = createMuiTheme( defaultThemeObject );
 // Redux
 import { connect } from "react-redux";
 
+// Router
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+
 // The App
-import AppWithTheme from "./AppWithTheme";
+import Navbar from "./Components/Navbar";
+import MenuDrawer from "./Components/MenuDrawer";
+import CubeList from "./Components/Pages/UserCubeList/CubeList";
+import DisplayCube from "./Components/Pages/DisplayCube/DisplayCube";
+import Splash from "./Components/Pages/Splash/Splash";
 
-class App extends React.Component{
 
-    render(){
-        // TODO pull this into a function
-        let useTheme = ( this.props.user && this.props.user.theme ) ? this.props.user.theme : defaultTheme;
+const saveStateName = 'UIStateShowDrawer';
 
-        return(
-            <ThemeProvider theme={ useTheme }>
-                <CssBaseline />
-
-                <AppWithTheme />
-            </ThemeProvider>
-        )
+const useStyles = makeStyles(({
+    pageContainer: {
+        maxWidth: 1100,
+        margin: `24px auto`
     }
+}));
+
+function App( props ){
+
+    // Fetch state from LocalStorage
+    let shouldShowDrawer = JSON.parse( localStorage.getItem( saveStateName ) );
+
+    // Show Drawer State Hooks
+    const [showDeskDrawer, setDeskDrawer] = useState( shouldShowDrawer );
+    const [showMobileDrawer, setMobileDrawer] = useState( false );
+
+    // Figure out what theme to use
+    const useTheme = ( props.user && props.user.theme ) ? props.user.theme : defaultTheme;
+
+    // Use Media Query
+    const isLarge = useMediaQuery( useTheme.breakpoints.up( useTheme.isLarge ) );
+
+    // Turn mobile drawer off if we've switched to Desktop view
+    useEffect( () => {
+
+        if( isLarge ){
+            // If we're now large, but was not before
+            setMobileDrawer( false ); // Retract the mobile drawer
+        }
+
+        // Else do nothing
+
+    }, [isLarge] );
+
+    // Determine if there should be a margin for page content
+    const contentMargin = isLarge && showDeskDrawer ? useTheme.drawerWidth : 0;
+
+    // Drawer toggle based on size
+    const toggleDrawer = () => {
+        if( isLarge ){
+            const target = !showDeskDrawer;
+            setDeskDrawer( target );
+
+            // Save to local storage for persistence
+            localStorage.setItem( saveStateName, JSON.stringify( target ) );
+        } else {
+            setMobileDrawer( !showMobileDrawer );
+        }
+    };
+
+    const classes = useStyles();
+
+    return(
+        <ThemeProvider theme={ useTheme }>
+            <CssBaseline />
+
+            {/* Kept around for staging */}
+            <Router basename={process.env.URL_BASE_NAME} >
+                <>
+                    <Navbar toggleDrawer={toggleDrawer} />
+                    <MenuDrawer
+                        showDeskDrawer={showDeskDrawer}
+                        showMobileDrawer={showMobileDrawer}
+                        toggleDrawer={toggleDrawer}
+                        retractMobileDrawer={() => setMobileDrawer( false )}
+                    />
+
+                    <div style={ { marginLeft: contentMargin } }>
+                        <div className={classes.pageContainer}>
+                            <Switch>
+                                <Route path="/cubes" component={CubeList} />
+                                <Route path="/cube/:id/:edit?" component={DisplayCube} />
+                                <Route exact path="/" component={Splash} />
+                            </Switch>
+                        </div>
+                    </div>
+                </>
+            </Router>
+        </ThemeProvider>
+    )
 
 }
 
