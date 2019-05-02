@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/TriangularCube/Hex-frontend#readme",
   "dependencies": {
+    "@loadable/component": "^5.9.0",
     "@material-ui/core": "^4.0.0-beta.0",
     "@material-ui/styles": "^4.0.0-beta.0",
     "prop-types": "^15.7.2",
