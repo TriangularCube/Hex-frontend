@@ -17,15 +17,17 @@ const useStyles = makeStyles( theme => ({
     },
     main: {
         margin: 0,
-        flex: '1 1 70%'
+        flex: '2 1'
     },
     searchColumn: {
         order: 2,
-        width: '150px',
-        flexShrink: 0,
+        flexGrow: 1,
         position: 'sticky',
         margin: 0,
-        [theme.breakpoints.up('sm')]: {
+
+        // Hide display under small
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
             display: 'block'
         }
     }
@@ -41,25 +43,30 @@ function EditCube( props ){
 
     return(
         <>
-            <PageTitle>
-                Cube A
-            </PageTitle>
+
 
             {/* Root div for max width */}
             <div className={classes.horizontalSplit}>
-                {/* Search Column */}
-                <div className={classes.searchColumn}>
-                    <Paper>
-                        Something!
-                    </Paper>
-                </div>
-
                 {/* Main Column */}
                 <main className={classes.main}>
+                    <PageTitle>
+                        Cube A
+                    </PageTitle>
+
                     <Paper>
                         Cube A
                     </Paper>
                 </main>
+
+                {/* Search Column */}
+                <div className={classes.searchColumn}>
+                    <PageTitle>
+                        Search
+                    </PageTitle>
+                    <Paper>
+                        Something!
+                    </Paper>
+                </div>
             </div>
 
         </>

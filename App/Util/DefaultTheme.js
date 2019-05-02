@@ -4,6 +4,5 @@ export default {
     },
     drawerWidth: 220,
     // Have to change Menu Drawer Hidden implementation as well
-    isLarge: 'sm',
-    pageMaxWidth: 900
+    isLarge: 'sm'
 };

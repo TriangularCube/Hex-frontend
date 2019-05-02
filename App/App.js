@@ -29,8 +29,9 @@ const saveStateName = 'UIStateShowDrawer';
 
 const useStyles = makeStyles(({
     pageContainer: {
-        maxWidth: 1100,
-        margin: `24px auto`
+        maxWidth: 1200,
+        margin: `24px auto`,
+        padding: '0 16px'
     }
 }));
 
