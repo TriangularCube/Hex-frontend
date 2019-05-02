@@ -20,9 +20,12 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 // The App
 import Navbar from "./Components/Navbar";
 import MenuDrawer from "./Components/MenuDrawer";
-import UserCubeList from "./Components/Pages/UserCubeList/UserCubeList";
-import EditCube from "./Components/Pages/UserCubeList/EditCube";
-import Splash from "./Components/Pages/Splash/Splash";
+
+import loadable from "@loadable/component";
+const Splash = loadable( () => import( "./Components/Pages/Splash/Splash" ) );
+const UserCubeList = loadable( () => import( "./Components/Pages/UserCubeList/UserCubeList" ) );
+const EditCube = loadable( () => import ( "./Components/Pages/UserCubeList/EditCube" ) );
+
 
 
 const saveStateName = 'UIStateShowDrawer';
