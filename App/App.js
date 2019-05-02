@@ -20,7 +20,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 // The App
 import Navbar from "./Components/Navbar";
 import MenuDrawer from "./Components/MenuDrawer";
-import CubeList from "./Components/Pages/UserCubeList/CubeList";
+import UserCubeList from "./Components/Pages/UserCubeList/UserCubeList";
 import EditCube from "./Components/Pages/UserCubeList/EditCube";
 import Splash from "./Components/Pages/Splash/Splash";
 
@@ -83,10 +83,11 @@ function App( props ){
         <ThemeProvider theme={ useTheme }>
             <CssBaseline />
 
+            <Navbar toggleDrawer={toggleDrawer} />
+
             {/* Kept around for staging */}
             <Router basename={process.env.URL_BASE_NAME} >
                 <>
-                    <Navbar toggleDrawer={toggleDrawer} />
                     <MenuDrawer
                         showDeskDrawer={showDeskDrawer}
                         showMobileDrawer={showMobileDrawer}
@@ -97,7 +98,7 @@ function App( props ){
                     <div style={ { marginLeft: contentMargin } }>
                         <div className={classes.pageContainer}>
                             <Switch>
-                                <Route path="/cubes" component={CubeList} />
+                                <Route path="/cubes" component={UserCubeList} />
                                 <Route path="/cube/:id/:edit?" component={EditCube} />
                                 <Route exact path="/" component={Splash} />
                             </Switch>

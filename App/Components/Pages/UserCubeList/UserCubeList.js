@@ -21,7 +21,7 @@ import PageTitle from "../../Common/PageTitle";
 const pageName = 'My Cubes';
 
 
-function CubeList(){
+function UserCubeList(){
 
     // Document Title
     useEffect( () => {
@@ -133,4 +133,4 @@ function CubeCard(){
 
 }
 
-export default CubeList;
+export default UserCubeList;

@@ -2,18 +2,18 @@ import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 
 // Material UI Utils
-import makeStyles from "@material-ui/styles/makeStyles/index";
+import makeStyles from "@material-ui/styles/makeStyles";
 
 // Material UI Components
-import Typography from "@material-ui/core/Typography/index";
-import Paper from "@material-ui/core/Paper/index";
+import Paper from "@material-ui/core/Paper";
 
 // Custom Components
 import PageTitle from "../../Common/PageTitle";
 
 const useStyles = makeStyles( theme => ({
     horizontalSplit: {
-        display: 'flex'
+        display: 'flex',
+        flexDirection: 'row'
     },
     main: {
         margin: 0,
@@ -31,13 +31,13 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-function EditCube(){
-
-    const classes = useStyles();
+function EditCube( props ){
 
     useEffect( () => {
         document.title = 'Cube A'; // TODO This should be based on cube name
     });
+
+    const classes = useStyles();
 
     return(
         <>
@@ -47,7 +47,6 @@ function EditCube(){
 
             {/* Root div for max width */}
             <div className={classes.horizontalSplit}>
-
                 {/* Search Column */}
                 <div className={classes.searchColumn}>
                     <Paper>
@@ -62,9 +61,9 @@ function EditCube(){
                     </Paper>
                 </main>
             </div>
-        </>
-    )
 
+        </>
+    );
 }
 
 EditCube.propTypes = {

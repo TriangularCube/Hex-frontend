@@ -79,14 +79,14 @@ function MenuDrawer( props ){
 
         <>
             {/* First the Mobile Drawer */}
-            <Hidden smUp implementation="js">
-                <SwipeableDrawer open={ showMobileDrawer } onClose={ () => retractMobileDrawer } onOpen={ () => toggleDrawer() }>
+            <Hidden smUp implementation="css">
+                <SwipeableDrawer open={ showMobileDrawer } onClose={ () => retractMobileDrawer() } onOpen={ () => toggleDrawer() }>
                     {DrawerList}
                 </SwipeableDrawer>
             </Hidden>
 
             {/* Then the large sized Drawer */}
-            <Hidden xsDown implementation="js">
+            <Hidden xsDown implementation="css">
                 <Drawer variant='persistent' open={ showDeskDrawer } classes={{paper: classes.drawerPaper}}>
                     {DrawerList}
                 </Drawer>
