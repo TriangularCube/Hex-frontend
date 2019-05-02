@@ -21,7 +21,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import MenuDrawer from "./Components/MenuDrawer";
 import CubeList from "./Components/Pages/UserCubeList/CubeList";
-import DisplayCube from "./Components/Pages/DisplayCube/DisplayCube";
+import EditCube from "./Components/Pages/UserCubeList/EditCube";
 import Splash from "./Components/Pages/Splash/Splash";
 
 
@@ -98,7 +98,7 @@ function App( props ){
                         <div className={classes.pageContainer}>
                             <Switch>
                                 <Route path="/cubes" component={CubeList} />
-                                <Route path="/cube/:id/:edit?" component={DisplayCube} />
+                                <Route path="/cube/:id/:edit?" component={EditCube} />
                                 <Route exact path="/" component={Splash} />
                             </Switch>
                         </div>

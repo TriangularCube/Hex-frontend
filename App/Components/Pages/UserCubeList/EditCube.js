@@ -2,11 +2,11 @@ import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 
 // Material UI Utils
-import makeStyles from "@material-ui/styles/makeStyles";
+import makeStyles from "@material-ui/styles/makeStyles/index";
 
 // Material UI Components
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography/index";
+import Paper from "@material-ui/core/Paper/index";
 
 // Custom Components
 import PageTitle from "../../Common/PageTitle";
@@ -31,7 +31,7 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-function DisplayCube(){
+function EditCube(){
 
     const classes = useStyles();
 
@@ -67,8 +67,8 @@ function DisplayCube(){
 
 }
 
-DisplayCube.propTypes = {
+EditCube.propTypes = {
     match: PropTypes.object.isRequired
 };
 
-export default DisplayCube;
+export default EditCube;
