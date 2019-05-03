@@ -11,6 +11,9 @@ import useMediaQuery from "@material-ui/core/useMediaQuery/useMediaQuery";
 import defaultThemeObject from "../Data/DefaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
+// Constants
+import * as constants from "/Data/constants";
+
 // Redux
 import { connect } from "react-redux";
 
@@ -32,7 +35,7 @@ const saveStateName = 'UIStateShowDrawer';
 
 const useStyles = makeStyles(({
     pageContainer: {
-        maxWidth: 1200,
+        maxWidth: 1150,
         margin: `24px auto`,
         padding: '0 16px'
     }
@@ -51,7 +54,7 @@ function App( props ){
     const useTheme = ( props.user && props.user.theme ) ? props.user.theme : defaultTheme;
 
     // Use Media Query
-    const isLarge = useMediaQuery( useTheme.breakpoints.up( useTheme.isLarge ) );
+    const isLarge = useMediaQuery( useTheme.breakpoints.up( constants.isLarge ) );
 
     // Turn mobile drawer off if we've switched to Desktop view
     useEffect( () => {
@@ -66,7 +69,7 @@ function App( props ){
     }, [isLarge] );
 
     // Determine if there should be a margin for page content
-    const contentMargin = isLarge && showDeskDrawer ? useTheme.drawerWidth : 0;
+    const contentMargin = isLarge && showDeskDrawer ? constants.drawerWidth : 0;
 
     // Drawer toggle based on size
     const toggleDrawer = () => {
