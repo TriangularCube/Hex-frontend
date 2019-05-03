@@ -103,7 +103,11 @@ function EditCube( props ){
     const createList = (children) => {
         let list = [];
         for( let i = 0; i < 60; i++){
-            list.push( <Paper key={i}>{children}</Paper> )
+            list.push(
+                <Typography key={i}>
+                    {children}
+                </Typography>
+            )
         }
         return list;
     };
@@ -125,7 +129,9 @@ function EditCube( props ){
                             {currentCube.name}
                         </PageTitle>
 
-                        {createList('Cube A')}
+                        <div>
+                            {createList('Cube A')}
+                        </div>
 
                     </main>
 
@@ -134,9 +140,9 @@ function EditCube( props ){
                         <PageTitle>
                             Search
                         </PageTitle>
-                        <Paper>
+                        <div>
                             Something!
-                        </Paper>
+                        </div>
                     </div>
                 </div>
 

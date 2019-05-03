@@ -85,7 +85,7 @@ function CubeCard(){
         <Grid item>
 
             {/* Display card, sharp corners */}
-            <Card className={ classes.card } square={true}>
+            <Card className={ classes.card }>
 
                 {/* I would normally put a CardContent here, but it doesn't seem like its needed */}
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 
 // Material UI Utils
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
@@ -51,7 +51,9 @@ function App( props ){
     const [showMobileDrawer, setMobileDrawer] = useState( false );
 
     // Figure out what theme to use
-    const useTheme = ( props.user && props.user.theme ) ? props.user.theme : defaultTheme;
+    const useTheme = ( props.user && props.user.theme ) ?
+        useMemo( () => createMuiTheme( props.user.theme ), [props.user.theme] )
+        : defaultTheme;
 
     // Use Media Query
     const isLarge = useMediaQuery( useTheme.breakpoints.up( constants.isLarge ) );
