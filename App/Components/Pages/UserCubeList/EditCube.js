@@ -17,7 +17,8 @@ import {Typography} from "@material-ui/core";
 
 const useStyles = makeStyles( theme => ({
     horizontalSplit: {
-        display: 'flex'
+        display: 'flex',
+        alignItems: 'flex-start'
     },
     main: {
         margin: 0,
