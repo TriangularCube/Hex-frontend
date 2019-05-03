@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 
 // Material UI Utils
@@ -10,10 +10,14 @@ import Paper from "@material-ui/core/Paper";
 // Custom Components
 import PageTitle from "../../Common/PageTitle";
 
+// Util
+import Cube from "/Data/Cube";
+import * as fetchState from '/Data/FetchState';
+import {Typography} from "@material-ui/core";
+
 const useStyles = makeStyles( theme => ({
     horizontalSplit: {
-        display: 'flex',
-        flexDirection: 'row'
+        display: 'flex'
     },
     main: {
         margin: 0,
@@ -23,6 +27,7 @@ const useStyles = makeStyles( theme => ({
         order: 2,
         flexGrow: 1,
         position: 'sticky',
+        top: 70,
         margin: 0,
 
         // Hide display under small
@@ -35,42 +40,109 @@ const useStyles = makeStyles( theme => ({
 
 function EditCube( props ){
 
+    // Get the match prop so we can fetch the cube ID
+    const { matches } = props;
+
+    // Fetch Status
+    const [fetchStatus, setFetch] = useState( fetchState.FETCH );
+
+    // The current Cube
+    const [ currentCube, setCube ] = useState( new Cube );
+
+    // Fetch the cube from server
     useEffect( () => {
-        document.title = 'Cube A'; // TODO This should be based on cube name
-    });
+        // TODO Get cube
+        setFetch( fetchState.FETCH );
+
+        /* Don't need this right now
+        fetch( process.env.API_URL + 'cube/0' )
+
+            .then( (res) => {
+                if( res.ok ){
+                    return new Promise( resolve => setTimeout( () => resolve(res), 1000 ) );
+                }
+                throw new Error( 'Network response error' );
+            })
+            .then( (res) => {
+                return res.json();
+            })
+            .then( ( json ) => {
+                setCube( new Cube( json ) );
+                setFetch( fetchState.DONE );
+            })
+            .catch( (error) => {
+                setFetch( fetchState.ERROR );
+                console.log( error.message );
+            });
+            */
+
+        // TODO remove this later
+        setCube( new Cube(
+            {
+                name: 'First Cube!'
+            }
+        ) );
+        setFetch( fetchState.DONE );
+    }, [] );
+
+    useEffect( () => {
+        document.title = currentCube.name || "Loading...";
+    }, [currentCube] );
 
     const classes = useStyles();
 
-    return(
-        <>
+    const CubeSection = () => {
+        return(
+            <Paper>
 
+            </Paper>
+        )
+    };
 
-            {/* Root div for max width */}
-            <div className={classes.horizontalSplit}>
-                {/* Main Column */}
-                <main className={classes.main}>
-                    <PageTitle>
-                        Cube A
-                    </PageTitle>
+    const createList = (children) => {
+        let list = [];
+        for( let i = 0; i < 60; i++){
+            list.push( <Paper key={i}>{children}</Paper> )
+        }
+        return list;
+    };
 
-                    <Paper>
-                        Cube A
-                    </Paper>
-                </main>
+    if( fetchStatus === fetchState.FETCH ){
+        return (
+            <Typography>
+                Loading...
+            </Typography>
+        )
+    } else if( fetchStatus === fetchState.DONE ){
+        return(
+            <>
+                {/* Root div for max width */}
+                <div className={classes.horizontalSplit}>
+                    {/* Main Column */}
+                    <main className={classes.main}>
+                        <PageTitle>
+                            {currentCube.name}
+                        </PageTitle>
 
-                {/* Search Column */}
-                <div className={classes.searchColumn}>
-                    <PageTitle>
-                        Search
-                    </PageTitle>
-                    <Paper>
-                        Something!
-                    </Paper>
+                        {createList('Cube A')}
+
+                    </main>
+
+                    {/* Search Column */}
+                    <div className={classes.searchColumn}>
+                        <PageTitle>
+                            Search
+                        </PageTitle>
+                        <Paper>
+                            Something!
+                        </Paper>
+                    </div>
                 </div>
-            </div>
 
-        </>
-    );
+            </>
+        );
+    }
+
 }
 
 EditCube.propTypes = {
