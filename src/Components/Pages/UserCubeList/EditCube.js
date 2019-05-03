@@ -11,8 +11,8 @@ import Paper from "@material-ui/core/Paper";
 import PageTitle from "../../Common/PageTitle";
 
 // Util
-import Cube from "/Data/Cube";
-import * as fetchState from '/Data/FetchState';
+import Cube from "~/Data/Cube";
+import * as fetchState from "~/Data/FetchState";
 import {Typography} from "@material-ui/core";
 
 const useStyles = makeStyles( theme => ({

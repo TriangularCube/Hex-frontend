@@ -8,11 +8,11 @@ import {makeStyles} from "@material-ui/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery/useMediaQuery";
 
 // Theme
-import defaultThemeObject from "../Data/DefaultTheme";
+import defaultThemeObject from "~/Data/DefaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Constants
-import * as constants from "/Data/constants";
+import * as constants from "./Data/constants";
 
 // Redux
 import { connect } from "react-redux";
@@ -21,13 +21,13 @@ import { connect } from "react-redux";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 // The App
-import Navbar from "./Components/Navbar";
-import MenuDrawer from "./Components/MenuDrawer";
+import Navbar from "~/Components/Navbar";
+import MenuDrawer from "~/Components/MenuDrawer";
 
 import loadable from "@loadable/component";
-const Splash = loadable( () => import( "./Components/Pages/Splash/Splash" ) );
-const UserCubeList = loadable( () => import( "./Components/Pages/UserCubeList/UserCubeList" ) );
-const EditCube = loadable( () => import ( "./Components/Pages/UserCubeList/EditCube" ) );
+const Splash = loadable( () => import( "~/Components/Pages/Splash/Splash" ) );
+const UserCubeList = loadable( () => import( "~/Components/Pages/UserCubeList/UserCubeList" ) );
+const EditCube = loadable( () => import ( "~/Components/Pages/UserCubeList/EditCube" ) );
 
 
 
