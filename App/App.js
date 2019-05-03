@@ -8,7 +8,7 @@ import {makeStyles} from "@material-ui/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery/useMediaQuery";
 
 // Theme
-import defaultThemeObject from "./Util/DefaultTheme";
+import defaultThemeObject from "../Data/DefaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Redux
