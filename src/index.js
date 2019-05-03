@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { Provider } from "react-redux";
-import store from "./App/Redux/store";
+import store from "./Redux/store";
 
-import App from "./App/App";
+import App from "./App";
 
 WebFont.load({
     google: {

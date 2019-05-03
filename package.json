@@ -2,12 +2,12 @@
   "name": "hexahedron",
   "version": "0.0.1",
   "description": "A Cube Management software built with React and Material UI",
-  "main": "index.html",
+  "main": "src/index.html",
   "scripts": {
-    "dev": "parcel index.html --out-dir build/dev",
-    "dev-no-cache": "parcel index.html --out-dir build/dev --no-cache",
-    "stage": "cross-env NODE_ENV=staging parcel build index.html --out-dir build/stage --public-url /beta/",
-    "build": "parcel build index.html --out-dir build/prod --no-source-maps"
+    "dev": "parcel src/index.html --out-dir build/dev",
+    "dev-no-cache": "parcel src/index.html --out-dir build/dev --no-cache",
+    "stage": "cross-env NODE_ENV=staging parcel build src/index.html --out-dir build/stage --public-url /beta/",
+    "build": "parcel build src/index.html --out-dir build/prod --no-source-maps"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,6 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "cross-env": "^5.2.0",
-    "cssnano": "^4.1.10"
+    "eslint": "^5.16.0"
   }
 }
