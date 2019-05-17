@@ -3,7 +3,10 @@ export default {
         useNextVariants: true // Apparently default typography uses features being deprecated soon
     },
     palette: {
-        type: 'dark'
+        type: 'dark',
+        primary: {
+            main: '#ff9800'
+        }
     },
     props: {
         MuiPaper: {

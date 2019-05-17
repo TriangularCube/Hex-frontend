@@ -10,8 +10,8 @@ import Typography from "@material-ui/core/Typography/index";
 import IconButton from "@material-ui/core/IconButton/index";
 
 // Icons
-// import AccIcon from "@material-ui/icons/AccountCircle";
-// import MenuIcon from "@material-ui/icons/Menu";
+import AccIcon from "@material-ui/icons/AccountCircle";
+import MenuIcon from "@material-ui/icons/Menu";
 
 
 const useStyles = makeStyles( theme => ({
@@ -48,7 +48,7 @@ function Navbar( props ){
                         onClick={ () => props.toggleDrawer() }
                         className={ classes.menuButton }
                     >
-                        {/*<MenuIcon />*/}
+                        <MenuIcon />
                     </IconButton>
 
                     {/* Site Title */}
@@ -60,7 +60,7 @@ function Navbar( props ){
                     {/* TODO will probably replace this with Sidebar Account Displays */}
                     {/* User button */}
                     <IconButton color='inherit'>
-                        {/*<AccIcon/>*/}
+                        <AccIcon/>
                     </IconButton>
 
                 </Toolbar>

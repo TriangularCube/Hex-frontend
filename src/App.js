@@ -92,8 +92,6 @@ function App( props ){
         <ThemeProvider theme={ useTheme }>
             <CssBaseline />
 
-            <Navbar toggleDrawer={toggleDrawer} />
-
             {/* Kept around for staging */}
             <Router basename={process.env.URL_BASE_NAME} >
                 <>
@@ -105,6 +103,7 @@ function App( props ){
                     />
 
                     <div style={ { marginLeft: contentMargin } }>
+                        <Navbar toggleDrawer={toggleDrawer} />
                         <div className={classes.pageContainer}>
                             <Switch>
                                 <Route path="/cubes" component={UserCubeList} />

@@ -45,7 +45,7 @@ function EditCube( props ){
     const { matches } = props;
 
     // Fetch Status
-    const [fetchStatus, setFetch] = useState( fetchState.FETCH );
+    const [fetchStatus, setFetch] = useState( fetchState.NONE );
 
     // The current Cube
     const [ currentCube, setCube ] = useState( new Cube );
@@ -78,12 +78,18 @@ function EditCube( props ){
             */
 
         // TODO remove this later
-        setCube( new Cube(
-            {
-                name: 'First Cube!'
-            }
-        ) );
-        setFetch( fetchState.DONE );
+        const fetchCube = async () => {
+            let someCube = await import( '~/Data/mock/testCube' );
+
+            setCube( new Cube( someCube.default ) );
+            setFetch( fetchState.DONE );
+        };
+
+        fetchCube()
+            .catch( ( error ) => {
+                setFetch( fetchState.ERROR );
+                console.log( error );
+            })
     }, [] );
 
     useEffect( () => {
@@ -100,6 +106,7 @@ function EditCube( props ){
         )
     };
 
+    // TODO debug
     const createList = (children) => {
         let list = [];
         for( let i = 0; i < 60; i++){
@@ -112,42 +119,55 @@ function EditCube( props ){
         return list;
     };
 
-    if( fetchStatus === fetchState.FETCH ){
-        return (
-            <Typography>
-                Loading...
-            </Typography>
-        )
-    } else if( fetchStatus === fetchState.DONE ){
-        return(
-            <>
-                {/* Root div for max width */}
-                <div className={classes.horizontalSplit}>
-                    {/* Main Column */}
-                    <main className={classes.main}>
-                        <PageTitle>
-                            {currentCube.name}
-                        </PageTitle>
+    switch ( fetchStatus ) {
+        case fetchState.NONE:
+            return (
+                <Typography>
+                    Waiting for page to load
+                </Typography>
+            );
+        case fetchState.FETCH:
+            return (
+                <Typography>
+                    Fetching Data...
+                </Typography>
+            );
+        case fetchState.DONE:
+            return(
+                <>
+                    {/* Root div for max width */}
+                    <div className={classes.horizontalSplit}>
+                        {/* Main Column */}
+                        <main className={classes.main}>
+                            <PageTitle>
+                                {currentCube.name}
+                            </PageTitle>
 
-                        <div>
-                            {createList('Cube A')}
-                        </div>
+                            <Paper>
+                                {createList('Cube A')}
+                            </Paper>
 
-                    </main>
+                        </main>
 
-                    {/* Search Column */}
-                    <div className={classes.searchColumn}>
-                        <PageTitle>
-                            Search
-                        </PageTitle>
-                        <div>
-                            Something!
+                        {/* Search Column */}
+                        <div className={classes.searchColumn}>
+                            <PageTitle>
+                                Search
+                            </PageTitle>
+                            <div>
+                                Something!
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </>
-        );
+                </>
+            );
+        case fetchState.ERROR:
+            return (
+                <Typography>
+                    An error has occurred
+                </Typography>
+            )
     }
 
 }

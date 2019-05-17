@@ -1,8 +1,13 @@
+"use strict";
+
 import React from "react";
 import PropTypes from "prop-types";
 
 // Router
 import {Link} from "react-router-dom";
+
+// Redux
+import { connect } from "react-redux";
 
 // Material UI Utils
 import makeStyles from "@material-ui/styles/makeStyles";
@@ -17,16 +22,16 @@ import ListItem from "@material-ui/core/ListItem/index";
 import ListItemText from "@material-ui/core/ListItemText/index";
 import Divider from "@material-ui/core/Divider/index";
 
+import { drawerWidth } from "~/Data/constants/";
+import {Typography} from "@material-ui/core";
+
 
 const useStyles = makeStyles( theme => ({
-    spacer: {
+    userDisplay: {
         ...theme.mixins.toolbar
     },
-    spacerPadding: {
-        height: 2
-    },
     drawerPaper:{
-        width: theme.drawerWidth
+        width: drawerWidth
     },
     drawerButton: {
         flexGrow: 1
@@ -40,7 +45,8 @@ const useStyles = makeStyles( theme => ({
 function MenuDrawer( props ){
 
     const classes = useStyles();
-    const { showMobileDrawer, showDeskDrawer, toggleDrawer, retractMobileDrawer } = props;
+    const { showMobileDrawer, showDeskDrawer, toggleDrawer, retractMobileDrawer, user } = props;
+
 
     // Link Button, used in Drawer
     const LinkButton = (name, to) => (
@@ -51,8 +57,17 @@ function MenuDrawer( props ){
     const DrawerList = (
         <>
             {/* Shim for proper spacing under the App Bar  */}
-            <div className={classes.spacer} />
-            <div className={classes.spacerPadding} />
+            <div className={classes.userDisplay}>
+                { user ? (
+                    <Typography color='inherit'>
+                        {user.name}
+                    </Typography>
+                ) : (
+                    // Display nothing if User isn't present
+                    null
+                )}
+            </div>
+            <Divider />
 
             {/* Possibly use with List */}
             {LinkButton( 'Main Page', '/' )}
@@ -105,4 +120,11 @@ MenuDrawer.propTypes = {
     retractMobileDrawer: PropTypes.func.isRequired
 };
 
-export default MenuDrawer;
+
+function mapStateToProps( state ){
+    return({
+        user: state.user
+    })
+}
+
+export default connect( mapStateToProps )( MenuDrawer );
