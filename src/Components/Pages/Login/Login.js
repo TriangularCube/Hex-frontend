@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Amplify from "aws-amplify";
 const Auth = Amplify.Auth;
 
-async function CreateUser( username, password ){
+async function CreateUser(){
     try{
         const user = await Auth.signUp({
             username: 'bluntweapon',
