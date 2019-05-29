@@ -27,7 +27,8 @@ import MenuDrawer from "~/Components/MenuDrawer";
 import loadable from "@loadable/component";
 const Splash = loadable( () => import( "~/Components/Pages/Splash/Splash" ) );
 const UserCubeList = loadable( () => import( "~/Components/Pages/UserCubeList/UserCubeList" ) );
-const EditCube = loadable( () => import ( "~/Components/Pages/UserCubeList/EditCube" ) );
+const EditCube = loadable( () => import( "~/Components/Pages/UserCubeList/EditCube" ) );
+const Login = loadable( () => import( "~/Components/Pages/Login/Login" ));
 
 
 
@@ -106,6 +107,7 @@ function App( props ){
                         <Navbar toggleDrawer={toggleDrawer} />
                         <div className={classes.pageContainer}>
                             <Switch>
+                                <Route path="/login" component={Login} />
                                 <Route path="/cubes" component={UserCubeList} />
                                 <Route path="/cube/:id/:edit?" component={EditCube} />
                                 <Route exact path="/" component={Splash} />

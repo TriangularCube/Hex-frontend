@@ -12,6 +12,9 @@ WebFont.load({
     }
 });
 
+// Configure Amplify
+import "./Amplify-Config";
+
 function Index(){
     return(
         <Provider store={store}>

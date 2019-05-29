@@ -70,6 +70,8 @@ function MenuDrawer( props ){
             <Divider />
 
             {/* Possibly use with List */}
+            {LinkButton( 'Login', '/login')}
+
             {LinkButton( 'Main Page', '/' )}
 
             {LinkButton( 'My Cubes', '/cubes' )}
