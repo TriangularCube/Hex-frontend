@@ -32,11 +32,27 @@ async function LoginUser(){
     }
 }
 
-async function GetCurrent(){
-    const user = await Auth.currentAuthenticatedUser({
+function GetCurrent(){
+    Auth.currentAuthenticatedUser({
         bypassCache: true
-    });
-    console.log( user );
+    })
+        .then( user => console.log( user ) )
+        .catch( err => console.log( err ) );
+}
+
+async function ConfirmSignup(){
+    try{
+        const data = await Auth.confirmSignUp( 'bluntweapon', '596234' );
+        console.log( data );
+    } catch( e ){
+        console.log( e.message );
+    }
+}
+
+function Logout(){
+    Auth.signOut()
+        .then( () => console.log( "Successfully logged out" ) )
+        .catch( err => console.log( err ) );
 }
 
 function Login(){
@@ -51,6 +67,12 @@ function Login(){
             </Button>
             <Button onClick={ GetCurrent }>
                 Show Current User
+            </Button>
+            <Button onClick={ ConfirmSignup }>
+                Confirm Signup
+            </Button>
+            <Button onClick={ Logout }>
+                Logout
             </Button>
         </>
     );
