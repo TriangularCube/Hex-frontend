@@ -11,7 +11,7 @@
 # deploy contexts will inherit these settings.
 [context.production]
     publish = "build"
-    command = "npm run deploy-no-maps"
+    command = "npm run deploy-prod"
     # Environment is specifiec in .env.production as parcel uses dotenv
 
 [context.staging]
@@ -25,6 +25,6 @@
     environment = { NODE_ENV = "development" }
 
 [[redirects]]
-    from = ".*"
+    from = "/*"
     to = "/"
     status = 200
