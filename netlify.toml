@@ -25,6 +25,6 @@
     environment = { NODE_ENV = "development" }
 
 [[redirects]]
-    from = ".*"
+    from = "/*"
     to = "/"
     status = 200
