@@ -4,8 +4,7 @@ import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 
 // AWS
-import Amplify from "aws-amplify";
-const Auth = Amplify.Auth;
+import Auth from "@aws-amplify/auth";
 
 async function CreateUser( username, password ){
     try{
