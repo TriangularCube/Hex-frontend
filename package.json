@@ -6,8 +6,8 @@
     "scripts": {
         "dev": "parcel src/index.html --out-dir build/dev",
         "dev-no-cache": "parcel src/index.html --out-dir build/dev --no-cache",
-        "stage": "cross-env NODE_ENV=staging parcel build src/index.html --out-dir build/stage --public-url /beta/",
-        "build": "parcel build src/index.html --out-dir build/prod --no-source-maps"
+        "deploy": "parcel build src/index.html --out-dir build",
+        "deploy-no-maps": "parcel build src/index.html --out-dir build --no-source-maps"
     },
     "repository": {
         "type": "git",
