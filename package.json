@@ -6,8 +6,8 @@
     "scripts": {
         "dev": "parcel src/index.html --out-dir build/dev",
         "dev-no-cache": "parcel src/index.html --out-dir build/dev --no-cache",
-        "deploy": "parcel build src/index.html --out-dir build",
-        "deploy-no-maps": "parcel build src/index.html --out-dir build --no-source-maps"
+        "deploy": "parcel build src/index.html --out-dir build --no-minify",
+        "deploy-prod": "parcel build src/index.html --out-dir build --no-source-maps"
     },
     "repository": {
         "type": "git",
