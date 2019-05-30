@@ -58,14 +58,15 @@ function MenuDrawer( props ){
         <>
             {/* Shim for proper spacing under the App Bar  */}
             <div className={classes.userDisplay}>
-                { user ? (
-                    <Typography color='inherit'>
-                        {user.name}
-                    </Typography>
-                ) : (
-                    // Display nothing if User isn't present
-                    null
-                )}
+                {process.env.NODE_ENV}
+                {/*{ user ? (*/}
+                {/*    <Typography color='inherit'>*/}
+                {/*        {user.name}*/}
+                {/*    </Typography>*/}
+                {/*) : (*/}
+                {/*    // Display nothing if User isn't present*/}
+                {/*    null*/}
+                {/*)}*/}
             </div>
             <Divider />
 

@@ -1,0 +1,30 @@
+# Settings in the [build] context are global and are applied to all contexts
+# unless otherwise overridden by more specific contexts.
+[build]
+    # Directory to change to before starting a build.
+    # This is where we will look for package.json/.nvmrc/etc.
+    base = "/"
+
+    # I'm skipping "publish" and "command" as these are particular to the stage
+
+# Production context: all deploys from the Production branch set in your site's
+# deploy contexts will inherit these settings.
+[context.production]
+    publish = "build"
+    command = "npm run deploy-no-maps"
+    # Environment is specifiec in .env.production as parcel uses dotenv
+
+[context.staging]
+    publish = "build"
+    command = "npm run deploy"
+    environment = { NODE_ENV = "staging" }
+
+[context."dev/master"]
+    publish = "build"
+    command = "npm run deploy"
+    environment = { NODE_ENV = "development" }
+
+[[redirects]]
+    from = ".*"
+    to = "/"
+    status = 200

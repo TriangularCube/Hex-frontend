@@ -95,6 +95,7 @@ function App( props ){
             {/* Kept around for staging */}
             <Router basename={process.env.URL_BASE_NAME} >
                 <>
+                    {/* not passing USER right now */}
                     <MenuDrawer
                         showDeskDrawer={showDeskDrawer}
                         showMobileDrawer={showMobileDrawer}
