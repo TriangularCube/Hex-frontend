@@ -29,6 +29,7 @@ const Splash = loadable( () => import( "~/Components/Pages/Splash/Splash" ) );
 const UserCubeList = loadable( () => import( "~/Components/Pages/UserCubeList/UserCubeList" ) );
 const EditCube = loadable( () => import( "~/Components/Pages/UserCubeList/EditCube" ) );
 const Login = loadable( () => import( "~/Components/Pages/Login/Login" ));
+const FaunaTest = loadable( () => import( "~/Components/Pages/FaunaTest/FaunaTest"));
 
 
 
@@ -112,6 +113,7 @@ function App( props ){
                                 <Route path="/login" component={Login} />
                                 <Route path="/cubes" component={UserCubeList} />
                                 <Route path="/cube/:id/:edit?" component={EditCube} />
+                                <Route path="/fauna" component={FaunaTest}/>
                                 <Route exact path="/" component={Splash} />
                             </Switch>
                         </div>
