@@ -108,6 +108,15 @@ async function CallAPI(){
 
 }
 
+async function ChangePassword(){
+    try{
+        const res = await Auth.forgotPasswordSubmit( 'michael.liu0@gmail.com', '502996', 'this is the grand life' );
+        console.log( res );
+    } catch( e ){
+        console.log( e.message );
+    }
+}
+
 function Login(){
 
     return(
@@ -129,6 +138,9 @@ function Login(){
             </Button>
             <Button onClick={ CallAPI }>
                 Call API
+            </Button>
+            <Button onClick={ ChangePassword }>
+                Change Password
             </Button>
         </>
     );
