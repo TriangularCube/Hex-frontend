@@ -58,15 +58,14 @@ function MenuDrawer( props ){
         <>
             {/* Shim for proper spacing under the App Bar  */}
             <div className={classes.userDisplay}>
-                {process.env.NODE_ENV}
-                {/*{ user ? (*/}
-                {/*    <Typography color='inherit'>*/}
-                {/*        {user.name}*/}
-                {/*    </Typography>*/}
-                {/*) : (*/}
-                {/*    // Display nothing if User isn't present*/}
-                {/*    null*/}
-                {/*)}*/}
+                { user ? (
+                    <Typography color='inherit'>
+                        {user.name}
+                    </Typography>
+                ) : (
+                    // Display nothing if User isn't present
+                    null
+                )}
             </div>
             <Divider />
 
@@ -79,14 +78,16 @@ function MenuDrawer( props ){
 
             {LinkButton( 'A Cube', '/cube/0' )}
 
+            {LinkButton( 'FaunaDB Test', '/fauna' )}
+
             <div className={classes.divider}/>
 
             <Divider />
             <List>
                 <ListItem button>
                     {/*<ListItemIcon />*/}
-                    <ListItemText>
-                        Credits or something!
+                    <ListItemText style={{textAlign: 'center'}}>
+                        {process.env.NODE_ENV.charAt(0).toUpperCase() + process.env.NODE_ENV.slice(1)} build
                     </ListItemText>
                 </ListItem>
             </List>
