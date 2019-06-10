@@ -45,7 +45,8 @@ const useStyles = makeStyles(({
 function App( props ){
 
     // Fetch state from LocalStorage
-    let shouldShowDrawer = JSON.parse( localStorage.getItem( saveStateName ) );
+    const savedValue = JSON.parse( localStorage.getItem( saveStateName ) );
+    const shouldShowDrawer = savedValue === null ? true : savedValue;
 
     // Show Drawer State Hooks
     const [showDeskDrawer, setDeskDrawer] = useState( shouldShowDrawer );
@@ -94,7 +95,7 @@ function App( props ){
             <CssBaseline />
 
             {/* Kept around for staging */}
-            <Router basename={process.env.URL_BASE_NAME} >
+            <Router>
                 <>
                     {/* not passing USER right now */}
                     <MenuDrawer
