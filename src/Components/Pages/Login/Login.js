@@ -33,7 +33,7 @@ async function CreateUser(){
     try{
         const user = await Auth.signUp({
             username: 'michael.liu0@gmail.com',
-            password: 'this is the grand life'
+            password: 'this is a very long password'
         });
         console.log( user );
     } catch( e ){
@@ -44,7 +44,7 @@ async function CreateUser(){
 async function LoginUser(){
 
     try {
-        const user = await Auth.signIn( 'michael.liu0@gmail.com', 'this is the grand life' );
+        const user = await Auth.signIn( 'michael.liu0@gmail.com', 'this is a very long password' );
         console.log( user );
     } catch( e ){
         console.log( e.message );
@@ -72,7 +72,7 @@ function GetCurrent(){
 
 async function ConfirmSignup(){
     try{
-        const output = await Auth.confirmSignUp( 'michael.liu0@gmail.com', '338919' );
+        const output = await Auth.confirmSignUp( 'michael.liu0@gmail.com', '112284' );
         console.log( output );
     } catch( e ){
         console.log( e.message );
@@ -108,9 +108,18 @@ async function CallAPI(){
 
 }
 
+async function ForgotPassword(){
+    try{
+        const res = await Auth.forgotPassword( 'michael.liu0@gmail.com' );
+        console.log( res );
+    } catch( e ){
+        console.log( e.message );
+    }
+}
+
 async function ChangePassword(){
     try{
-        const res = await Auth.forgotPasswordSubmit( 'michael.liu0@gmail.com', '502996', 'this is the grand life' );
+        const res = await Auth.forgotPasswordSubmit( 'michael.liu0@gmail.com', '804910', 'this is the grand life' );
         console.log( res );
     } catch( e ){
         console.log( e.message );
@@ -138,6 +147,9 @@ function Login(){
             </Button>
             <Button onClick={ CallAPI }>
                 Call API
+            </Button>
+            <Button onClick={ ForgotPassword }>
+                Forgot Password!
             </Button>
             <Button onClick={ ChangePassword }>
                 Change Password
