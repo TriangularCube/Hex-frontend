@@ -13,7 +13,10 @@ WebFont.load({
 });
 
 // Configure Amplify
-import "./Amplify-Config";
+import { targetName, configStage, DEV } from "./Amplify-Config";
+
+const target = localStorage.getItem( targetName );
+configStage( target === null ? DEV : target );
 
 function Index(){
     return(

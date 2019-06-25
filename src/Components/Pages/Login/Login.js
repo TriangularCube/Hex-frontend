@@ -6,27 +6,6 @@ import Button from "@material-ui/core/Button";
 // AWS
 import Auth from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
-/*
-import { AuthenticationDetails, CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
-
-const authenticationData = {
-    Username: 'bluntweapon',
-    Password: 'this is the grand life'
-};
-const authenticationDetails = new AuthenticationDetails( authenticationData );
-
-const poolData = {
-    UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    ClientId: process.env.APP_CLIENT_ID
-};
-const userPool = new CognitoUserPool( poolData );
-
-const userData = {
-    Username: 'bluntweapon',
-    Pool: userPool
-};
-const cognitoUser = new CognitoUser( userData );
- */
 
 
 async function CreateUser(){
@@ -96,7 +75,7 @@ async function CallAPI(){
     }
 
     try{
-        const res = await API.get( "hex", "hello", {
+        const res = await API.get( "hex", "user/bluntweapo", {
             headers: {
                 Authorization: token
             }
