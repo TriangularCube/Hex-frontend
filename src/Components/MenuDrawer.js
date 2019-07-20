@@ -13,14 +13,14 @@ import { connect } from "react-redux";
 import makeStyles from "@material-ui/styles/makeStyles";
 
 // Material UI Components
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer/index";
-import Button from "@material-ui/core/Button/index";
-import Hidden from "@material-ui/core/Hidden/index";
-import Drawer from "@material-ui/core/Drawer/index";
-import List from "@material-ui/core/List/index";
-import ListItem from "@material-ui/core/ListItem/index";
-import ListItemText from "@material-ui/core/ListItemText/index";
-import Divider from "@material-ui/core/Divider/index";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import Button from "@material-ui/core/Button";
+import Hidden from "@material-ui/core/Hidden";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
 
 import { drawerWidth } from "~/Data/constants/";
 import {Typography} from "@material-ui/core";
@@ -83,14 +83,7 @@ function MenuDrawer( props ){
             <div className={classes.divider}/>
 
             <Divider />
-            <List>
-                <ListItem button>
-                    {/*<ListItemIcon />*/}
-                    <ListItemText style={{textAlign: 'center'}}>
-                        {process.env.NODE_ENV.charAt(0).toUpperCase() + process.env.NODE_ENV.slice(1)} build
-                    </ListItemText>
-                </ListItem>
-            </List>
+            {LinkButton( `${process.env.NODE_ENV.charAt(0).toUpperCase() + process.env.NODE_ENV.slice(1)} build`, '' )}
         </>
     );
 

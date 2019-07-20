@@ -6,34 +6,13 @@ import Button from "@material-ui/core/Button";
 // AWS
 import Auth from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
-/*
-import { AuthenticationDetails, CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
-
-const authenticationData = {
-    Username: 'bluntweapon',
-    Password: 'this is the grand life'
-};
-const authenticationDetails = new AuthenticationDetails( authenticationData );
-
-const poolData = {
-    UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    ClientId: process.env.APP_CLIENT_ID
-};
-const userPool = new CognitoUserPool( poolData );
-
-const userData = {
-    Username: 'bluntweapon',
-    Pool: userPool
-};
-const cognitoUser = new CognitoUser( userData );
- */
 
 
 async function CreateUser(){
     try{
         const user = await Auth.signUp({
             username: 'michael.liu0@gmail.com',
-            password: 'this is the grand life'
+            password: 'this is a very long password'
         });
         console.log( user );
     } catch( e ){
@@ -44,7 +23,7 @@ async function CreateUser(){
 async function LoginUser(){
 
     try {
-        const user = await Auth.signIn( 'michael.liu0@gmail.com', 'this is the grand life' );
+        const user = await Auth.signIn( 'michael.liu0@gmail.com', 'this is a very long password' );
         console.log( user );
     } catch( e ){
         console.log( e.message );
@@ -72,7 +51,7 @@ function GetCurrent(){
 
 async function ConfirmSignup(){
     try{
-        const output = await Auth.confirmSignUp( 'michael.liu0@gmail.com', '338919' );
+        const output = await Auth.confirmSignUp( 'michael.liu0@gmail.com', '112284' );
         console.log( output );
     } catch( e ){
         console.log( e.message );
@@ -96,7 +75,7 @@ async function CallAPI(){
     }
 
     try{
-        const res = await API.get( "hex", "hello", {
+        const res = await API.get( "hex", "user/bluntweapon", {
             headers: {
                 Authorization: token
             }
@@ -108,9 +87,18 @@ async function CallAPI(){
 
 }
 
+async function ForgotPassword(){
+    try{
+        const res = await Auth.forgotPassword( 'michael.liu0@gmail.com' );
+        console.log( res );
+    } catch( e ){
+        console.log( e.message );
+    }
+}
+
 async function ChangePassword(){
     try{
-        const res = await Auth.forgotPasswordSubmit( 'michael.liu0@gmail.com', '502996', 'this is the grand life' );
+        const res = await Auth.forgotPasswordSubmit( 'michael.liu0@gmail.com', '804910', 'this is the grand life' );
         console.log( res );
     } catch( e ){
         console.log( e.message );
@@ -138,6 +126,9 @@ function Login(){
             </Button>
             <Button onClick={ CallAPI }>
                 Call API
+            </Button>
+            <Button onClick={ ForgotPassword }>
+                Forgot Password!
             </Button>
             <Button onClick={ ChangePassword }>
                 Change Password
