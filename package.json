@@ -31,7 +31,7 @@
         "react-dom": "^16.8.6",
         "react-redux": "^7.1.0",
         "react-router-dom": "^5.0.1",
-        "redux-saga": "^1.0.3"
+        "redux-saga": "^1.0.5"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",

@@ -50,7 +50,7 @@ function MenuDrawer( props ){
 
     // Link Button, used in Drawer
     const LinkButton = (name, to) => (
-        <Button component={Link} to={to} onClick={ () => retractMobileDrawer() }>{name}</Button>
+        <Button component={Link} to={to} onClick={ retractMobileDrawer }>{name}</Button>
     );
 
     // List of components to display in Drawer. Separated here since it's used twice
@@ -83,7 +83,7 @@ function MenuDrawer( props ){
             <div className={classes.divider}/>
 
             <Divider />
-            {LinkButton( `${process.env.NODE_ENV.charAt(0).toUpperCase() + process.env.NODE_ENV.slice(1)} build`, '' )}
+            {LinkButton( `${process.env.NODE_ENV.charAt(0).toUpperCase() + process.env.NODE_ENV.slice(1)} build`, '/target' )}
         </>
     );
 

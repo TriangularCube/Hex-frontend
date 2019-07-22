@@ -16,6 +16,7 @@ WebFont.load({
 import { targetName, configStage, DEV } from "./Amplify-Config";
 
 const target = localStorage.getItem( targetName );
+console.log( target );
 configStage( target === null ? DEV : target );
 
 function Index(){
