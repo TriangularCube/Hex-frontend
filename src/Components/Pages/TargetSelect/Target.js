@@ -6,43 +6,63 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 // Amplify
-import * as AC from "../../../Amplify-Config";
+import * as AC from "~/Amplify-Config";
 
 function Target(){
 
     const [target, setTarget] = React.useState( localStorage.getItem( AC.targetName ) || AC.LOCAL );
+    const [selectedTarget, setSelectTarget] = React.useState( target );
 
     function handleChange( event ){
-        setTarget( event.target.value );
-        AC.configStage( event.target.value );
+        setSelectTarget( event.target.value );
     }
 
     function handleSubmit( event ){
 
+        setTarget( selectedTarget );
+        AC.configStage( selectedTarget );
+
+        event.preventDefault();
+
     }
 
     return(
+        <>
+            <Typography variant='h5'>
+                Current target is: {target}
+            </Typography>
 
-        <form onSubmit={handleSubmit}>
-            <FormControl component="fieldset">
-                <FormLabel component="legend">API Target</FormLabel>
+            <br />
 
-                <RadioGroup
-                    value={target}
-                    onChange={handleChange}
-                >
+            <form onSubmit={handleSubmit}>
+                <FormControl component="fieldset">
+                    <FormLabel component="legend">API Target</FormLabel>
 
-                    <FormControlLabel value={AC.LOCAL} control={<Radio />} label='Local' />
-                    <FormControlLabel value={AC.DEV} control={<Radio />} label='Dev' />
-                    <FormControlLabel value={AC.DEV_MASTER} control={<Radio />} label='Dev-Master' />
-                    <FormControlLabel value={AC.STAGE} control={<Radio />} label='Stage' />
+                    <RadioGroup
+                        value={selectedTarget}
+                        onChange={handleChange}
+                    >
 
-                </RadioGroup>
-            </FormControl>
+                        <FormControlLabel value={AC.LOCAL} control={<Radio />} label='Local' />
+                        <FormControlLabel value={AC.DEV} control={<Radio />} label='Dev' />
+                        <FormControlLabel value={AC.DEV_MASTER} control={<Radio />} label='Dev-Master' />
+                        <FormControlLabel value={AC.STAGE} control={<Radio />} label='Stage' />
 
-        </form>
+                    </RadioGroup>
+
+                    <br />
+
+                    <Button variant='contained' disabled={ target === selectedTarget } type='submit' color='primary'>
+                        Submit!
+                    </Button>
+                </FormControl>
+            </form>
+
+        </>
 
     );
 }
