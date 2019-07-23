@@ -12,7 +12,7 @@ import Chip from "@material-ui/core/Chip";
 import IconButton from "@material-ui/core/IconButton";
 
 // Icons
-// import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@material-ui/icons/Edit";
 
 // Custom Components
 import PageTitle from "../../Common/PageTitle";
@@ -114,6 +114,11 @@ function CubeCard(){
                                 {/* Chips for cube tags! May remove later TODO*/}
                                 <Chip className={classes.chip} color="primary" label="Tag!" />
                             </div>
+
+                            <IconButton className={classes.editButton}>
+                                <EditIcon />
+                            </IconButton>
+
                         </CardActionArea>
                     </Grid>
 
@@ -122,7 +127,7 @@ function CubeCard(){
 
                         {/* The Edit Button, aligned to the right */}
                         <IconButton className={classes.editButton}>
-                            {/*<EditIcon />*/}
+                            <EditIcon />
                         </IconButton>
                     </Grid>
 
