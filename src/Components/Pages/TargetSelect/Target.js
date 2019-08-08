@@ -1,18 +1,12 @@
 import React from "react";
 
 // Material UI
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import { FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Button, Typography } from "@material-ui/core";
 
 // Amplify
-import * as AC from "~/Amplify-Config";
+import * as AC from "~/util/amplify/Amplify-Config";
 
-function Target(){
+const Target = () => {
 
     const [target, setTarget] = React.useState( localStorage.getItem( AC.targetName ) || AC.LOCAL );
     const [selectedTarget, setSelectTarget] = React.useState( target );
@@ -65,6 +59,6 @@ function Target(){
         </>
 
     );
-}
+};
 
 export default Target;

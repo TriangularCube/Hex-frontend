@@ -1,136 +1,174 @@
-import React, {useEffect, useState, useMemo} from 'react';
-
-// Material UI Utils
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import {makeStyles} from "@material-ui/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery/useMediaQuery";
-
-// Theme
-import defaultThemeObject from "~/Data/DefaultTheme";
-const defaultTheme = createMuiTheme( defaultThemeObject );
-
-// Constants
-import * as constants from "./Data/constants";
+import React, {useEffect, useMemo, useState} from "react";
+import ReactDOM from "react-dom";
 
 // Redux
-import { connect } from "react-redux";
+import {Provider, useDispatch, useSelector} from "react-redux";
+import store from "./Redux/store";
+import { setDrawer } from "./Redux/actionCreators";
 
 // Router
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-// The App
-import Navbar from "~/Components/Navbar";
-import MenuDrawer from "~/Components/MenuDrawer";
+// Material UI utils
+import { createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider, useTheme } from "@material-ui/styles";
+import {Container, Typography, useMediaQuery} from "@material-ui/core";
 
+// Material UI Components
+import { CircularProgress, CssBaseline } from "@material-ui/core";
+
+// Loadable
 import loadable from "@loadable/component";
-const Target = loadable( () => import( "./Components/Pages/TargetSelect/Target" ) ) ;
-const Splash = loadable( () => import( "~/Components/Pages/Splash/Splash" ) );
-const UserCubeList = loadable( () => import( "~/Components/Pages/UserCubeList/UserCubeList" ) );
-const EditCube = loadable( () => import( "~/Components/Pages/UserCubeList/EditCube" ) );
-const Login = loadable( () => import( "~/Components/Pages/Login/Login" ));
-const FaunaTest = loadable( () => import( "~/Components/Pages/FaunaTest/FaunaTest"));
+
+// Hex components
+import MenuDrawer from "./MenuDrawer";
+import NavBar from "./NavBar";
+
+const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
+const Login = loadable( () => import( "./components/pages/Account/Login" ) );
+const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
+const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+
+// Font
+WebFont.load({
+    google: {
+        families: [ 'Roboto:300,500,700' ]
+    }
+});
+
+// Configure Amplify
+import { targetName, configStage, DEV } from "./util/amplify/Amplify-Config";
+const target = localStorage.getItem( targetName );
+configStage( target === null ? DEV : target );
+
+// Amplify
+import { GetUser } from "./util/amplify/amp";
+
+// Load Theme
+import DefaultThemeObject from "./util/DefaultTheme";
+const defaultTheme = createMuiTheme( DefaultThemeObject );
+
+// Get Page Width
+import { pageWidth, sidePadding } from "./util/constants";
 
 
-
-const saveStateName = 'UIStateShowDrawer';
-
-const useStyles = makeStyles(({
+// Make styles
+const useStyles = makeStyles( theme => ({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
+    },
+    progressCentering: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+    },
     pageContainer: {
-        maxWidth: 1150,
+        // backgroundColor: '#382fff',
+        // maxWidth: pageWidth,
+        // height: '100%',
         margin: `24px auto`,
-        padding: '0 16px'
+        padding: `0 ${sidePadding}px`
+    },
+    footer: {
+        padding: theme.spacing( 1 ),
+        marginTop: 'auto',
+        backgroundColor: theme.palette.background.paper
     }
 }));
 
-function App( props ){
 
-    // Fetch state from LocalStorage
-    const savedValue = JSON.parse( localStorage.getItem( saveStateName ) );
-    const shouldShowDrawer = savedValue === null ? true : savedValue;
+// The inner most Component, after all the context is passed through
+const WithTheme = () => {
 
-    // Show Drawer State Hooks
-    const [showDeskDrawer, setDeskDrawer] = useState( shouldShowDrawer );
-    const [showMobileDrawer, setMobileDrawer] = useState( false );
+    // Get style classes
+    const classes = useStyles();
 
-    // Figure out what theme to use
-    const useTheme = ( props.user && props.user.theme ) ?
-        useMemo( () => createMuiTheme( props.user.theme ), [props.user.theme] )
-        : defaultTheme;
+    // Is the app prepping?
+    const [isPrepping, setPrepping] = useState(true );
 
-    // Use Media Query
-    const isLarge = useMediaQuery( useTheme.breakpoints.up( constants.isLarge ) );
-
-    // Turn mobile drawer off if we've switched to Desktop view
+    // Prep data and such
     useEffect( () => {
 
-        if( isLarge ){
-            // If we're now large, but was not before
-            setMobileDrawer( false ); // Retract the mobile drawer
-        }
+        // Wrapped in an Async Function
+        const Effect = async () => {
+            // Figure out if the user is logged in
+            await GetUser();
 
-        // Else do nothing
+            // Finally, we're done prepping
+            setPrepping(false );
+        };
 
-    }, [isLarge] );
+        // Ignoring the Promised returned since it can never error out
+        Effect();
 
-    // Determine if there should be a margin for page content
-    const contentMargin = isLarge && showDeskDrawer ? constants.drawerWidth : 0;
+    }, [] );
 
-    // Drawer toggle based on size
-    const toggleDrawer = () => {
-        if( isLarge ){
-            const target = !showDeskDrawer;
-            setDeskDrawer( target );
+    // Bail early if we're prepping
+    if( isPrepping ){
+        return (
+            <div className={classes.progressCentering}>
+                <CircularProgress/>
+            </div>
+        );
+    }
 
-            // Save to local storage for persistence
-            localStorage.setItem( saveStateName, JSON.stringify( target ) );
-        } else {
-            setMobileDrawer( !showMobileDrawer );
-        }
-    };
+    // Otherwise, render page
+    return (
+        <div className={ classes.root }>
+            <Router>
+                <MenuDrawer />
+                <NavBar/>
+                <Container component='main' className={classes.pageContainer}>
+                    <Switch>
+                        <Route path='/login' component={Login} />
+                        <Route path='/myCubes' component={MyCubes} />
+                        <Route path='/target' component={Target} />
+                        <Route exact path='/' component={Splash} />
+                    </Switch>
+                </Container>
+                <footer className={ classes.footer }>
+                    <Typography variant='body1' color='inherit'>
+                        This is a footer
+                    </Typography>
+                </footer>
+            </Router>
+        </div>
+    );
 
-    const classes = useStyles();
+};
+
+const WithStore = () => {
+
+    // Figure out what theme to use
+
+    // Grab the user from Redux
+    const user = useSelector( state => state.user );
+
+    // Use the user's custom theme if there is one
+    const useTheme = user && user.theme ?
+        // Memoize the user's theme to minimize having to create a new theme every time
+        useMemo( () => createMuiTheme( user.theme ), [user.theme] ) :
+        // Otherwise just use the default theme
+        defaultTheme;
 
     return(
         <ThemeProvider theme={ useTheme }>
-            <CssBaseline />
-
-            {/* Kept around for staging */}
-            <Router>
-                <>
-                    {/* not passing USER right now */}
-                    <MenuDrawer
-                        showDeskDrawer={showDeskDrawer}
-                        showMobileDrawer={showMobileDrawer}
-                        toggleDrawer={toggleDrawer}
-                        retractMobileDrawer={() => setMobileDrawer( false )}
-                    />
-
-                    <div style={ { marginLeft: contentMargin } }>
-                        <Navbar toggleDrawer={toggleDrawer} />
-                        <div className={classes.pageContainer}>
-                            <Switch>
-                                <Route path="/login" component={Login} />
-                                <Route path="/cubes" component={UserCubeList} />
-                                <Route path="/cube/:id/:edit?" component={EditCube} />
-                                <Route path="/fauna" component={FaunaTest}/>
-                                <Route path="/target" component={Target} />
-                                <Route exact path="/" component={Splash} />
-                            </Switch>
-                        </div>
-                    </div>
-                </>
-            </Router>
+            <CssBaseline/>
+            <WithTheme/>
         </ThemeProvider>
-    )
+    );
 
-}
+};
 
-function mapStateToProps( state ){
-    return {
-        user: state.user
-    }
-}
+const App = () => {
+    return(
+        <Provider store={store}>
+            <WithStore/>
+        </Provider>
+    );
+};
 
-export default connect( mapStateToProps )( App );
+ReactDOM.render( <App />, document.getElementById( 'root' ) );

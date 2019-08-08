@@ -1,10 +1,10 @@
 import React from "react";
 
 // Material UI Utils
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles } from "@material-ui/styles";
 
 // Material UI Components
-import Typography from "@material-ui/core/Typography";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles( theme => ({
     root: {
@@ -12,13 +12,13 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-function PageTitle( props ){
+const PageTitle = ( props ) => {
     const classes = useStyles();
     return(
         <Typography className={classes.root} color='textPrimary' variant='h4'>
             {props.children}
         </Typography>
     )
-}
+};
 
 export default PageTitle;

@@ -1,14 +1,6 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import createSagaMiddleware from 'redux-saga';
+import { createStore, combineReducers } from 'redux';
 import * as reducers from './reducers';
 
-import { watchLogin, watchCookies } from './sagas/api';
-
-const sagaMiddleware = createSagaMiddleware();
-
-const store = createStore( combineReducers( reducers ), applyMiddleware( sagaMiddleware ) );
-
-sagaMiddleware.run( watchLogin );
-sagaMiddleware.run( watchCookies );
+const store = createStore( combineReducers( reducers ) );
 
 export default store;
