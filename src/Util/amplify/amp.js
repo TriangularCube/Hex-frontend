@@ -4,18 +4,24 @@ import API from "@aws-amplify/api";
 import store from "../../Redux/store";
 import { setUser } from "../../Redux/actionCreators";
 
+const dispatch = store.dispatch;
+
 export const GetUser = async () => {
 
     try{
 
         // Fetch the current user from Auth
         const res = await Auth.currentAuthenticatedUser();
-        store.dispatch( setUser( res ) );
+
+        // TODO get user data
+        // res.getSignInUserSession().getIdToken().getJwtToken();
+
+        dispatch( setUser( res ) );
 
     } catch( e ){
 
         // Not logged in
-        store.dispatch( setUser( null ) );
+        dispatch( setUser( null ) );
 
     }
 

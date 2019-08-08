@@ -15,8 +15,6 @@ import {Typography, TextField, Container, Avatar, Button} from "@material-ui/cor
 // Icons
 import { LockOutlined } from "@material-ui/icons";
 
-// Hex
-import PageTitle from "../../Common/PageTitle";
 
 // Styles
 const useStyles = makeStyles(theme => ({
@@ -33,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const Login = () => {
+const Login = ( props ) => {
 
     const classes = useStyles();
 
@@ -69,10 +67,18 @@ const Login = () => {
     }
 
     const emailRef = React.createRef();
+    const passwordRef = React.createRef();
 
     const handleSubmit = async ( event ) => {
-        console.log( emailRef.current.value );
         event.preventDefault();
+
+        const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
+
+        if( res ){
+            props.history.push( '/' );
+        } else {
+            // TODO Show some error here
+        }
     };
 
     return(
@@ -100,10 +106,12 @@ const Login = () => {
                         margin='normal'
                         label='Password'
                         type='password'
+                        inputRef={passwordRef}
                         variant='filled'
                     />
                     <Button
                         type='submit'
+                        fullWidth
                     >
                         Submit
                     </Button>

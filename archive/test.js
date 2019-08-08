@@ -105,7 +105,7 @@ async function ChangePassword(){
     }
 }
 
-function LoginOld(){
+function Test(){
 
     return(
         <>
@@ -137,4 +137,4 @@ function LoginOld(){
     );
 }
 
-export default LoginOld;
+export default Test;

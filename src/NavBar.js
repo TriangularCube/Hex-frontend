@@ -13,14 +13,14 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 import { useMediaQuery } from "@material-ui/core";
 
 // Material UI
-import { AppBar, Toolbar, IconButton, Button, ButtonBase, Typography, InputBase } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Button, ButtonBase, Typography, InputBase, Hidden } from "@material-ui/core";
 
 // Icons
 import { AccountCircle as AccIcon, Menu as MenuIcon, Search as SearchIcon } from "@material-ui/icons";
 
 
 // Constant
-import { isLarge, pageWidth, sidePadding } from "./util/constants";
+import { isLarge, sidePadding } from "./util/constants";
 
 
 
@@ -90,6 +90,7 @@ const NavBar = () => {
     // Get stuff from Redux
     const dispatch = useDispatch();
     const mobileDrawerOpen = useSelector( state => state.mobileDrawerOpen );
+    const user = useSelector( state => state.user );
 
     // Fetch theme
     const theme = useTheme();
@@ -136,31 +137,42 @@ const NavBar = () => {
 
                 {/* TODO Add Hidden */}
 
-                {/* Search */}
-                <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                        <SearchIcon />
+                <Hidden smDown>
+                    {/* Search */}
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
                     </div>
-                    <InputBase
-                        placeholder="Search…"
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                        }}
-                        inputProps={{ 'aria-label': 'search' }}
-                    />
-                </div>
 
+                    {/* Debug Suite */}
+                    <Button color='inherit' component={Link} to='/test'>
+                        Test
+                    </Button>
 
-                {/* Login Test */}
-                <Button color='inherit' component={Link} to='/login'>
-                    Login Test
-                </Button>
+                    {/* TODO replace with menu */}
+                    <Button color='inherit' component={Link} to='/login'>
+                        Login
+                    </Button>
 
-                {/* My Cubes */}
-                <Button color='inherit' component={Link} to='/myCubes'>
-                    My Cubes
-                </Button>
+                    {/* My Cubes */}
+                    {
+                        user !== null &&
+                            <Button color='inherit' component={Link} to='/myCubes'>
+                                My Cubes
+                            </Button>
+                    }
+
+                </Hidden>
+
 
                 {/* User button */}
                 <IconButton color='inherit'>

@@ -29,6 +29,9 @@ const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
 
+// HACK strictly for debugging
+import Test from "../archive/test";
+
 // Font
 WebFont.load({
     google: {
@@ -123,6 +126,8 @@ const WithTheme = () => {
                 <NavBar/>
                 <Container component='main' className={classes.pageContainer}>
                     <Switch>
+                        <Route path='/test' component={Test}/>
+
                         <Route path='/login' component={Login} />
                         <Route path='/myCubes' component={MyCubes} />
                         <Route path='/target' component={Target} />
