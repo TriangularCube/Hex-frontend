@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import {Card, Grid, Typography} from "@material-ui/core";
 
 // Components
-import PageTitle from "../../Common/PageTitle";
+import PageTitle from "../../common/PageTitle";
 
 
 
