@@ -58,13 +58,18 @@ const Login = async ( name, pwd ) => {
     try{
 
         await Auth.signIn( name, pwd );
+        await GetUser();
 
-        return true;
+        return {success: true};
 
     } catch( e ){
 
+        // DEBUG
         console.log( e );
-        return false;
+        return {
+            success: false,
+            error: e
+        };
 
     }
 

@@ -74,7 +74,7 @@ const Login = ( props ) => {
 
         const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
 
-        if( res ){
+        if( res.success ){
             props.history.push( '/' );
         } else {
             // TODO Show some error here
@@ -113,7 +113,7 @@ const Login = ( props ) => {
                         type='submit'
                         fullWidth
                     >
-                        Submit
+                        Login
                     </Button>
                 </form>
             </div>
