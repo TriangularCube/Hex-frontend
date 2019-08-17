@@ -12,7 +12,10 @@ async function CreateUser(){
     try{
         const user = await Auth.signUp({
             username: 'michael.liu0@gmail.com',
-            password: 'this is a very long password'
+            password: 'this is a very long password',
+            attributes: {
+                name: 'bluntweapon'
+            }
         });
         console.log( user );
     } catch( e ){
@@ -105,7 +108,7 @@ async function ChangePassword(){
     }
 }
 
-function Login(){
+function Test(){
 
     return(
         <>
@@ -137,4 +140,4 @@ function Login(){
     );
 }
 
-export default Login;
+export default Test;

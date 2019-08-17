@@ -1,5 +1,5 @@
-export const REQUEST_LOGIN = 'REQUEST_LOGIN';
+// Drawer
+export const SET_MOBILE_DRAWER = 'SET_MOBILE_DRAWER';
 
+// User
 export const SET_USER = 'SET_USER';
-
-export const CHECK_COOKIE = 'CHECK_COOKIE';

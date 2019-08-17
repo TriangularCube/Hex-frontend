@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 
 // Material UI Utils
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles } from "@material-ui/styles";
 
 // Material UI Components
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import { Paper, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
 	paper: {
@@ -13,7 +12,7 @@ const useStyles = makeStyles({
 	}
 });
 
-function Splash(){
+const Splash = () => {
 
 	const classes = useStyles();
 
@@ -33,6 +32,6 @@ function Splash(){
 
 	)
 
-}
+};
 
 export default Splash;
