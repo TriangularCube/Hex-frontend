@@ -64,8 +64,6 @@ const Login = async ( name, pwd ) => {
 
     } catch( e ){
 
-        // DEBUG
-        console.log( e );
         return {
             success: false,
             error: e

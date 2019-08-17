@@ -1,4 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
+
+// Async Hook
+import { useAsyncCallback } from "react-async-hook";
+
+// Router
+import { Link as RouterLink } from "react-router-dom";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -10,7 +16,7 @@ import amp from "../../../util/amplify/amp";
 import { makeStyles } from "@material-ui/styles";
 
 // Material UI
-import {Typography, TextField, Container, Avatar, Button} from "@material-ui/core";
+import {Typography, TextField, Container, Avatar, Button, CircularProgress as Progress, Link} from "@material-ui/core";
 
 // Icons
 import { LockOutlined } from "@material-ui/icons";
@@ -27,13 +33,27 @@ const useStyles = makeStyles(theme => ({
     },
     avatar: {
         backgroundColor: theme.palette.secondary.main
+    },
+    submit: {
+        margin: theme.spacing( 2, 0, 1 ),
+        height: 50 // This should be the height of the Progress Indicator
+    },
+    linkSection: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%'
+    },
+    spacer: {
+        flex: 1
     }
 
 }));
 
 const Login = ( props ) => {
 
-    const classes = useStyles();
+    // Refs for inputs
+    const emailRef = useRef(null );
+    const passwordRef = useRef( null );
 
     // Check the Login Status
     const [checkingUser, setCheckingUser] = useState( true );
@@ -46,6 +66,30 @@ const Login = ( props ) => {
     // Check if user is already logged in
     const user = useSelector( state => state.user );
 
+    // Setup Async Login Handlers
+    const login = async () => {
+        const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
+
+        if( res.success ){
+            // If login is successful, redirect to main page
+            props.history.push( '/' );
+        } else {
+            // Otherwise, print the error
+            // TODO
+            console.log( res.error );
+        }
+
+        // DEBUG
+        // console.log( "enter" );
+        // await new Promise( resolve => setTimeout( resolve, 2000 ) );
+        // console.log( "resolve" );
+    };
+    const asyncLogin = useAsyncCallback( login );
+
+
+    // Set the styles
+    const classes = useStyles();
+
     // If we're checking login status, render Progress Activity
     if( checkingUser ){
         // TODO Render Progress
@@ -56,8 +100,6 @@ const Login = ( props ) => {
         )
     }
 
-
-
     // Bail out early if already logged in
     if( user !== null ){
         // TODO instead redirect to splash
@@ -65,21 +107,6 @@ const Login = ( props ) => {
             <Typography>Logged in</Typography>
         )
     }
-
-    const emailRef = React.createRef();
-    const passwordRef = React.createRef();
-
-    const handleSubmit = async ( event ) => {
-        event.preventDefault();
-
-        const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
-
-        if( res.success ){
-            props.history.push( '/' );
-        } else {
-            // TODO Show some error here
-        }
-    };
 
     return(
         <Container maxWidth='xs'>
@@ -90,32 +117,53 @@ const Login = ( props ) => {
                 <Typography component='h1' variant='h5'>
                     Login
                 </Typography>
-                <form style={{ width: '100%' }} onSubmit={handleSubmit}>
-                    <TextField
-                        fullWidth={true}
-                        margin='normal'
-                        label='Email Address'
-                        type='email'
-                        name='email'
-                        id='email'
-                        inputRef={emailRef}
-                        variant='filled'
-                    />
-                    <TextField
-                        fullWidth={true}
-                        margin='normal'
-                        label='Password'
-                        type='password'
-                        inputRef={passwordRef}
-                        variant='filled'
-                    />
-                    <Button
-                        type='submit'
-                        fullWidth
-                    >
-                        Login
-                    </Button>
-                </form>
+
+                <TextField
+                    fullWidth={true}
+                    margin='normal'
+                    label='Email Address'
+                    type='email'
+                    name='email'
+                    id='email'
+                    inputRef={emailRef}
+                    variant='filled'
+                />
+                <TextField
+                    fullWidth={true}
+                    margin='normal'
+                    label='Password'
+                    type='password'
+                    inputRef={passwordRef}
+                    variant='filled'
+                />
+                <Button
+                    type='submit'
+                    fullWidth
+                    // variant='contained'
+                    className={classes.submit}
+                    onClick={asyncLogin.execute}
+                    disabled={asyncLogin.loading}
+                >
+                    {
+                        asyncLogin.loading ?
+                        <Progress/>
+                        : "Login"
+                    }
+                </Button>
+
+                <div className={classes.linkSection}>
+
+                    <Link varient='body2' component={RouterLink} to='/forgotPassword'>
+                        Forgot password?
+                    </Link>
+
+                    <div className={classes.spacer}/>
+
+                    <Link varient='body2' component={RouterLink} to='/createAccount'>
+                        Create a new account
+                    </Link>
+
+                </div>
             </div>
         </Container>
     )
