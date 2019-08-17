@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     userDisplay: {
         ...theme.mixins.toolbar,
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     drawerPaper: {
         width: drawerWidth
@@ -75,26 +76,9 @@ const MenuDrawer = () => {
     const DrawerList = (
         <>
             <div className={classes.userDisplay}>
-                <Typography variant='h5'>
+                <Typography variant='h5' color='inherit'>
                     Hexahedron
                 </Typography>
-                {/*{*/}
-                {/*    user !== null ? (*/}
-                {/*        // Display the User if we're logged in*/}
-                {/*        <Typography color='inherit'>*/}
-                {/*            { user.name }*/}
-                {/*        </Typography>*/}
-                {/*    ) :*/}
-                {/*        // TODO Or generic not logged in*/}
-                {/*        <div>*/}
-                {/*            <Typography align='center'>*/}
-                {/*                Welcome*/}
-                {/*            </Typography>*/}
-                {/*            <Typography align='center'>*/}
-                {/*                <em>Person!</em>*/}
-                {/*            </Typography>*/}
-                {/*        </div>*/}
-                {/*}*/}
             </div>
 
             {/* TODO Other Links */}

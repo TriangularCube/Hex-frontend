@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import { setMobileDrawer } from "./Redux/actionCreators";
 
 // Router
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+
+// Amp, for Logout
+import amp from "./util/amplify/amp";
 
 // Material UI Utils
 import { fade } from "@material-ui/core/styles";
 import { makeStyles, useTheme } from "@material-ui/styles";
-import { useMediaQuery } from "@material-ui/core";
+import {ListItemText, useMediaQuery} from "@material-ui/core";
 
 // Material UI
-import { AppBar, Toolbar, IconButton, Button, ButtonBase, Typography, InputBase, Hidden } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Button, ButtonBase, Typography, InputBase, Hidden, Menu, MenuItem } from "@material-ui/core";
 
 // Icons
 import { AccountCircle as AccIcon, Menu as MenuIcon, Search as SearchIcon } from "@material-ui/icons";
@@ -21,6 +24,7 @@ import { AccountCircle as AccIcon, Menu as MenuIcon, Search as SearchIcon } from
 
 // Constant
 import { isLarge, sidePadding } from "./util/constants";
+
 
 
 
@@ -79,11 +83,16 @@ const useStyles = makeStyles( theme => ({
                 width: 200,
             },
         },
+    },
+    menuItemText: {
+        flex: 1,
+        flexDirection: 'row',
+        textAlign: 'right'
     }
 }));
 
 
-const NavBar = () => {
+const NavBar = ( props ) => {
 
     const classes = useStyles();
 
@@ -98,9 +107,32 @@ const NavBar = () => {
     // Figure out if the page is in Large mode
     const isLargeMode = useMediaQuery( theme.breakpoints.up( isLarge ) );
 
+    // Menu stuff
+    const [anchor, setAnchor] = useState( null );
+    const openMenu = ( event ) => {
+        setAnchor( event.currentTarget );
+    };
+    const closeMenu = () => {
+        setAnchor( null );
+    };
+
     const toggleDrawer = () => {
         // Toggle the mobile drawer
         dispatch( setMobileDrawer( !mobileDrawerOpen ) );
+    };
+
+    const handleLogout = async () => {
+        // Initiate logout
+        const res = await amp.Logout();
+
+        if( res ){
+            // If successful, close menu and redirect to homepage
+            closeMenu();
+            props.history.push( '/' );
+        } else {
+            console.log( 'Failed to logout' );
+            // TODO
+        }
     };
 
     return(
@@ -123,44 +155,37 @@ const NavBar = () => {
                 }
 
                 {/* Site Title */}
-                {/* TODO Change this to clickable */}
-                <ButtonBase component={Link} to={'/'}>
-                    <Typography color='inherit' variant='h5'>
-                        Hexahedron
-                    </Typography>
-                </ButtonBase>
-
+                <Hidden smDown>
+                    <ButtonBase component={Link} to={'/'}>
+                        <Typography color='inherit' variant='h5'>
+                            Hexahedron
+                        </Typography>
+                    </ButtonBase>
+                </Hidden>
 
 
                 {/* Spacer */}
                 <div className={classes.spacer} />
 
-                {/* TODO Add Hidden */}
+                {/* Search */}
+                <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                        <SearchIcon />
+                    </div>
+                    <InputBase
+                        placeholder="Search…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                    />
+                </div>
 
                 <Hidden smDown>
-                    {/* Search */}
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div>
-
                     {/* Debug Suite */}
                     <Button color='inherit' component={Link} to='/test'>
                         Test
-                    </Button>
-
-                    {/* TODO replace with menu */}
-                    <Button color='inherit' component={Link} to='/login'>
-                        Login
                     </Button>
 
                     {/* My Cubes */}
@@ -175,13 +200,55 @@ const NavBar = () => {
 
 
                 {/* User button */}
-                <IconButton color='inherit'>
-                    <AccIcon/>
-                </IconButton>
+                <div>
+                    <IconButton color='inherit' onClick={openMenu}>
+                        <AccIcon/>
+                    </IconButton>
+                    <Menu
+                        id='account-menu'
+                        anchorEl={anchor}
+                        getContentAnchorEl={null}
+                        open={Boolean( anchor )}
+                        onClose={ closeMenu }
+                        anchorOrigin={{
+                            vertical: 30,
+                            horizontal: 'center'
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center'
+                        }}
+                    >
+                        {
+                            user === null ?
+                                <MenuItem
+                                    onClick={ closeMenu }
+                                    component={Link}
+                                    to='/login'
+                                >
+                                    <ListItemText className={classes.menuItemText} primary='Login'/>
+                                </MenuItem>
+                                :
+                                <MenuItem
+                                    onClick={ handleLogout }
+                                >
+                                    <ListItemText className={classes.menuItemText} primary='Logout'/>
+                                </MenuItem>
+                        }
+
+                        <MenuItem
+                            onClick={ closeMenu }
+                            component={Link}
+                            to='/target'
+                        >
+                            <ListItemText primary='Target Selection'/>
+                        </MenuItem>
+                    </Menu>
+                </div>
             </Toolbar>
         </AppBar>
     )
 
 };
 
-export default NavBar;
+export default withRouter( NavBar );

@@ -53,6 +53,8 @@ const CreateUser = async ( name, pws ) => {
 
 };
 
+
+//region Login/out
 const Login = async ( name, pwd ) => {
 
     try{
@@ -77,13 +79,17 @@ const Logout = async () => {
 
     try{
         await Auth.signOut();
-        return true;
+        dispatch( setUser( null ) );
+        return { success: true };
     } catch( e ){
-        console.log( e );
-        return false;
+        return {
+            success: false,
+            error: e.message
+        };
     }
 
 };
+//endregion
 
 export default {
     GetUser,

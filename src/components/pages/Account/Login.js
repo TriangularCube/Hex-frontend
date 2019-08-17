@@ -85,7 +85,10 @@ const Login = ( props ) => {
         // console.log( "resolve" );
     };
     const asyncLogin = useAsyncCallback( login );
-
+    const handleSubmit = ( event ) => {
+        event.preventDefault();
+        asyncLogin.execute();
+    };
 
     // Set the styles
     const classes = useStyles();
@@ -108,6 +111,8 @@ const Login = ( props ) => {
         )
     }
 
+    // TODO implement error banner
+
     return(
         <Container maxWidth='xs'>
             <div className={classes.container}>
@@ -118,38 +123,40 @@ const Login = ( props ) => {
                     Login
                 </Typography>
 
-                <TextField
-                    fullWidth={true}
-                    margin='normal'
-                    label='Email Address'
-                    type='email'
-                    name='email'
-                    id='email'
-                    inputRef={emailRef}
-                    variant='filled'
-                />
-                <TextField
-                    fullWidth={true}
-                    margin='normal'
-                    label='Password'
-                    type='password'
-                    inputRef={passwordRef}
-                    variant='filled'
-                />
-                <Button
-                    type='submit'
-                    fullWidth
-                    // variant='contained'
-                    className={classes.submit}
-                    onClick={asyncLogin.execute}
-                    disabled={asyncLogin.loading}
-                >
-                    {
-                        asyncLogin.loading ?
-                        <Progress/>
-                        : "Login"
-                    }
-                </Button>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        fullWidth={true}
+                        margin='normal'
+                        label='Email Address'
+                        type='email'
+                        name='email'
+                        id='email'
+                        inputRef={emailRef}
+                        variant='filled'
+                    />
+                    <TextField
+                        fullWidth={true}
+                        margin='normal'
+                        label='Password'
+                        type='password'
+                        inputRef={passwordRef}
+                        variant='filled'
+                    />
+                    <Button
+                        type='submit'
+                        fullWidth
+                        // variant='contained'
+                        className={classes.submit}
+                        // onClick={asyncLogin.execute}
+                        disabled={asyncLogin.loading}
+                    >
+                        {
+                            asyncLogin.loading ?
+                            <Progress/>
+                            : "Login"
+                        }
+                    </Button>
+                </form>
 
                 <div className={classes.linkSection}>
 
