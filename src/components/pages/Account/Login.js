@@ -58,7 +58,7 @@ const Login = ( props ) => {
     // Check the Login Status
     const [checkingUser, setCheckingUser] = useState( true );
     useEffect( () => {
-        amp.GetUser().then( () => {
+        amp.FetchUser().then( () => {
             setCheckingUser( false );
         });
     }, [] );

@@ -1,21 +1,22 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import ReactDOM from "react-dom";
 
+import { useAsync } from "react-async-hook";
+
 // Redux
-import {Provider, useDispatch, useSelector} from "react-redux";
+import {Provider, useSelector} from "react-redux";
 import store from "./Redux/store";
-import { setDrawer } from "./Redux/actionCreators";
 
 // Router
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";
-import { makeStyles, ThemeProvider, useTheme } from "@material-ui/styles";
-import {Container, Typography, useMediaQuery} from "@material-ui/core";
+import { makeStyles, ThemeProvider } from "@material-ui/styles";
+import {Container, Typography} from "@material-ui/core";
 
 // Material UI Components
-import { CircularProgress, CssBaseline } from "@material-ui/core";
+import { CssBaseline } from "@material-ui/core";
 
 // Loadable
 import loadable from "@loadable/component";
@@ -28,6 +29,8 @@ const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+
+import PageLoading from "./components/common/PageLoading";
 
 // HACK strictly for debugging
 import Test from "../archive/test";
@@ -45,14 +48,14 @@ const target = localStorage.getItem( targetName );
 configStage( target === null ? DEV : target );
 
 // Amplify
-import { GetUser } from "./util/amplify/amp";
+import amp from "./util/amplify/amp";
 
 // Load Theme
-import DefaultThemeObject from "./util/DefaultTheme";
-const defaultTheme = createMuiTheme( DefaultThemeObject );
+import defaultThemeObject from "./util/DefaultTheme";
+const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Get Page Width
-import { pageWidth, sidePadding } from "./util/constants";
+import { sidePadding } from "./util/constants";
 
 
 // Make styles
@@ -69,9 +72,10 @@ const useStyles = makeStyles( theme => ({
         height: '100vh'
     },
     pageContainer: {
-        // backgroundColor: '#382fff',
-        // maxWidth: pageWidth,
-        // height: '100%',
+        flex: 1,
+        display: 'flex',
+        alignItems: 'stretch',
+        justifyContent: 'center',
         margin: `24px auto`,
         padding: `0 ${sidePadding}px`
     },
@@ -89,31 +93,13 @@ const WithTheme = () => {
     // Get style classes
     const classes = useStyles();
 
-    // Is the app prepping?
-    const [isPrepping, setPrepping] = useState(true );
-
-    // Prep data and such
-    useEffect( () => {
-
-        // Wrapped in an Async Function
-        const Effect = async () => {
-            // Figure out if the user is logged in
-            await GetUser();
-
-            // Finally, we're done prepping
-            setPrepping(false );
-        };
-
-        // Ignoring the Promised returned since it can never error out
-        Effect();
-
-    }, [] );
+    const asyncUser = useAsync( amp.FetchUser, [] );
 
     // Bail early if we're prepping
-    if( isPrepping ){
+    if( asyncUser.loading ){
         return (
-            <div className={classes.progressCentering}>
-                <CircularProgress/>
+            <div className={ classes.root }>
+                <PageLoading/>
             </div>
         );
     }
