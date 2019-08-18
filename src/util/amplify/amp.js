@@ -6,17 +6,18 @@ import { setUser } from "../../Redux/actionCreators";
 
 const dispatch = store.dispatch;
 
-export const GetUser = async () => {
+const FetchUser = async () => {
 
     try{
 
-        // Fetch the current user from Auth
-        const res = await Auth.currentAuthenticatedUser();
+        const user = await Get( '/me' );
 
-        // TODO get user data
-        // res.getSignInUserSession().getIdToken().getJwtToken();
+        if( user.success ){
+            dispatch( setUser( user.user ) );
+            return user.user;
+        }
 
-        dispatch( setUser( res ) );
+        dispatch( setUser( null ) );
 
     } catch( e ){
 
@@ -30,7 +31,7 @@ export const GetUser = async () => {
 const Get = async ( path, additionalHeaders = {} ) => {
 
     // Get the user auth token
-    const user = await GetUser();
+    const user = await Auth.currentAuthenticatedUser();
     const token = user ? user.getSignInUserSession().getIdToken().getJwtToken() : 'none';
 
     try{
@@ -43,8 +44,10 @@ const Get = async ( path, additionalHeaders = {} ) => {
         });
 
     } catch( e ){
-        console.log( `ERROR, ${e.message}` );
-        return undefined;
+        return {
+            success: false,
+            error: e.message
+        };
     }
 
 };
@@ -60,7 +63,7 @@ const Login = async ( name, pwd ) => {
     try{
 
         await Auth.signIn( name, pwd );
-        await GetUser();
+        await FetchUser();
 
         return {success: true};
 
@@ -92,7 +95,7 @@ const Logout = async () => {
 //endregion
 
 export default {
-    GetUser,
+    FetchUser,
     Get,
     Login,
     Logout

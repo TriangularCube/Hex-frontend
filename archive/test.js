@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 // AWS
 import Auth from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
+import {useSelector} from "react-redux";
 
 
 async function CreateUser(){
@@ -109,6 +110,9 @@ async function ChangePassword(){
 }
 
 function Test(){
+
+    const user = useSelector( state => state.user );
+    console.log( user );
 
     return(
         <>
