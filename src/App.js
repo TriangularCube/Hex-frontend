@@ -93,18 +93,6 @@ const WithTheme = () => {
     // Get style classes
     const classes = useStyles();
 
-    const asyncUser = useAsync( amp.FetchUser, [] );
-
-    // Bail early if we're prepping
-    if( asyncUser.loading ){
-        // TODO Write something quipy here
-        return (
-            <div className={ classes.root }>
-                <PageLoading/>
-            </div>
-        );
-    }
-
     // Otherwise, render page
     return (
         <div className={ classes.root }>
@@ -155,7 +143,30 @@ const WithStore = () => {
 
 };
 
+const loadingStyles = makeStyles({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
+    }
+});
+
 const App = () => {
+
+    const classes = loadingStyles();
+
+    const asyncUser = useAsync( amp.FetchUser, [] );
+
+    // Bail early if we're prepping
+    if( asyncUser.loading ){
+        // TODO Write something quipy here
+        return (
+            <div className={classes.root}>
+                <PageLoading/>
+            </div>
+        );
+    }
+
     return(
         <Provider store={store}>
             <WithStore/>
