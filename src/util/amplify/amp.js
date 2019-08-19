@@ -1,6 +1,8 @@
 import Auth from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
 
+import errorCodes from "../../util/errorCodes.json";
+
 import store from "../../Redux/store";
 import { setUser } from "../../Redux/actionCreators";
 
@@ -10,7 +12,7 @@ const FetchUser = async () => {
 
     try{
 
-        const user = await Get( '/me' );
+        const user = await GetWithAuth( '/me' );
 
         if( user.success ){
             dispatch( setUser( user.user ) );
@@ -31,6 +33,23 @@ const FetchUser = async () => {
 
 };
 
+const GetWithAuth = async ( path, additionalHeaders = {} ) => {
+
+    let user;
+    try{
+        user = await Auth.currentSession();
+    } catch( e ){
+        console.log( 'Not Authenticated' );
+        return {
+            success: false,
+            error: errorCodes.notLoggedIn
+        }
+    }
+
+    return await GetFromServer( path, user, additionalHeaders );
+
+};
+
 const Get = async ( path, additionalHeaders = {} ) => {
 
     // Get the user auth token
@@ -41,6 +60,12 @@ const Get = async ( path, additionalHeaders = {} ) => {
         // DEBUG
         console.log( `Not Authenticated: ${e}` );
     }
+
+    return await GetFromServer( path, user, additionalHeaders )
+
+};
+
+const GetFromServer = async ( path, user, additionalHeaders ) => {
 
     const token = user ? user.getIdToken().getJwtToken() : 'none';
 
@@ -111,6 +136,7 @@ const Logout = async () => {
 export default {
     FetchUser,
     Get,
+    GetWithAuth,
     Login,
     Logout
 }

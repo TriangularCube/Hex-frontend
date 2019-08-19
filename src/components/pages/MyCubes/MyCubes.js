@@ -195,7 +195,7 @@ const MyCubes = () => {
 
 
     // Fire off an async request
-    const asyncCubes = useAsync( async () => amp.Get( '/myCubes' ), [] );
+    const asyncCubes = useAsync( async () => amp.GetWithAuth( '/myCubes' ), [] );
     // FIXME this is a leak as the component will redirect away when the user logs out, but the function will return on an unmounted component
 
     // If not logged in, simply redirect to login page
@@ -244,7 +244,7 @@ const MyCubes = () => {
                 open={openNewCubeDialog}
                 onClose={ () => setNewCubeDialog(false) }
                 fullWidth
-                maxWidth={ 'md' }
+                maxWidth={ 'sm' }
             >
                 <DialogTitle disableTypography className={classes.dialogTitle}>
                     <Typography variant='h6'>
@@ -261,10 +261,11 @@ const MyCubes = () => {
                     <TextField
                         autoFocus
                         fullWidth
+                        label='Cube Name'
                     />
                 </DialogContent>
                 <DialogActions className={classes.dialogActions}>
-                    <Button color='primary'>
+                    <Button color='primary' onClick={handleNewCube}>
                         Create
                     </Button>
                 </DialogActions>
