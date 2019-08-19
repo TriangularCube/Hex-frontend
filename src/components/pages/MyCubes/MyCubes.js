@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 
 // Async hook
 import { useAsync } from "react-async-hook";
@@ -10,10 +10,20 @@ import { Link as RouterLink, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Material UI
-import {Card, Container, Grid, Typography, Chip, IconButton, Link, Button} from "@material-ui/core";
+import {
+    Card,
+    Container,
+    Grid,
+    Typography,
+    Chip,
+    IconButton,
+    Link,
+    Button,
+    Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions
+} from "@material-ui/core";
 
 // Icon
-import { Edit as EditIcon } from "@material-ui/icons";
+import { Edit as EditIcon, Close as CloseIcon } from "@material-ui/icons";
 
 // Components
 import PageTitle from "../../common/PageTitle";
@@ -139,7 +149,28 @@ const cubePageStyles = makeStyles(theme => ({
     newCubeButtonContainer: {
         height: theme.fontSize,
         alignSelf: 'center'
+    },
+
+    //region Create Cube Dialog
+    dialogTitle: {
+        padding: theme.spacing( 2 )
+    },
+    dialogContent: {
+        padding: `${theme.spacing( 2 )}px ${theme.spacing( 2 )}px 0`
+    },
+    dialogActions: {
+        padding: theme.spacing( 2 )
+    },
+    closeIcon: {
+        position: 'absolute',
+        right: theme.spacing( 1 ),
+        top: theme.spacing( 1 )
+    },
+    createButton: {
+        right: theme.spacing( 1 ),
+        top: theme.spacing( 1 )
     }
+    //endregion
 }));
 
 const pageName = 'My Cubes';
@@ -154,6 +185,14 @@ const MyCubes = () => {
     useEffect( () => {
         document.title = pageName;
     }, [] );
+
+    //region New Cube handling
+    const [openNewCubeDialog, setNewCubeDialog] = useState( false );
+    const handleNewCube = () => {
+
+    };
+    //endregion
+
 
     // Fire off an async request
     const asyncCubes = useAsync( async () => amp.Get( '/myCubes' ), [] );
@@ -201,6 +240,36 @@ const MyCubes = () => {
     return(
         <Container maxWidth='md'>
 
+            <Dialog
+                open={openNewCubeDialog}
+                onClose={ () => setNewCubeDialog(false) }
+                fullWidth
+                maxWidth={ 'md' }
+            >
+                <DialogTitle disableTypography className={classes.dialogTitle}>
+                    <Typography variant='h6'>
+                        Create New Cube
+                    </Typography>
+                    <IconButton className={classes.closeIcon} onClick={ () => setNewCubeDialog( false ) }>
+                        <CloseIcon/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent className={classes.dialogContent}>
+                    <DialogContentText>
+                        Please specify a name for the new Cube:
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions className={classes.dialogActions}>
+                    <Button color='primary'>
+                        Create
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             {/* The Top Row */}
             <div className={classes.topRowContainer}>
                 {/* Page Title */}
@@ -213,7 +282,7 @@ const MyCubes = () => {
 
                 {/* New Cube Button */}
                 <div className={classes.newCubeButtonContainer}>
-                    <Button variant='outlined'>
+                    <Button variant='outlined' onClick={ () => setNewCubeDialog( true ) }>
                         New Cube
                     </Button>
                 </div>
