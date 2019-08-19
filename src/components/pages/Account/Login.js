@@ -51,6 +51,11 @@ const useStyles = makeStyles(theme => ({
 
 const Login = ( props ) => {
 
+    // DEBUG Log if referred from somewhere
+    if( props.location.state && props.location.state.referrer ){
+        console.log( `Login referred from ${props.location.state.referrer}` )
+    }
+
     // Refs for inputs
     const emailRef = useRef(null );
     const passwordRef = useRef( null );
@@ -71,12 +76,18 @@ const Login = ( props ) => {
         const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
 
         if( res.success ){
-            // If login is successful, redirect to main page
+            // If login is successful, redirect
+
+            if( props.location.state && props.location.state.referrer ){
+                props.history.push( props.location.state.referrer );
+                return;
+            }
+
             props.history.push( '/' );
         } else {
             // Otherwise, print the error
             // TODO
-            console.log( res.error );
+            console.log( `Login Unsuccessful, message: ${res.error}` );
         }
 
         // DEBUG

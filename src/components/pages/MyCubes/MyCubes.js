@@ -4,7 +4,10 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-async-hook";
 
 // Router
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Redirect } from "react-router-dom";
+
+// Redux
+import { useSelector } from "react-redux";
 
 // Material UI
 import {Card, Container, Grid, Typography, Chip, IconButton, Link, Button} from "@material-ui/core";
@@ -22,6 +25,13 @@ import amp from "../../../util/amplify/amp";
 // Styles
 import { makeStyles } from "@material-ui/styles";
 
+// Error codes
+import errorCodes from "../../../util/errorCodes";
+
+
+
+
+//region Cube Card
 const cubeCardStyles = makeStyles( theme => ({
     cubeSection: {
         margin: `${theme.spacing( 1 )}px 0`
@@ -114,8 +124,9 @@ const CubeCard = ( props ) => {
     );
 
 };
+//endregion
 
-
+//region Cube Page
 const cubePageStyles = makeStyles(theme => ({
     topRowContainer: {
         flex: 1,
@@ -134,6 +145,9 @@ const cubePageStyles = makeStyles(theme => ({
 const pageName = 'My Cubes';
 const MyCubes = () => {
 
+    // Check if user exists
+    const user = useSelector( state => state.user );
+
     const classes = cubePageStyles();
 
     // First, set the page name
@@ -143,6 +157,19 @@ const MyCubes = () => {
 
     // Fire off an async request
     const asyncCubes = useAsync( async () => amp.Get( '/myCubes' ), [] );
+    // FIXME this is a leak as the component will redirect away when the user logs out, but the function will return on an unmounted component
+
+    // If not logged in, simply redirect to login page
+    if( !user ){
+        return <Redirect
+            to={{
+                pathname: '/login',
+                state: {
+                    referrer: '/myCubes'
+                }
+            }}
+        />
+    }
 
     // While it's loading
     if( asyncCubes.loading ){
@@ -151,23 +178,40 @@ const MyCubes = () => {
         )
     }
 
-    if( asyncCubes.error || !asyncCubes.result.success ){
-        // TODO deal with an error
+    // If request not successful
+    if( !asyncCubes.result.success ){
+
+        if( asyncCubes.result.error === errorCodes.notLoggedIn ){
+
+            // This should not happen and should have been guarded against. This is here as a sanity check only
+            console.error( 'Not Logged In error from API on MyCubes' );
+            return <Redirect to={'/login'}/>
+
+        }
+
+        // Otherwise Log the error
+        console.error( `My Cubes fetch unsuccessful, error: ${asyncCubes.result.error}` );
+
+        // TODO handle the error somehow
     }
 
-    console.log( asyncCubes.result );
-
+    // Convenience
     const cubes = asyncCubes.result.cubes;
 
     return(
         <Container maxWidth='md'>
+
+            {/* The Top Row */}
             <div className={classes.topRowContainer}>
+                {/* Page Title */}
                 <PageTitle>
                     {pageName}
                 </PageTitle>
 
+                {/* Spacer to fill row */}
                 <div className={classes.spacer}/>
 
+                {/* New Cube Button */}
                 <div className={classes.newCubeButtonContainer}>
                     <Button variant='outlined'>
                         New Cube
@@ -177,11 +221,12 @@ const MyCubes = () => {
 
             {/* Grid of Cube List */}
             <Grid container spacing={0} alignItems='stretch' direction='column' justify='flex-start'>
-                {cubes.map( (element) => <CubeCard cube={element} key={element.handle}/> )}
+                {cubes.map( (element, index) => <CubeCard cube={element} key={index}/> )}
             </Grid>
         </Container>
     );
 
 };
+//endregion
 
 export default MyCubes;

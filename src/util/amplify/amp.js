@@ -21,6 +21,9 @@ const FetchUser = async () => {
 
     } catch( e ){
 
+        // DEBUG
+        console.error( 'Fetch User Errored, setting user to Null. Message: ' + e );
+
         // Not logged in
         dispatch( setUser( null ) );
 
@@ -31,8 +34,18 @@ const FetchUser = async () => {
 const Get = async ( path, additionalHeaders = {} ) => {
 
     // Get the user auth token
-    const user = await Auth.currentAuthenticatedUser();
-    const token = user ? user.getSignInUserSession().getIdToken().getJwtToken() : 'none';
+    let user;
+    try{
+        user = await Auth.currentSession();
+    } catch( e ){
+        // DEBUG
+        console.log( `Not Authenticated: ${e}` );
+    }
+
+    const token = user ? user.getIdToken().getJwtToken() : 'none';
+
+    // DEBUG
+    console.log( `GET on path: ${path},\nusing token: ${token}` );
 
     try{
 
@@ -62,7 +75,8 @@ const Login = async ( name, pwd ) => {
 
     try{
 
-        await Auth.signIn( name, pwd );
+        const res = await Auth.signIn( name, pwd );
+        console.log( res );
         await FetchUser();
 
         return {success: true};
