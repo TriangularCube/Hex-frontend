@@ -97,6 +97,7 @@ const WithTheme = () => {
 
     // Bail early if we're prepping
     if( asyncUser.loading ){
+        // TODO Write something quipy here
         return (
             <div className={ classes.root }>
                 <PageLoading/>

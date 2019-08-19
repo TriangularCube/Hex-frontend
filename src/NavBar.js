@@ -130,7 +130,7 @@ const NavBar = ( props ) => {
             closeMenu();
             props.history.push( '/' );
         } else {
-            console.log( 'Failed to logout' );
+            console.error( 'Failed to logout' );
             // TODO
         }
     };
