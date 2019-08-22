@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 // Async hook
 import { useAsync } from "react-async-hook";
@@ -188,8 +188,9 @@ const MyCubes = () => {
 
     //region New Cube handling
     const [openNewCubeDialog, setNewCubeDialog] = useState( false );
+    let newCubeNameRef = useRef( null );
     const handleNewCube = () => {
-
+        console.log( newCubeNameRef.current.value );
     };
     //endregion
 
@@ -262,6 +263,7 @@ const MyCubes = () => {
                         autoFocus
                         fullWidth
                         label='Cube Name'
+                        inputRef={newCubeNameRef}
                     />
                 </DialogContent>
                 <DialogActions className={classes.dialogActions}>
