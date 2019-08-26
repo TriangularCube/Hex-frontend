@@ -171,7 +171,7 @@ const cubePageStyles = makeStyles(theme => ({
 }));
 
 const pageName = 'My Cubes';
-const MyCubes = () => {
+const MyCubes = ( props ) => {
 
     const classes = cubePageStyles();
 
@@ -183,8 +183,29 @@ const MyCubes = () => {
     //region New Cube handling
     const [openNewCubeDialog, setNewCubeDialog] = useState( false );
     let newCubeNameRef = useRef( null );
-    const handleNewCube = () => {
-        console.log( newCubeNameRef.current.value );
+    const handleNewCube = async () => {
+
+        const cubeName = newCubeNameRef.current.value;
+
+        if( cubeName.length < 1 ){
+            // TODO deal with empty name
+            console.log( 'Name too short' );
+            return;
+        }
+
+        const body = {
+            name: cubeName
+        };
+
+        const res = await amp.Post( '/newCube', body );
+
+        if( res.success ){
+            props.history.push( `/cube/${ res.handle }` );
+        } else {
+            // TODO handle error creating cube
+            console.error( 'Could not create cube' );
+        }
+
     };
     //endregion
 

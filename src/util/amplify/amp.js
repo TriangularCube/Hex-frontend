@@ -91,7 +91,7 @@ const Get = async ( path, additionalHeaders = {} ) => {
 const GetFromServer = async ( path, token, additionalHeaders ) => {
 
     // DEBUG
-    console.log( `GET on path: ${path},\nusing token: ${token}` );
+    console.log( `GET on path: ${path} ${ token ? 'with token' : '' }` );
 
     try{
 
@@ -118,6 +118,10 @@ const Post = async ( path, body, additionalHeaders = {} ) => {
 
     // If not logged in, punt it back
     if( !token ){
+
+        // DEBUG
+        console.error( 'Cannot POST without being logged in' );
+
         return {
             success: false,
             error: errorCodes.notLoggedIn
