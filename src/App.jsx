@@ -25,10 +25,13 @@ import loadable from "@loadable/component";
 import MenuDrawer from "./MenuDrawer";
 import NavBar from "./NavBar";
 
+const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+
 const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
-const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
+
 
 import PageLoading from "./components/common/PageLoading";
 
@@ -103,9 +106,13 @@ const WithTheme = () => {
                     <Switch>
                         <Route path='/test' component={Test}/>
 
+                        <Route path='/target' component={Target} />
+
                         <Route path='/login' component={Login} />
                         <Route path='/myCubes' component={MyCubes} />
-                        <Route path='/target' component={Target} />
+
+                        <Route path='/cube/:handle' component={} />
+
                         <Route exact path='/' component={Splash} />
                     </Switch>
                 </Container>
