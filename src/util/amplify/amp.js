@@ -58,6 +58,7 @@ const GetUserCredentials = async () => {
 
 };
 
+//region GET logic
 const GetWithAuth = async ( path, additionalHeaders = {} ) => {
 
     let token = await GetUserCredentials();
@@ -109,13 +110,41 @@ const GetFromServer = async ( path, token, additionalHeaders ) => {
     }
 
 };
+//endregion
 
-const CreateUser = async ( name, pws ) => {
+const Post = async ( path, body, additionalHeaders = {} ) => {
+
+    const token = await GetUserCredentials();
+
+    // If not logged in, punt it back
+    if( !token ){
+        return {
+            success: false,
+            error: errorCodes.notLoggedIn
+        };
+    }
+
+    console.log( `POST on path: ${path}` );
+
+    return await API.post( 'hex', path, {
+        headers: {
+            Authorization: token,
+            ...additionalHeaders
+        },
+        body: body
+    });
 
 };
 
 
-//region Login/out
+
+
+
+//region User Account Management
+const CreateUser = async ( name, pws ) => {
+
+};
+
 const Login = async ( name, pwd ) => {
 
     try{
@@ -154,9 +183,10 @@ const Logout = async () => {
 //endregion
 
 export default {
-    FetchUser: FetchUserData,
+    FetchUserData,
     Get,
     GetWithAuth,
+    Post,
     Login,
     Logout
 }

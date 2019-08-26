@@ -1,4 +1,7 @@
 {
     "notLoggedIn": "Not Logged In",
-    "fetchError": "Fetch Error from Endpoint"
+    "fetchError": "Fetch Error from Endpoint",
+    "badJSONBody": "Bad Json Body",
+    "invalidJSON": "Invalid JSON",
+    "couldNotGenerateUniqueID": "A unique ID could not be generated"
 }
