@@ -6,9 +6,6 @@ import { useAsync } from "react-async-hook";
 // Router
 import { Link as RouterLink, Redirect } from "react-router-dom";
 
-// Redux
-import { useSelector } from "react-redux";
-
 // Material UI
 import {
     Card,
@@ -176,9 +173,6 @@ const cubePageStyles = makeStyles(theme => ({
 const pageName = 'My Cubes';
 const MyCubes = () => {
 
-    // Check if user exists
-    const user = useSelector( state => state.user );
-
     const classes = cubePageStyles();
 
     // First, set the page name
@@ -199,18 +193,6 @@ const MyCubes = () => {
     const asyncCubes = useAsync( async () => amp.GetWithAuth( '/myCubes' ), [] );
     // FIXME this is a leak as the component will redirect away when the user logs out, but the function will return on an unmounted component
 
-    // If not logged in, simply redirect to login page
-    if( !user ){
-        return <Redirect
-            to={{
-                pathname: '/login',
-                state: {
-                    referrer: '/myCubes'
-                }
-            }}
-        />
-    }
-
     // While it's loading
     if( asyncCubes.loading ){
         return(
@@ -224,7 +206,7 @@ const MyCubes = () => {
         if( asyncCubes.result.error === errorCodes.notLoggedIn ){
 
             // This should not happen and should have been guarded against. This is here as a sanity check only
-            console.error( 'Not Logged In error from API on MyCubes' );
+            console.error( 'Not Logged In error from API on MyCubes, redirecting to login' );
             return <Redirect to={'/login'}/>
 
         }
