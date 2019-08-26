@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 
 // Async Hook
-import { useAsyncCallback } from "react-async-hook";
+import { useAsync, useAsyncCallback } from "react-async-hook";
 
 // Router
 import { Link as RouterLink } from "react-router-dom";
@@ -61,12 +61,7 @@ const Login = ( props ) => {
     const passwordRef = useRef( null );
 
     // Check the Login Status
-    const [checkingUser, setCheckingUser] = useState( true );
-    useEffect( () => {
-        amp.FetchUser().then( () => {
-            setCheckingUser( false );
-        });
-    }, [] );
+    const fetchingUser = useAsync( amp.FetchUserData, [] );
 
     // Check if user is already logged in
     const user = useSelector( state => state.user );
@@ -105,7 +100,7 @@ const Login = ( props ) => {
     const classes = useStyles();
 
     // If we're checking login status, render Progress Activity
-    if( checkingUser ){
+    if( fetchingUser.loading ){
         // TODO Render Progress
         return(
             <Typography>

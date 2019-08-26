@@ -155,7 +155,7 @@ const App = () => {
 
     const classes = loadingStyles();
 
-    const asyncUser = useAsync( amp.FetchUser, [] );
+    const asyncUser = useAsync( amp.FetchUserData, [] );
 
     // Bail early if we're prepping
     if( asyncUser.loading ){
