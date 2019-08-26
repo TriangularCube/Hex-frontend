@@ -8,7 +8,7 @@ import { setUser } from "../../Redux/actionCreators";
 
 const dispatch = store.dispatch;
 
-const FetchUser = async () => {
+const FetchUserData = async () => {
 
     try{
 
@@ -33,41 +33,61 @@ const FetchUser = async () => {
 
 };
 
+// Fetch user credentials from Auth module
+const GetUserCredentials = async () => {
+
+    let userCredentials;
+    try{
+
+        userCredentials = await Auth.currentSession();
+
+        // If successful, get JWT
+        return userCredentials.getIdToken().getJwtToken();
+
+    } catch( e ){
+
+        // DEBUG
+        console.log( `Error getting user credentials from Auth, setting user to Null. Message: ${ e.message }` );
+
+        // If unsuccessful, reset user and return
+        dispatch( setUser( null ) );
+
+        return undefined;
+
+    }
+
+};
+
 const GetWithAuth = async ( path, additionalHeaders = {} ) => {
 
-    let user;
-    try{
-        user = await Auth.currentSession();
-    } catch( e ){
-        console.log( 'Not Authenticated' );
+    let token = await GetUserCredentials();
+
+    if( !token ) {
+
         return {
             success: false,
             error: errorCodes.notLoggedIn
         }
+
     }
 
-    return await GetFromServer( path, user, additionalHeaders );
+    return await GetFromServer( path, token, additionalHeaders );
 
 };
 
 const Get = async ( path, additionalHeaders = {} ) => {
 
-    // Get the user auth token
-    let user;
-    try{
-        user = await Auth.currentSession();
-    } catch( e ){
-        // DEBUG
-        console.log( `Not Authenticated: ${e}` );
+    let token = await GetUserCredentials();
+
+    if( !token ){
+        token = 'none';
     }
 
-    return await GetFromServer( path, user, additionalHeaders )
+    return await GetFromServer( path, token, additionalHeaders );
 
 };
 
-const GetFromServer = async ( path, user, additionalHeaders ) => {
-
-    const token = user ? user.getIdToken().getJwtToken() : 'none';
+const GetFromServer = async ( path, token, additionalHeaders ) => {
 
     // DEBUG
     console.log( `GET on path: ${path},\nusing token: ${token}` );
@@ -102,7 +122,7 @@ const Login = async ( name, pwd ) => {
 
         const res = await Auth.signIn( name, pwd );
         console.log( res );
-        await FetchUser();
+        await FetchUserData();
 
         return {success: true};
 
@@ -134,7 +154,7 @@ const Logout = async () => {
 //endregion
 
 export default {
-    FetchUser,
+    FetchUser: FetchUserData,
     Get,
     GetWithAuth,
     Login,
