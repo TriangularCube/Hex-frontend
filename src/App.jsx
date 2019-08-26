@@ -31,6 +31,7 @@ const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
+const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" ) );
 
 
 import PageLoading from "./components/common/PageLoading";
@@ -59,6 +60,7 @@ const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Get Page Width
 import { sidePadding } from "./util/constants";
+import Cube from "./components/pages/Cube/Cube";
 
 
 // Make styles
@@ -111,7 +113,8 @@ const WithTheme = () => {
                         <Route path='/login' component={Login} />
                         <Route path='/myCubes' component={MyCubes} />
 
-                        <Route path='/cube/:handle' component={} />
+                        <Route path='/cube/:handle/edit' component={EditCubePage} />
+                        <Route path='/cube/:handle' component={ViewCubePage} />
 
                         <Route exact path='/' component={Splash} />
                     </Switch>
