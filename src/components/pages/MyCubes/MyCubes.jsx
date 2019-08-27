@@ -212,7 +212,8 @@ const MyCubes = ( props ) => {
 
     // Fire off an async request
     const asyncCubes = useAsync( async () => amp.GetWithAuth( '/myCubes' ), [] );
-    // FIXME this is a leak as the component will redirect away when the user logs out, but the function will return on an unmounted component
+    // FIXME this is a leak as the component will redirect away when the user logs out,
+    //  but the function will return on an unmounted component
 
     // While it's loading
     if( asyncCubes.loading ){

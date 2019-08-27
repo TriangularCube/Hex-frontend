@@ -1,10 +1,15 @@
 import React from "react";
 
+// Material UI
+import { Container } from "@material-ui/core";
+
 const Cube = () => {
     return(
-        <p>
-            Cube Page
-        </p>
+        <Container>
+            <p>
+                Cube Page
+            </p>
+        </Container>
     )
 };
 
