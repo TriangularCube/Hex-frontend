@@ -9,7 +9,8 @@ const useStyles = makeStyles({
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: '100%'
     }
 });
 

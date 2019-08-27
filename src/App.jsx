@@ -79,10 +79,9 @@ const useStyles = makeStyles( theme => ({
     pageContainer: {
         flex: 1,
         display: 'flex',
-        alignItems: 'stretch',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        margin: `24px auto`,
-        padding: `0 ${sidePadding}px`
+        margin: theme.spacing( 2 )
     },
     footer: {
         padding: theme.spacing( 1 ),
@@ -104,7 +103,8 @@ const WithTheme = () => {
             <Router>
                 <MenuDrawer />
                 <NavBar/>
-                <Container component='main' className={classes.pageContainer}>
+                {/*<Container component='main' className={classes.pageContainer}>*/}
+                <main className={classes.pageContainer}>
                     <Switch>
                         <Route path='/test' component={Test}/>
 
@@ -118,7 +118,8 @@ const WithTheme = () => {
 
                         <Route exact path='/' component={Splash} />
                     </Switch>
-                </Container>
+                </main>
+                {/*</Container>*/}
                 <footer className={ classes.footer }>
                     <Typography variant='body1' color='inherit'>
                         This is a footer
@@ -140,7 +141,7 @@ const WithStore = () => {
     // Use the user's custom theme if there is one
     const useTheme = user && user.theme ?
         // Memoize the user's theme to minimize having to create a new theme every time
-        useMemo( () => createMuiTheme( user.theme ), [user.theme] ) :
+        useMemo( () => createMuiTheme( user.theme ), [ user.theme ] ) :
         // Otherwise just use the default theme
         defaultTheme;
 
