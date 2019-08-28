@@ -10,6 +10,8 @@ const useStyles = makeStyles({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+
+        // This makes the display inside Site-Content work
         height: '100%'
     }
 });

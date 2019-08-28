@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";
 import { makeStyles, ThemeProvider } from "@material-ui/styles";
-import {Container, Typography} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 // Material UI Components
 import { CssBaseline } from "@material-ui/core";
@@ -68,24 +68,21 @@ const useStyles = makeStyles( theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
+        // https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
         minHeight: '100vh'
     },
-    progressCentering: {
+    siteContent: {
+        flex: '1 0 auto',
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
         alignItems: 'center',
-        height: '100vh'
-    },
-    pageContainer: {
-        flex: 1,
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         margin: theme.spacing( 2 )
     },
     footer: {
         padding: theme.spacing( 1 ),
-        marginTop: 'auto',
+        // marginTop: 'auto',
+        justifySelf: 'flex-end',
         backgroundColor: theme.palette.background.paper
     }
 }));
@@ -103,8 +100,8 @@ const WithTheme = () => {
             <Router>
                 <MenuDrawer />
                 <NavBar/>
-                {/*<Container component='main' className={classes.pageContainer}>*/}
-                <main className={classes.pageContainer}>
+
+                <main className={classes.siteContent}>
                     <Switch>
                         <Route path='/test' component={Test}/>
 
@@ -119,7 +116,7 @@ const WithTheme = () => {
                         <Route exact path='/' component={Splash} />
                     </Switch>
                 </main>
-                {/*</Container>*/}
+
                 <footer className={ classes.footer }>
                     <Typography variant='body1' color='inherit'>
                         This is a footer
@@ -172,9 +169,12 @@ const App = () => {
     if( asyncUser.loading ){
         // TODO Write something quipy here
         return (
-            <div className={classes.root}>
-                <PageLoading/>
-            </div>
+            <>
+                <CssBaseline/>
+                <div className={classes.root}>
+                    <PageLoading/>
+                </div>
+            </>
         );
     }
 
