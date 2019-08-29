@@ -1,16 +1,18 @@
 import Auth from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
 
+import errorCodes from "../../util/errorCodes.json";
+
 import store from "../../Redux/store";
 import { setUser } from "../../Redux/actionCreators";
 
 const dispatch = store.dispatch;
 
-const FetchUser = async () => {
+const FetchUserData = async () => {
 
     try{
 
-        const user = await Get( '/me' );
+        const user = await GetWithAuth( '/me' );
 
         if( user.success ){
             dispatch( setUser( user.user ) );
@@ -31,21 +33,65 @@ const FetchUser = async () => {
 
 };
 
-const Get = async ( path, additionalHeaders = {} ) => {
+// Fetch user credentials from Auth module
+const GetUserCredentials = async () => {
 
-    // Get the user auth token
-    let user;
+    let userCredentials;
     try{
-        user = await Auth.currentSession();
+
+        userCredentials = await Auth.currentSession();
+
+        // If successful, get JWT
+        return userCredentials.getIdToken().getJwtToken();
+
     } catch( e ){
+
         // DEBUG
-        console.log( `Not Authenticated: ${e}` );
+        console.log( `Error getting user credentials from Auth, setting user to Null. Message: ${ e.message }` );
+
+        // If unsuccessful, reset user and return
+        dispatch( setUser( null ) );
+
+        return undefined;
+
     }
 
-    const token = user ? user.getIdToken().getJwtToken() : 'none';
+};
+
+//region GET logic
+const GetWithAuth = async ( path, additionalHeaders = {} ) => {
+
+    let token = await GetUserCredentials();
+
+    if( !token ) {
+
+        return {
+            success: false,
+            error: errorCodes.notLoggedIn
+        }
+
+    }
+
+    return await GetFromServer( path, token, additionalHeaders );
+
+};
+
+const Get = async ( path, additionalHeaders = {} ) => {
+
+    let token = await GetUserCredentials();
+
+    if( !token ){
+        token = 'none';
+    }
+
+    return await GetFromServer( path, token, additionalHeaders );
+
+};
+
+const GetFromServer = async ( path, token, additionalHeaders ) => {
 
     // DEBUG
-    console.log( `GET on path: ${path},\nusing token: ${token}` );
+    console.log( `GET on path: ${path} ${ token ? 'with token' : '' }` );
 
     try{
 
@@ -64,20 +110,52 @@ const Get = async ( path, additionalHeaders = {} ) => {
     }
 
 };
+//endregion
 
-const CreateUser = async ( name, pws ) => {
+const Post = async ( path, body, additionalHeaders = {} ) => {
+
+    const token = await GetUserCredentials();
+
+    // If not logged in, punt it back
+    if( !token ){
+
+        // DEBUG
+        console.error( 'Cannot POST without being logged in' );
+
+        return {
+            success: false,
+            error: errorCodes.notLoggedIn
+        };
+    }
+
+    console.log( `POST on path: ${path}` );
+
+    return await API.post( 'hex', path, {
+        headers: {
+            Authorization: token,
+            ...additionalHeaders
+        },
+        body: body
+    });
 
 };
 
 
-//region Login/out
+
+
+
+//region User Account Management
+const CreateUser = async ( name, pws ) => {
+
+};
+
 const Login = async ( name, pwd ) => {
 
     try{
 
         const res = await Auth.signIn( name, pwd );
         console.log( res );
-        await FetchUser();
+        await FetchUserData();
 
         return {success: true};
 
@@ -109,8 +187,10 @@ const Logout = async () => {
 //endregion
 
 export default {
-    FetchUser,
+    FetchUserData,
     Get,
+    GetWithAuth,
+    Post,
     Login,
     Logout
 }

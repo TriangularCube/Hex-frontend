@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";
 import { makeStyles, ThemeProvider } from "@material-ui/styles";
-import {Container, Typography} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 // Material UI Components
 import { CssBaseline } from "@material-ui/core";
@@ -25,10 +25,14 @@ import loadable from "@loadable/component";
 import MenuDrawer from "./MenuDrawer";
 import NavBar from "./NavBar";
 
+const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+
 const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
-const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
+const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" ) );
+
 
 import PageLoading from "./components/common/PageLoading";
 
@@ -56,6 +60,7 @@ const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Get Page Width
 import { sidePadding } from "./util/constants";
+import Cube from "./components/pages/Cube/Cube";
 
 
 // Make styles
@@ -63,25 +68,21 @@ const useStyles = makeStyles( theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
+        // https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
         minHeight: '100vh'
     },
-    progressCentering: {
+    siteContent: {
+        flex: '1 0 auto',
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
         alignItems: 'center',
-        height: '100vh'
-    },
-    pageContainer: {
-        flex: 1,
-        display: 'flex',
-        alignItems: 'stretch',
-        justifyContent: 'center',
-        margin: `24px auto`,
-        padding: `0 ${sidePadding}px`
+        justifyContent: 'flex-start',
+        margin: theme.spacing( 2 )
     },
     footer: {
         padding: theme.spacing( 1 ),
-        marginTop: 'auto',
+        // marginTop: 'auto',
+        justifySelf: 'flex-end',
         backgroundColor: theme.palette.background.paper
     }
 }));
@@ -99,16 +100,23 @@ const WithTheme = () => {
             <Router>
                 <MenuDrawer />
                 <NavBar/>
-                <Container component='main' className={classes.pageContainer}>
+
+                <main className={classes.siteContent}>
                     <Switch>
                         <Route path='/test' component={Test}/>
 
+                        <Route path='/target' component={Target} />
+
                         <Route path='/login' component={Login} />
                         <Route path='/myCubes' component={MyCubes} />
-                        <Route path='/target' component={Target} />
+
+                        <Route path='/cube/:handle/edit' component={EditCubePage} />
+                        <Route path='/cube/:handle' component={ViewCubePage} />
+
                         <Route exact path='/' component={Splash} />
                     </Switch>
-                </Container>
+                </main>
+
                 <footer className={ classes.footer }>
                     <Typography variant='body1' color='inherit'>
                         This is a footer
@@ -130,7 +138,7 @@ const WithStore = () => {
     // Use the user's custom theme if there is one
     const useTheme = user && user.theme ?
         // Memoize the user's theme to minimize having to create a new theme every time
-        useMemo( () => createMuiTheme( user.theme ), [user.theme] ) :
+        useMemo( () => createMuiTheme( user.theme ), [ user.theme ] ) :
         // Otherwise just use the default theme
         defaultTheme;
 
@@ -155,15 +163,18 @@ const App = () => {
 
     const classes = loadingStyles();
 
-    const asyncUser = useAsync( amp.FetchUser, [] );
+    const asyncUser = useAsync( amp.FetchUserData, [] );
 
     // Bail early if we're prepping
     if( asyncUser.loading ){
         // TODO Write something quipy here
         return (
-            <div className={classes.root}>
-                <PageLoading/>
-            </div>
+            <>
+                <CssBaseline/>
+                <div className={classes.root}>
+                    <PageLoading/>
+                </div>
+            </>
         );
     }
 

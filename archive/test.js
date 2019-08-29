@@ -115,7 +115,7 @@ function Test(){
     console.log( user );
 
     return(
-        <>
+        <div>
             <Button onClick={ CreateUser }>
                 Create User!
             </Button>
@@ -140,7 +140,7 @@ function Test(){
             <Button onClick={ ChangePassword }>
                 Change Password
             </Button>
-        </>
+        </div>
     );
 }
 

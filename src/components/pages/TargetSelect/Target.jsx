@@ -8,7 +8,7 @@ import * as AC from "~/util/amplify/Amplify-Config";
 
 const Target = () => {
 
-    const [target, setTarget] = React.useState( localStorage.getItem( AC.targetName ) || AC.LOCAL );
+    const [target, setTarget] = React.useState( localStorage.getItem( AC.targetName ) || AC.DEV );
     const [selectedTarget, setSelectTarget] = React.useState( target );
 
     function handleChange( event ){
@@ -25,7 +25,7 @@ const Target = () => {
     }
 
     return(
-        <>
+        <div>
             <Typography variant='h5'>
                 Current target is: {target}
             </Typography>
@@ -56,7 +56,7 @@ const Target = () => {
                 </FormControl>
             </form>
 
-        </>
+        </div>
 
     );
 };

@@ -1,13 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 // Async hook
 import { useAsync } from "react-async-hook";
 
 // Router
 import { Link as RouterLink, Redirect } from "react-router-dom";
-
-// Redux
-import { useSelector } from "react-redux";
 
 // Material UI
 import {
@@ -174,10 +171,7 @@ const cubePageStyles = makeStyles(theme => ({
 }));
 
 const pageName = 'My Cubes';
-const MyCubes = () => {
-
-    // Check if user exists
-    const user = useSelector( state => state.user );
+const MyCubes = ( props ) => {
 
     const classes = cubePageStyles();
 
@@ -188,27 +182,38 @@ const MyCubes = () => {
 
     //region New Cube handling
     const [openNewCubeDialog, setNewCubeDialog] = useState( false );
-    const handleNewCube = () => {
+    let newCubeNameRef = useRef( null );
+    const handleNewCube = async () => {
+
+        const cubeName = newCubeNameRef.current.value;
+
+        if( cubeName.length < 1 ){
+            // TODO deal with empty name
+            console.log( 'Name too short' );
+            return;
+        }
+
+        const body = {
+            name: cubeName
+        };
+
+        const res = await amp.Post( '/newCube', body );
+
+        if( res.success ){
+            props.history.push( `/cube/${ res.handle }` );
+        } else {
+            // TODO handle error creating cube
+            console.error( 'Could not create cube' );
+        }
 
     };
     //endregion
 
 
     // Fire off an async request
-    const asyncCubes = useAsync( async () => amp.Get( '/myCubes' ), [] );
-    // FIXME this is a leak as the component will redirect away when the user logs out, but the function will return on an unmounted component
-
-    // If not logged in, simply redirect to login page
-    if( !user ){
-        return <Redirect
-            to={{
-                pathname: '/login',
-                state: {
-                    referrer: '/myCubes'
-                }
-            }}
-        />
-    }
+    const asyncCubes = useAsync( async () => amp.GetWithAuth( '/myCubes' ), [] );
+    // FIXME this is a leak as the component will redirect away when the user logs out,
+    //  but the function will return on an unmounted component
 
     // While it's loading
     if( asyncCubes.loading ){
@@ -223,7 +228,7 @@ const MyCubes = () => {
         if( asyncCubes.result.error === errorCodes.notLoggedIn ){
 
             // This should not happen and should have been guarded against. This is here as a sanity check only
-            console.error( 'Not Logged In error from API on MyCubes' );
+            console.error( 'Not Logged In error from API on MyCubes, redirecting to login' );
             return <Redirect to={'/login'}/>
 
         }
@@ -244,7 +249,7 @@ const MyCubes = () => {
                 open={openNewCubeDialog}
                 onClose={ () => setNewCubeDialog(false) }
                 fullWidth
-                maxWidth={ 'md' }
+                maxWidth={ 'sm' }
             >
                 <DialogTitle disableTypography className={classes.dialogTitle}>
                     <Typography variant='h6'>
@@ -261,10 +266,12 @@ const MyCubes = () => {
                     <TextField
                         autoFocus
                         fullWidth
+                        label='Cube Name'
+                        inputRef={newCubeNameRef}
                     />
                 </DialogContent>
                 <DialogActions className={classes.dialogActions}>
-                    <Button color='primary'>
+                    <Button color='primary' onClick={handleNewCube}>
                         Create
                     </Button>
                 </DialogActions>

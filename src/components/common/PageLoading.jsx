@@ -9,7 +9,10 @@ const useStyles = makeStyles({
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+
+        // This makes the display inside Site-Content work
+        height: '100%'
     }
 });
 
