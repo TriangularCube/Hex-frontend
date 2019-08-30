@@ -9,17 +9,25 @@ import {
     Grid,
     Paper,
     Tabs,
-    Tab, Hidden
+    Tab,
+    Divider
 } from "@material-ui/core";
 
 // Hex Components
 import PageTitle from "../../common/PageTitle";
 
 const useStyles = makeStyles((theme) => ({
+    cubeListTab: {
+        display: 'flex',
+        flexDirection: 'row'
+    },
     paper: {
         padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
+    },
+    divider: {
+        marginBottom: theme.spacing( 2 )
     }
 }));
 
@@ -73,7 +81,11 @@ const Cube = () => {
             >
                 <Tab label='Description' />
                 <Tab label='List' />
+                <Tab label='Data' />
+                <Tab label='Test' />
             </Tabs>
+
+            <Divider className={classes.divider} />
 
             {
                 tabValue === 0 ?
