@@ -46,7 +46,7 @@ function configAmplify( stage, apiURL, poolID, appID ){
             endpoints:[
                 {
                     name: 'hex',
-                    endpoint: apiURL + stage + '/'
+                    endpoint: apiURL + stage
                 }
             ]
         }

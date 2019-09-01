@@ -222,7 +222,15 @@ const MyCubes = ( props ) => {
         )
     }
 
-    // If request not successful
+    //region Error
+    if( asyncCubes.error ){
+
+        console.error( 'Error connecting to server, message: ', asyncCubes.error );
+
+        // TODO handle the error somehow
+        return null;
+    }
+
     if( !asyncCubes.result.success ){
 
         if( asyncCubes.result.error === errorCodes.notLoggedIn ){
@@ -237,7 +245,9 @@ const MyCubes = ( props ) => {
         console.error( `My Cubes fetch unsuccessful, error: ${asyncCubes.result.error}` );
 
         // TODO handle the error somehow
+        return null;
     }
+    //endregion
 
     // Convenience
     const cubes = asyncCubes.result.cubes;

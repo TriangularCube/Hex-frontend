@@ -79,7 +79,7 @@ async function CallAPI(){
     }
 
     try{
-        const res = await API.get( "hex", "user/bluntweapon", {
+        const res = await API.get( "hex", "/user/bluntweapon", {
             headers: {
                 Authorization: token
             }

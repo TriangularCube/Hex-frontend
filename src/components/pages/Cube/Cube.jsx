@@ -4,8 +4,6 @@ import {useAsync} from "react-async-hook";
 
 import amp from "../../../util/amplify/amp";
 
-import FittedImage from "react-fitted-image";
-
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";
 
@@ -43,14 +41,25 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'row'
     },
-    cubeDescriptionBackground: {
+    cubeCoverSection: {
         padding: theme.spacing(2),
-        // textAlign: 'center',
+        textAlign: 'center',
         color: theme.palette.text.secondary,
     },
     coverImage: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        [theme.breakpoints.down('xs')]: {
+            maxHeight: 400,
+            // width: 'auto'
+            objectFit: 'contain'
+        }
+        // maxHeight: 400
+    },
+    cubeDescriptionSection: {
+        padding: theme.spacing(2),
+        // textAlign: 'center',
+        color: theme.palette.text.secondary,
     },
     divider: {
         marginBottom: theme.spacing( 2 )
@@ -101,10 +110,11 @@ const Cube = ( props ) => {
         return(
             <Grid container spacing={1}>
                 <Grid item xs={12} sm={4} md={3}>
-                    <Paper className={classes.cubeDescriptionBackground}>
+                    <Paper className={classes.cubeCoverSection}>
 
+                        {/* HACK */}
                         <img
-                            src='http://placekitten.com/500/500'
+                            src='http://placekitten.com/400/400'
                             alt='Cube Image'
                             className={classes.coverImage}
                         />
@@ -116,7 +126,7 @@ const Cube = ( props ) => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                    <Paper className={classes.cubeDescriptionBackground}>
+                    <Paper className={classes.cubeDescriptionSection}>
                         <div>
                             <p>
                                 Cube Description
