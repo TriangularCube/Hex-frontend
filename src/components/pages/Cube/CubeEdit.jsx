@@ -21,6 +21,10 @@ import { List, ListItem, ListItemText, Typography } from "@material-ui/core";
 import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 
+
+// DEBUG
+import testCube from "./cubeTestData";
+
 const useStyles = makeStyles({
     page: {
         flex: 1,
@@ -37,8 +41,12 @@ const useStyles = makeStyles({
         // weight: '100%'
     },
     cubeList: {
-        width: '100%',
-        maxWidth: '30%'
+        // width: '100%',
+        // maxWidth: '30%',
+        width: '30%'
+    },
+    workspace: {
+        width: '30%'
     }
 });
 
@@ -79,7 +87,8 @@ const CubeEdit = ( props ) => {
     }
     //endregion
 
-    const cube = asyncGetCube.result.cube;
+    // const cube = asyncGetCube.result.cube;
+    const cube = testCube;
 
     // DEBUG
     console.log( 'Cube: ', cube );
@@ -123,11 +132,11 @@ const CubeEdit = ( props ) => {
                                         { ...provided.draggableProps }
                                         { ...provided.dragHandleProps }
                                     >
+                                        {/* DEBUG */}
                                         <div style={ { background: '#feba13', width: '100%' } }>
-                                            <ListItemText
-                                                primary='Some Text'
-                                                secondary='Secondary Text'
-                                            />
+                                            <ListItemText>
+                                                Some Text
+                                            </ListItemText>
                                         </div>
                                     </ListItem>
                                 ) }
@@ -161,7 +170,7 @@ const CubeEdit = ( props ) => {
         <Droppable droppableId='workspace'>
             {( provided ) => (
 
-                <List ref={provided.innerRef} style={{ border: 1 }}>
+                <List ref={provided.innerRef} className={classes.workspace}>
                     <Draggable
                         draggableId={'0'}
                         index={0}
@@ -203,6 +212,55 @@ const CubeEdit = ( props ) => {
             )}
         </Droppable>;
 
+    const SearchColumn = () =>
+        <Droppable
+            droppableId='search-column'
+            isDropDisabled={true}
+        >
+            {( provided ) => (
+
+                <List ref={provided.innerRef} className={classes.workspace}>
+                    <Draggable
+                        draggableId={'search-0'}
+                        index={0}
+                    >
+                        {(provided) => (
+                            <ListItem
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                            >
+                                <div style={{ background: '#feba13', width: '100%' }}>
+                                    <ListItemText
+                                        primary='Some Text'
+                                        secondary='Secondary Text'
+                                    />
+                                </div>
+                            </ListItem>
+                        )}
+                    </Draggable>
+
+                    <Draggable
+                        draggableId={'search-1'}
+                        index={1}
+                    >
+                        {(provided) => (
+                            <ListItem
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                            >
+                                <ListItemText
+                                    primary='Some Other Text'
+                                />
+                            </ListItem>
+                        )}
+                    </Draggable>
+                    {provided.placeholder}
+                </List>
+            )}
+        </Droppable>;
+
     return(
         <div className={classes.page}>
             <PageTitle>
@@ -216,6 +274,7 @@ const CubeEdit = ( props ) => {
 
                     <CubeList/>
                     <Workspace/>
+                    <SearchColumn/>
 
                 </div>
 

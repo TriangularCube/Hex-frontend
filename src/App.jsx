@@ -55,7 +55,7 @@ configStage( target === null ? DEV : target );
 import amp from "./util/amplify/amp";
 
 // Load Theme
-import defaultThemeObject from "./util/DefaultTheme";
+import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Get Page Width
