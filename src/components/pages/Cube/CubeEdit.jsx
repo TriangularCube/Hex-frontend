@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useAsync } from "react-async-hook";
 
@@ -9,57 +9,76 @@ import { useSelector } from "react-redux";
 import amp from "../../../util/amplify/amp";
 
 // Draggable
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";
 
 // Material UI
-import { List, ListItem, ListItemText, Typography } from "@material-ui/core";
+import {
+    Divider,
+    Tabs,
+    Tab
+} from "@material-ui/core";
 
 // Hex components
 import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 
+import { CubeList, Workspace, SearchColumn } from "./CubeEditComponents";
+
+
+const cubeDroppableId = 'cubeDroppable',
+      workspaceDroppableId = 'workspaceDroppable',
+      searchDroppableId = 'searchDroppable';
 
 // DEBUG
 import testCube from "./cubeTestData";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles( theme => ({
     page: {
         flex: 1,
         height: '100%',
         width: '100%',
-        paddingRight: 40,
-        paddingLeft: 40
+        paddingRight: theme.spacing( 3 ),
+        paddingLeft: theme.spacing( 3 )
     },
     contextSection: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
         // height: '100%',
-        // weight: '100%'
+        // width: '80%'
     },
-    cubeList: {
-        // width: '100%',
-        // maxWidth: '30%',
-        width: '30%'
-    },
-    workspace: {
-        width: '30%'
+    listSpacer: {
+        marginTop: 16,
+        flex: 2,
+        display: 'flex',
+        flexDirection: 'row'
     }
-});
+}));
 
 const CubeEdit = ( props ) => {
 
+    // Cube handle
     const handle = props.match.params.handle;
 
+    // This is to check...user status?
     const user = useSelector( state => state.user );
 
     const classes = useStyles();
 
+    // Tabs
+    // FIXME
+    const [tabValue, setTabValue] = useState( 1 );
+
+
+
+    //region Fetch Cube and check for errors
+
     // Fetch the cube
     // TODO implement some sort of transfer from MyCubes possibly
+    /*
     const asyncGetCube = useAsync( async () => {
         return await amp.GetWithAuth( `/cube/${handle}` );
     }, [] );
@@ -69,7 +88,6 @@ const CubeEdit = ( props ) => {
         return <PageLoading />
     }
 
-    //region Errors
     if( asyncGetCube.error ){
         // DEBUG
         console.error( 'Error getting cube, message: ', asyncGetCube.error );
@@ -85,15 +103,17 @@ const CubeEdit = ( props ) => {
         // TODO
         return null;
     }
-    //endregion
+    */
 
     // const cube = asyncGetCube.result.cube;
+    // DEBUG
     const cube = testCube;
 
     // DEBUG
     console.log( 'Cube: ', cube );
-    console.log( 'User: ', user );
+    // console.log( 'User: ', user );
 
+    /*
     // FIXME This is maybe too naive an implementation?
     if( cube.owner.displayName !== user.displayName ){
         console.error( 'Owner of Cube and current user do not match' );
@@ -105,176 +125,124 @@ const CubeEdit = ( props ) => {
             </p>
         )
     }
+    */
+
+    //endregion
 
     const handleDrop = ( result ) => {
         console.log( result );
+
+        // Back out early if no action is needed
+        if( result.destination === null ||
+            ( result.destination.droppableId === result.source.droppableId
+                 && result.destination.index === result.source.index ) ){
+            return;
+        }
+
+        // TODO
+        let sourceList, destinationList;
+
+        // Abstract the lists away so I don't have to worry about calling the right list
+        switch ( result.source.droppableId ) {
+            case cubeDroppableId:
+                sourceList = cube.cards;
+                break;
+            case workspaceDroppableId:
+                sourceList = cube.workspace;
+                break;
+            case searchDroppableId:
+                // TODO
+                break;
+            default:
+                console.error( 'Droppable ID not linked to list' );
+        }
+        switch ( result.destination.droppableId ) {
+            case cubeDroppableId:
+                destinationList = cube.cards;
+                break;
+            case workspaceDroppableId:
+                destinationList = cube.workspace;
+                break;
+            default:
+                console.error( 'Droppable ID not linked to list' );
+        }
+
+        let element = result.source.droppableId === searchDroppableId ?
+            // If coming from Search, simply copy element
+            // TODO
+            element = sourceList[result.source.index]
+            :
+            // Remove 1 element at index
+            element = sourceList.splice( result.source.index, 1 );
+
+        // Insert the element to location at index, and remove 0 elements
+        destinationList.splice( result.destination.index, 0, element[0] );
+
     };
 
-    // Cube List column
-    const CubeList = () =>
-        <Droppable droppableId='cubeList'>
-            { ( provided ) => (
-                <div className={ classes.cubeList }>
-                    <Typography variant='h5'>
-                        Cube List
-                    </Typography>
-
-                    <List ref={ provided.innerRef }>
-                        {/* DEBUG */ }
-                        <div style={ { border: 1, borderColor: '#ffffff', borderStyle: 'solid' } }>
-                            <Draggable
-                                draggableId={ 'cubeList-0' }
-                                index={ 0 }
-                            >
-                                { ( provided ) => (
-                                    <ListItem
-                                        ref={ provided.innerRef }
-                                        { ...provided.draggableProps }
-                                        { ...provided.dragHandleProps }
-                                    >
-                                        {/* DEBUG */}
-                                        <div style={ { background: '#feba13', width: '100%' } }>
-                                            <ListItemText>
-                                                Some Text
-                                            </ListItemText>
-                                        </div>
-                                    </ListItem>
-                                ) }
-                            </Draggable>
-
-                            <Draggable
-                                draggableId={ 'cubeList-1' }
-                                index={ 1 }
-                            >
-                                { ( provided ) => (
-                                    <ListItem
-                                        ref={ provided.innerRef }
-                                        { ...provided.draggableProps }
-                                        { ...provided.dragHandleProps }
-                                    >
-                                        <ListItemText
-                                            primary='Some Other Text'
-                                        />
-                                    </ListItem>
-                                ) }
-                            </Draggable>
-                            { provided.placeholder }
-                        </div>
-                    </List>
+    const SearchAndEdit = () => {
+        return (
+            <>
+                {/* Div here to space the top properly to line up with the Search heading */}
+                <div className={classes.listSpacer}>
+                    <CubeList
+                        cubeList={cube.cards}
+                        droppableId={cubeDroppableId}
+                    />
+                    <Workspace
+                        workspaceList={cube.workspace}
+                        droppableId={workspaceDroppableId}
+                    />
                 </div>
-            ) }
-        </Droppable>;
 
-    // Workspace column
-    const Workspace = () =>
-        <Droppable droppableId='workspace'>
-            {( provided ) => (
+                <SearchColumn
+                    droppableId={searchDroppableId}
+                />
+            </>
+        );
+    };
 
-                <List ref={provided.innerRef} className={classes.workspace}>
-                    <Draggable
-                        draggableId={'0'}
-                        index={0}
-                    >
-                        {(provided) => (
-                            <ListItem
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                            >
-                                <div style={{ background: '#feba13', width: '100%' }}>
-                                    <ListItemText
-                                        primary='Some Text'
-                                        secondary='Secondary Text'
-                                    />
-                                </div>
-                            </ListItem>
-                        )}
-                    </Draggable>
-
-                    <Draggable
-                        draggableId={'1'}
-                        index={1}
-                    >
-                        {(provided) => (
-                            <ListItem
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                            >
-                                <ListItemText
-                                    primary='Some Other Text'
-                                />
-                            </ListItem>
-                        )}
-                    </Draggable>
-                    {provided.placeholder}
-                </List>
-            )}
-        </Droppable>;
-
-    const SearchColumn = () =>
-        <Droppable
-            droppableId='search-column'
-            isDropDisabled={true}
-        >
-            {( provided ) => (
-
-                <List ref={provided.innerRef} className={classes.workspace}>
-                    <Draggable
-                        draggableId={'search-0'}
-                        index={0}
-                    >
-                        {(provided) => (
-                            <ListItem
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                            >
-                                <div style={{ background: '#feba13', width: '100%' }}>
-                                    <ListItemText
-                                        primary='Some Text'
-                                        secondary='Secondary Text'
-                                    />
-                                </div>
-                            </ListItem>
-                        )}
-                    </Draggable>
-
-                    <Draggable
-                        draggableId={'search-1'}
-                        index={1}
-                    >
-                        {(provided) => (
-                            <ListItem
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                            >
-                                <ListItemText
-                                    primary='Some Other Text'
-                                />
-                            </ListItem>
-                        )}
-                    </Draggable>
-                    {provided.placeholder}
-                </List>
-            )}
-        </Droppable>;
+    const TabDisplay = () => {
+        switch ( tabValue ) {
+            case 0:
+                // TODO
+                return null;
+            case 1:
+                return <SearchAndEdit/>;
+            case 2:
+                return null;
+            default:
+                console.error( 'Tab request unknown' );
+                return null;
+        }
+    };
 
     return(
         <div className={classes.page}>
+            {/* TODO Change this to custom implementation */}
             <PageTitle>
-                Edit This Cube!
+                {cube.name}
             </PageTitle>
+
+            <Tabs
+                value={tabValue}
+                onChange={ (evt, newValue) => setTabValue( newValue ) }
+                aria-label='View Editing Tabs'
+                variant='fullWidth'
+            >
+                <Tab label='Description' />
+                <Tab label='Search' />
+                <Tab label='Workspace' />
+            </Tabs>
+
+            <Divider />
 
             <DragDropContext
                 onDragEnd={ handleDrop }
             >
                 <div className={classes.contextSection}>
 
-                    <CubeList/>
-                    <Workspace/>
-                    <SearchColumn/>
+                    <TabDisplay/>
 
                 </div>
 
