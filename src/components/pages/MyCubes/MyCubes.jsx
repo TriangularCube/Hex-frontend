@@ -27,7 +27,7 @@ import PageTitle from "../../common/PageTitle";
 import PageLoading from "../../common/PageLoading";
 
 // Amp
-import amp from "../../../util/amplify/amp";
+import api from "../../../util/config/api";
 
 // Styles
 import { makeStyles } from "@material-ui/styles";
@@ -197,7 +197,7 @@ const MyCubes = ( props ) => {
             name: cubeName
         };
 
-        const res = await amp.Post( '/newCube', body );
+        const res = await api.Post( '/newCube', body );
 
         if( res.success ){
             props.history.push( `/cube/${ res.handle }` );
@@ -211,7 +211,7 @@ const MyCubes = ( props ) => {
 
 
     // Fire off an async request
-    const asyncCubes = useAsync( async () => amp.GetWithAuth( '/myCubes' ), [] );
+    const asyncCubes = useAsync( async () => api.GetWithAuth( '/myCubes' ), [] );
     // FIXME this is a leak as the component will redirect away when the user logs out,
     //  but the function will return on an unmounted component
 
@@ -222,7 +222,15 @@ const MyCubes = ( props ) => {
         )
     }
 
-    // If request not successful
+    //region Error
+    if( asyncCubes.error ){
+
+        console.error( 'Error connecting to server, message: ', asyncCubes.error );
+
+        // TODO handle the error somehow
+        return null;
+    }
+
     if( !asyncCubes.result.success ){
 
         if( asyncCubes.result.error === errorCodes.notLoggedIn ){
@@ -237,7 +245,9 @@ const MyCubes = ( props ) => {
         console.error( `My Cubes fetch unsuccessful, error: ${asyncCubes.result.error}` );
 
         // TODO handle the error somehow
+        return null;
     }
+    //endregion
 
     // Convenience
     const cubes = asyncCubes.result.cubes;

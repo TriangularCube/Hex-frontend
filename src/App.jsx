@@ -21,7 +21,7 @@ import { CssBaseline } from "@material-ui/core";
 // Loadable
 import loadable from "@loadable/component";
 
-// Hex components
+//region Hex components
 import MenuDrawer from "./MenuDrawer";
 import NavBar from "./NavBar";
 
@@ -32,7 +32,7 @@ const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
 const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" ) );
-
+//endregion
 
 import PageLoading from "./components/common/PageLoading";
 
@@ -47,20 +47,15 @@ WebFont.load({
 });
 
 // Configure Amplify
-import { targetName, configStage, DEV } from "./util/amplify/Amplify-Config";
-const target = localStorage.getItem( targetName );
-configStage( target === null ? DEV : target );
+import { setDefaultConfig } from "./util/config/config";
+setDefaultConfig();
 
 // Amplify
-import amp from "./util/amplify/amp";
+import amp from "./util/config/api";
 
 // Load Theme
-import defaultThemeObject from "./util/DefaultTheme";
+import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
-
-// Get Page Width
-import { sidePadding } from "./util/constants";
-import Cube from "./components/pages/Cube/Cube";
 
 
 // Make styles

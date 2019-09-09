@@ -3,12 +3,13 @@ import React from "react";
 // Material UI
 import { FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Button, Typography } from "@material-ui/core";
 
-// Amplify
-import * as AC from "~/util/amplify/Amplify-Config";
+// Config
+import { targetName, setConfig } from "../../../util/config/config";
+import { targets } from "../../../util/constants";
 
 const Target = () => {
 
-    const [target, setTarget] = React.useState( localStorage.getItem( AC.targetName ) || AC.DEV );
+    const [target, setTarget] = React.useState( localStorage.getItem( targetName ) );
     const [selectedTarget, setSelectTarget] = React.useState( target );
 
     function handleChange( event ){
@@ -17,10 +18,13 @@ const Target = () => {
 
     function handleSubmit( event ){
 
-        setTarget( selectedTarget );
-        AC.configStage( selectedTarget );
-
         event.preventDefault();
+
+        setTarget( selectedTarget );
+
+        const configObject = Object.values( targets )
+            .find( config => config.stage === selectedTarget );
+        setConfig( configObject );
 
     }
 
@@ -41,10 +45,10 @@ const Target = () => {
                         onChange={handleChange}
                     >
 
-                        <FormControlLabel value={AC.LOCAL} control={<Radio />} label='Local' />
-                        <FormControlLabel value={AC.DEV} control={<Radio />} label='Dev' />
-                        <FormControlLabel value={AC.DEV_MASTER} control={<Radio />} label='Dev-Master' />
-                        <FormControlLabel value={AC.STAGE} control={<Radio />} label='Stage' />
+                        <FormControlLabel value='local' control={<Radio />} label='Local' />
+                        <FormControlLabel value='dev' control={<Radio />} label='Dev' />
+                        <FormControlLabel value='dev-master' control={<Radio />} label='Dev-Master' />
+                        <FormControlLabel value='staging' control={<Radio />} label='Staging' />
 
                     </RadioGroup>
 
