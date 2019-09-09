@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import {useAsync} from "react-async-hook";
 
-import amp from "../../../util/amplify/amp";
+import amp from "../../../util/config/api";
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";

@@ -6,7 +6,7 @@ import { useAsync } from "react-async-hook";
 import { useSelector } from "react-redux";
 
 // Amp
-import amp from "../../../util/amplify/amp";
+import amp from "../../../util/config/api";
 
 // Draggable
 import { DragDropContext } from "react-beautiful-dnd";

@@ -1,62 +1,18 @@
 import Auth from "@aws-amplify/auth";
-import API from "@aws-amplify/api";
 
-import errorCodes from "../../util/errorCodes.json";
+import errorCodes from "../errorCodes.json";
 
 import store from "../../Redux/store";
 import { setUser } from "../../Redux/actionCreators";
 
 const dispatch = store.dispatch;
 
-const FetchUserData = async () => {
-
-    try{
-
-        const user = await GetWithAuth( '/me' );
-
-        if( user.success ){
-            dispatch( setUser( user.user ) );
-            return user.user;
-        }
-
-        dispatch( setUser( null ) );
-
-    } catch( e ){
-
-        // DEBUG
-        console.error( 'Fetch User Errored, setting user to Null. Message: ' + e );
-
-        // Not logged in
-        dispatch( setUser( null ) );
-
-    }
-
+let endpoint;
+export const configEndpoint = ( config ) => {
+    endpoint = config.url;
 };
 
-// Fetch user credentials from Auth module
-const GetUserCredentials = async () => {
 
-    let userCredentials;
-    try{
-
-        userCredentials = await Auth.currentSession();
-
-        // If successful, get JWT
-        return userCredentials.getIdToken().getJwtToken();
-
-    } catch( e ){
-
-        // DEBUG
-        console.log( `Error getting user credentials from Auth, setting user to Null. Message: ${ e.message }` );
-
-        // If unsuccessful, reset user and return
-        dispatch( setUser( null ) );
-
-        return undefined;
-
-    }
-
-};
 
 //region GET logic
 const GetWithAuth = async ( path, additionalHeaders = {} ) => {
@@ -95,17 +51,27 @@ const GetFromServer = async ( path, token, additionalHeaders ) => {
 
     try{
 
-        return await API.get( 'hex', path, {
+        const res = await fetch( endpoint + path, {
             headers: {
                 Authorization: token,
                 ...additionalHeaders
-            }
+            },
+            mode: "cors"
         });
+
+        if( !res.ok ){
+            return {
+                success: false,
+                error: res
+            }
+        }
+
+        return await res.json();
 
     } catch( e ){
         return {
             success: false,
-            error: e.message
+            error: e
         };
     }
 
@@ -130,30 +96,110 @@ const Post = async ( path, body, additionalHeaders = {} ) => {
 
     console.log( `POST on path: ${path}` );
 
-    return await API.post( 'hex', path, {
-        headers: {
-            Authorization: token,
-            ...additionalHeaders
-        },
-        body: body
-    });
+    try{
+
+        const res = await fetch( endpoint + path, {
+            method: 'POST',
+            headers: {
+                Authorization: token,
+                ...additionalHeaders
+            },
+            body: JSON.stringify( body )
+        });
+
+        if( !res.ok ){
+            return {
+                success: false,
+                error: res
+            }
+        }
+
+        return await res.json();
+
+    } catch( e ){
+
+        return {
+            success: false,
+            error: e
+        }
+
+    }
 
 };
 
-//region
+//region Convenience functions
+const FetchUserData = async () => {
+
+    try{
+
+        const user = await GetWithAuth( '/me' );
+
+        if( user.success ){
+            dispatch( setUser( user.user ) );
+            return user.user;
+        }
+
+        dispatch( setUser( null ) );
+
+    } catch( e ){
+
+        // DEBUG
+        console.error( 'Fetch User Errored, setting user to Null. Message: ' + e );
+
+        // Not logged in
+        dispatch( setUser( null ) );
+
+    }
+
+};
+
+const GetUserCredentials = async () => {
+
+    let userCredentials;
+    try{
+
+        userCredentials = await Auth.currentSession();
+
+        // If successful, get JWT
+        return userCredentials.getIdToken().getJwtToken();
+
+    } catch( e ){
+
+        // DEBUG
+        console.log( `Error getting user credentials from Auth, setting user to Null. Message: ${ e.message }` );
+
+        // If unsuccessful, reset user and return
+        dispatch( setUser( null ) );
+
+        return undefined;
+
+    }
+
+};
+//endregion
+
+//region Scryfall
 
 const SearchCard = async ( query, page = 1 ) => {
 
     try {
 
-        const res = await API.get(
-                'scryfall',
-                `/cards/search?q=${query}&page=${page}`,
-                {}
-            );
+        const res =
+            await fetch( `https://api.scryfall.com/cards/search?q=${query}&page=${page}` );
 
-        console.log( res );
-        return res;
+        if( !res.ok ){
+            return {
+                success: false,
+                error: res
+            }
+        }
+
+        const json = await res.json();
+
+        return {
+            success: true,
+            result: json
+        };
 
     } catch ( e ){
 

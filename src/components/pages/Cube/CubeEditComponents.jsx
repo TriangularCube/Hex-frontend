@@ -18,7 +18,7 @@ import {
 import { Search as SearchIcon } from "@material-ui/icons";
 
 
-import amp from "../../../util/amplify/amp";
+import amp from "../../../util/config/api";
 
 
 const useStyles = makeStyles( theme => ({

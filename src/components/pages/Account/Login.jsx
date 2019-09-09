@@ -10,7 +10,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Amp
-import amp from "../../../util/amplify/amp";
+import amp from "../../../util/config/api";
 
 // Material UI utils
 import { makeStyles } from "@material-ui/styles";
