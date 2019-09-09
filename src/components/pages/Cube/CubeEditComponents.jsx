@@ -16,7 +16,9 @@ import {
     Divider
 } from "@material-ui/core";
 import { Search as SearchIcon } from "@material-ui/icons";
-import { drop } from "react-beautiful-dnd/src/state/action-creators";
+
+
+import amp from "../../../util/amplify/amp";
 
 
 const useStyles = makeStyles( theme => ({
@@ -40,7 +42,6 @@ const useStyles = makeStyles( theme => ({
 export const CubeList = ({cubeList, droppableId}) => {
 
     const classes = useStyles();
-
 
     return (
         <div className={ classes.flex }>
@@ -141,6 +142,13 @@ export const SearchColumn = ({droppableId}) => {
 
     const classes = useStyles();
 
+    const handleSearchfield = async ( evt ) => {
+        const searchTerm = evt.target.value;
+
+        const res = await amp.SearchCard( searchTerm );
+        console.log( res );
+    };
+
     return (
         <div className={classes.flex}>
             {/*
@@ -156,6 +164,7 @@ export const SearchColumn = ({droppableId}) => {
                     margin='none'
                     id='search-textfield'
                     label='Search'
+                    onChange={ handleSearchfield }
                 />
             </div>
 

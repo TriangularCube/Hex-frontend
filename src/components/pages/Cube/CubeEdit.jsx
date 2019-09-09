@@ -211,6 +211,8 @@ const CubeEdit = ( props ) => {
                 return <SearchAndEdit/>;
             case 2:
                 return null;
+            case 3:
+                return null;
             default:
                 console.error( 'Tab request unknown' );
                 return null;
@@ -219,7 +221,7 @@ const CubeEdit = ( props ) => {
 
     return(
         <div className={classes.page}>
-            {/* TODO Change this to custom implementation */}
+            {/* TODO Change this to custom implementation with editable title */}
             <PageTitle>
                 {cube.name}
             </PageTitle>
@@ -233,6 +235,7 @@ const CubeEdit = ( props ) => {
                 <Tab label='Description' />
                 <Tab label='Search' />
                 <Tab label='Workspace' />
+                <Tab label='Update' />
             </Tabs>
 
             <Divider />

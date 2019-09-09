@@ -47,6 +47,10 @@ function configAmplify( stage, apiURL, poolID, appID ){
                 {
                     name: 'hex',
                     endpoint: apiURL + stage
+                },
+                {
+                    name: 'scryfall',
+                    endpoint: 'https://api.scryfall.com'
                 }
             ]
         }

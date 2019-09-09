@@ -140,7 +140,31 @@ const Post = async ( path, body, additionalHeaders = {} ) => {
 
 };
 
+//region
 
+const SearchCard = async ( query, page = 1 ) => {
+
+    try {
+
+        const res = await API.get(
+                'scryfall',
+                `/cards/search?q=${query}&page=${page}`,
+                {}
+            );
+
+        console.log( res );
+        return res;
+
+    } catch ( e ){
+
+        console.error( 'Error searching cards from Scryfall, message: ' + e.message );
+        return undefined;
+
+    }
+
+};
+
+//endregion
 
 
 
@@ -191,6 +215,7 @@ export default {
     Get,
     GetWithAuth,
     Post,
+    SearchCard,
     Login,
     Logout
 }
