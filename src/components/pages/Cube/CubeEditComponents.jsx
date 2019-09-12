@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+
+import useConstant from "use-constant";
+import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
@@ -19,6 +22,9 @@ import { Search as SearchIcon } from "@material-ui/icons";
 
 
 import networkCalls from "../../../util/config/networkCalls";
+import { useAsyncAbortable } from "react-async-hook";
+
+
 
 
 const useStyles = makeStyles( theme => ({
@@ -137,17 +143,36 @@ export const Workspace = ({workspaceList, droppableId}) => {
     )
 };
 
+const useDebouncedSearch = () => {
+
+    const [searchText, setSearchText] = useState( null );
+
+    const debouncedSearch = useConstant(() => {
+        AwesomeDebouncePromise( networkCalls.SearchCard, 1000 );
+    });
+
+    const search = useAsyncAbortable(
+        async (abortSignal, text) => {
+            if( text.length < 1 ){
+                return [];
+            }
+            return debouncedSearch( searchText, abortSignal );
+        },
+        [searchText]
+    )
+
+};
 
 export const SearchColumn = ({droppableId}) => {
 
     const classes = useStyles();
+    const [searchText, setSearchText] = useState( null );
 
     const handleSearchfield = async ( evt ) => {
-        const searchTerm = evt.target.value;
-
-        const res = await networkCalls.SearchCard( searchTerm );
-        console.log( res );
+        setSearchText( evt.target.value );
     };
+
+
 
     return (
         <div className={classes.flex}>

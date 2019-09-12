@@ -180,7 +180,7 @@ const GetUserCredentials = async () => {
 
 //region Scryfall
 
-const SearchCard = async ( query, page = 1 ) => {
+const SearchCard = async ( query, abortSignal, page = 1 ) => {
 
     try {
 
