@@ -6,7 +6,7 @@ import { useAsync } from "react-async-hook";
 import { useSelector } from "react-redux";
 
 // Amp
-import amp from "../../../util/config/api";
+import networkCalls from "../../../util/config/networkCalls";
 
 // Draggable
 import { DragDropContext } from "react-beautiful-dnd";
@@ -80,7 +80,7 @@ const CubeEdit = ( props ) => {
     // TODO implement some sort of transfer from MyCubes possibly
     /*
     const asyncGetCube = useAsync( async () => {
-        return await amp.GetWithAuth( `/cube/${handle}` );
+        return await networkCalls.GetWithAuth( `/cube/${handle}` );
     }, [] );
 
     // Back out if loading
@@ -163,6 +163,9 @@ const CubeEdit = ( props ) => {
             case workspaceDroppableId:
                 destinationList = cube.workspace;
                 break;
+            case searchDroppableId:
+                // TODO
+                break;
             default:
                 console.error( 'Droppable ID not linked to list' );
         }
@@ -170,10 +173,10 @@ const CubeEdit = ( props ) => {
         let element = result.source.droppableId === searchDroppableId ?
             // If coming from Search, simply copy element
             // TODO
-            element = sourceList[result.source.index]
+            sourceList[result.source.index]
             :
             // Remove 1 element at index
-            element = sourceList.splice( result.source.index, 1 );
+            sourceList.splice( result.source.index, 1 );
 
         // Insert the element to location at index, and remove 0 elements
         destinationList.splice( result.destination.index, 0, element[0] );

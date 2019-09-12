@@ -8,7 +8,7 @@ import { setMobileDrawer } from "./Redux/actionCreators";
 import { Link, withRouter } from "react-router-dom";
 
 // Amp, for Logout
-import amp from "./util/config/api";
+import networkCalls from "./util/config/networkCalls";
 
 // Material UI Utils
 import { fade } from "@material-ui/core/styles";
@@ -123,7 +123,7 @@ const NavBar = ( props ) => {
 
     const handleLogout = async () => {
         // Initiate logout
-        const res = await amp.Logout();
+        const res = await networkCalls.Logout();
 
         if( res ){
             // If successful, close menu and redirect to homepage

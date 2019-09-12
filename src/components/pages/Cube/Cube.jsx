@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import {useAsync} from "react-async-hook";
 
-import amp from "../../../util/config/api";
+import networkCalls from "../../../util/config/networkCalls";
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";
@@ -72,7 +72,7 @@ const Cube = ( props ) => {
 
     // Get the cube
     const asyncGetCube = useAsync( async () => {
-        return await amp.Get( `/cube/${handle}` );
+        return await networkCalls.Get( `/cube/${handle}` );
     }, [] );
 
     const classes = useStyles();
@@ -114,7 +114,7 @@ const Cube = ( props ) => {
 
                         {/* HACK */}
                         <img
-                            src='http://placekitten.com/400/400'
+                            src='https://placekitten.com/400/400'
                             alt='Cube Image'
                             className={classes.coverImage}
                         />

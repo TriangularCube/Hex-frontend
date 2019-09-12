@@ -18,7 +18,7 @@ import {
 import { Search as SearchIcon } from "@material-ui/icons";
 
 
-import amp from "../../../util/config/api";
+import networkCalls from "../../../util/config/networkCalls";
 
 
 const useStyles = makeStyles( theme => ({
@@ -145,7 +145,7 @@ export const SearchColumn = ({droppableId}) => {
     const handleSearchfield = async ( evt ) => {
         const searchTerm = evt.target.value;
 
-        const res = await amp.SearchCard( searchTerm );
+        const res = await networkCalls.SearchCard( searchTerm );
         console.log( res );
     };
 

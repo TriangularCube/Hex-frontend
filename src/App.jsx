@@ -51,7 +51,7 @@ import { setDefaultConfig } from "./util/config/config";
 setDefaultConfig();
 
 // Amplify
-import amp from "./util/config/api";
+import networkCalls from "./util/config/networkCalls";
 
 // Load Theme
 import defaultThemeObject from "./util/defaultTheme";
@@ -158,7 +158,7 @@ const App = () => {
 
     const classes = loadingStyles();
 
-    const asyncUser = useAsync( amp.FetchUserData, [] );
+    const asyncUser = useAsync( networkCalls.FetchUserData, [] );
 
     // Bail early if we're prepping
     if( asyncUser.loading ){

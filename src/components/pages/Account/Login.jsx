@@ -10,7 +10,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Amp
-import amp from "../../../util/config/api";
+import networkCalls from "../../../util/config/networkCalls";
 
 // Material UI utils
 import { makeStyles } from "@material-ui/styles";
@@ -61,14 +61,14 @@ const Login = ( props ) => {
     const passwordRef = useRef( null );
 
     // Check the Login Status
-    const fetchingUser = useAsync( amp.FetchUserData, [] );
+    const fetchingUser = useAsync( networkCalls.FetchUserData, [] );
 
     // Check if user is already logged in
     const user = useSelector( state => state.user );
 
     // Setup Async Login Handlers
     const login = async () => {
-        const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
+        const res = await networkCalls.Login( emailRef.current.value, passwordRef.current.value );
 
         if( res.success ){
             // If login is successful, redirect
