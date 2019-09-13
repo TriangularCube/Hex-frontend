@@ -51,7 +51,7 @@ import { setDefaultConfig } from "./util/config/config";
 setDefaultConfig();
 
 // Amplify
-import networkCalls from "./util/config/networkCalls";
+import networkCalls from "./util/networkCalls";
 
 // Load Theme
 import defaultThemeObject from "./util/defaultTheme";

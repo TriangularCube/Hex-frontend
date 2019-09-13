@@ -10,7 +10,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Amp
-import networkCalls from "../../../util/config/networkCalls";
+import networkCalls from "../../../util/networkCalls";
 
 // Material UI utils
 import { makeStyles } from "@material-ui/styles";

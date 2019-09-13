@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import useConstant from "use-constant";
+import { useAsyncAbortable } from "react-async-hook";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 import { Draggable, Droppable } from "react-beautiful-dnd";
@@ -21,8 +22,8 @@ import {
 import { Search as SearchIcon } from "@material-ui/icons";
 
 
-import networkCalls from "../../../util/config/networkCalls";
-import { useAsyncAbortable } from "react-async-hook";
+import networkCalls from "../../../util/networkCalls";
+
 
 
 
@@ -143,35 +144,44 @@ export const Workspace = ({workspaceList, droppableId}) => {
     )
 };
 
+
 const useDebouncedSearch = () => {
 
-    const [searchText, setSearchText] = useState( null );
+    const [searchText, setSearchText] = useState( '' );
 
-    const debouncedSearch = useConstant(() => {
-        AwesomeDebouncePromise( networkCalls.SearchCard, 1000 );
-    });
+    const debouncedSearch = useConstant(
+        () => AwesomeDebouncePromise( networkCalls.SearchCard, 1000 )
+    );
 
     const search = useAsyncAbortable(
         async (abortSignal, text) => {
-            if( text.length < 1 ){
+            if( text.length === 0 ){
                 return [];
             }
-            return debouncedSearch( searchText, abortSignal );
+            return debouncedSearch( text, abortSignal );
         },
         [searchText]
-    )
+    );
+
+    return [
+        searchText,
+        setSearchText,
+        search
+    ];
 
 };
 
 export const SearchColumn = ({droppableId}) => {
 
     const classes = useStyles();
-    const [searchText, setSearchText] = useState( null );
 
-    const handleSearchfield = async ( evt ) => {
-        setSearchText( evt.target.value );
-    };
+    const [searchText, setSearchText, search] = useDebouncedSearch();
 
+    console.log( `Loading: ${search.loading}` );
+    if( !search.loading ){
+        console.log( search.result );
+        console.log( search.error );
+    }
 
 
     return (
@@ -189,7 +199,8 @@ export const SearchColumn = ({droppableId}) => {
                     margin='none'
                     id='search-textfield'
                     label='Search'
-                    onChange={ handleSearchfield }
+                    value={searchText}
+                    onChange={ (evt) => setSearchText(evt.target.value) }
                 />
             </div>
 

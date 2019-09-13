@@ -6,7 +6,7 @@ import { useAsync } from "react-async-hook";
 import { useSelector } from "react-redux";
 
 // Amp
-import networkCalls from "../../../util/config/networkCalls";
+import networkCalls from "../../../util/networkCalls";
 
 // Draggable
 import { DragDropContext } from "react-beautiful-dnd";

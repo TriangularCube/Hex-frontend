@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import {useAsync} from "react-async-hook";
 
-import networkCalls from "../../../util/config/networkCalls";
+import networkCalls from "../../../util/networkCalls";
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";

@@ -1,6 +1,6 @@
 import { targets } from "../constants";
 import { configAmplify } from "./amplifyConfig";
-import { configEndpoint } from "./networkCalls";
+import { configEndpoint } from "../networkCalls";
 
 export const targetName = 'Hex-API-Target';
 

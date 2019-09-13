@@ -8,7 +8,7 @@ import { setMobileDrawer } from "./Redux/actionCreators";
 import { Link, withRouter } from "react-router-dom";
 
 // Amp, for Logout
-import networkCalls from "./util/config/networkCalls";
+import networkCalls from "./util/networkCalls";
 
 // Material UI Utils
 import { fade } from "@material-ui/core/styles";

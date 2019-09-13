@@ -1,9 +1,9 @@
 import Auth from "@aws-amplify/auth";
 
-import errorCodes from "../errorCodes.json";
+import errorCodes from "./errorCodes.json";
 
-import store from "../../Redux/store";
-import { setUser } from "../../Redux/actionCreators";
+import store from "../Redux/store";
+import { setUser } from "../Redux/actionCreators";
 
 const dispatch = store.dispatch;
 
@@ -181,6 +181,8 @@ const GetUserCredentials = async () => {
 //region Scryfall
 
 const SearchCard = async ( query, abortSignal, page = 1 ) => {
+
+    console.log( `Searching for card using query ${query}` );
 
     try {
 

@@ -27,7 +27,7 @@ import PageTitle from "../../common/PageTitle";
 import PageLoading from "../../common/PageLoading";
 
 // Amp
-import networkCalls from "../../../util/config/networkCalls";
+import networkCalls from "../../../util/networkCalls";
 
 // Styles
 import { makeStyles } from "@material-ui/styles";
