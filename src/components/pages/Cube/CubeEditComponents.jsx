@@ -17,7 +17,7 @@ import {
     ListItemText,
     TextField,
     Typography,
-    Divider
+    Divider, CircularProgress
 } from "@material-ui/core";
 import { Search as SearchIcon } from "@material-ui/icons";
 
@@ -145,6 +145,8 @@ export const Workspace = ({workspaceList, droppableId}) => {
 };
 
 
+// https://github.com/slorber/react-async-hook
+// Hook for debounced card search
 const useDebouncedSearch = () => {
 
     const [searchText, setSearchText] = useState( '' );
@@ -156,7 +158,7 @@ const useDebouncedSearch = () => {
     const search = useAsyncAbortable(
         async (abortSignal, text) => {
             if( text.length === 0 ){
-                return [];
+                return null;
             }
             return debouncedSearch( text, abortSignal );
         },
@@ -171,18 +173,68 @@ const useDebouncedSearch = () => {
 
 };
 
+const SearchResults = ({search}) => {
+    // Display loading spinner while loading
+    if( search.loading ){
+        return (
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <CircularProgress/>
+            </div>
+        );
+    }
+
+    // If nothing
+    if( !search.result ){
+        return (
+            <Typography>
+                Please enter a search term
+            </Typography>
+        );
+    }
+
+    // If no cards found
+    if( !search.result.success ){
+        return (
+            <Typography>
+                No cards found for that search
+            </Typography>
+        );
+    }
+
+    console.log( search.result );
+
+    const list = search.result.result.data.map( (element, index) => {
+        return(
+            <Draggable
+                draggableId={`search-${index}`}
+                index={index}
+                key={index}
+            >
+                {provided => {
+                    return(
+                        <ListItem
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                        >
+                            <ListItemText
+                                primary={element.name}
+                            />
+                        </ListItem>
+                    )
+                }}
+            </Draggable>
+        )
+    });
+
+    return list;
+};
+
 export const SearchColumn = ({droppableId}) => {
 
     const classes = useStyles();
 
     const [searchText, setSearchText, search] = useDebouncedSearch();
-
-    console.log( `Loading: ${search.loading}` );
-    if( !search.loading ){
-        console.log( search.result );
-        console.log( search.error );
-    }
-
 
     return (
         <div className={classes.flex}>
@@ -211,42 +263,7 @@ export const SearchColumn = ({droppableId}) => {
                 {( provided ) => (
 
                     <List ref={provided.innerRef}>
-                        <Draggable
-                            draggableId={'search-0'}
-                            index={0}
-                        >
-                            {(provided) => (
-                                <ListItem
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                >
-                                    <div style={{ background: '#feba13', width: '100%' }}>
-                                        <ListItemText
-                                            primary='Some Text'
-                                            secondary='Secondary Text'
-                                        />
-                                    </div>
-                                </ListItem>
-                            )}
-                        </Draggable>
-
-                        <Draggable
-                            draggableId={'search-1'}
-                            index={1}
-                        >
-                            {(provided) => (
-                                <ListItem
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                >
-                                    <ListItemText
-                                        primary='Some Other Text'
-                                    />
-                                </ListItem>
-                            )}
-                        </Draggable>
+                        <SearchResults search={search}/>
                         {provided.placeholder}
                     </List>
                 )}

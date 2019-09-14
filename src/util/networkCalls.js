@@ -187,7 +187,11 @@ const SearchCard = async ( query, abortSignal, page = 1 ) => {
     try {
 
         const res =
-            await fetch( `https://api.scryfall.com/cards/search?q=${query}&page=${page}` );
+            await fetch( `https://api.scryfall.com/cards/search?q=${query}&page=${page}`,
+                {
+                    signal: abortSignal
+                }
+            );
 
         if( !res.ok ){
             return {
