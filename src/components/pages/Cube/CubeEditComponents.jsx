@@ -157,7 +157,7 @@ const useDebouncedSearch = () => {
 
     const search = useAsyncAbortable(
         async (abortSignal, text) => {
-            if( text.length === 0 ){
+            if( text.length < 1 ){
                 return null;
             }
             return debouncedSearch( text, abortSignal );
@@ -210,17 +210,33 @@ const SearchResults = ({search}) => {
                 index={index}
                 key={index}
             >
-                {provided => {
+                { ( provided, snapshot ) => {
                     return(
-                        <ListItem
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                        >
-                            <ListItemText
-                                primary={element.name}
-                            />
-                        </ListItem>
+                        <>
+                            <ListItem
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                            >
+                                <ListItemText
+                                    primary={element.name}
+                                />
+                            </ListItem>
+                            { snapshot.isDragging && (
+                                <ListItem>
+                                    {/* https://github.com/atlassian/react-beautiful-dnd/issues/216 */}
+                                    <ListItemText
+                                        primary={element.name}
+                                        style={{
+                                            '~ div': {
+                                                transform: 'none!important',
+                                                backgroundColor: '#ffffff'
+                                            }
+                                        }}
+                                    />
+                                </ListItem>
+                            )}
+                        </>
                     )
                 }}
             </Draggable>
