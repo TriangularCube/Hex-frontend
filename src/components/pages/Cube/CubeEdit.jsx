@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-
-import { useAsync } from "react-async-hook";
+import React, { useState, useEffect } from "react";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -26,6 +24,7 @@ import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 
 import { CubeList, Workspace, SearchColumn } from "./CubeEditComponents";
+import useDebouncedSearch from "./useDebouncedSearch";
 
 
 const cubeDroppableId = 'cubeDroppable',
@@ -58,6 +57,7 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
+
 const CubeEdit = ( props ) => {
 
     // Cube handle
@@ -72,12 +72,15 @@ const CubeEdit = ( props ) => {
     // FIXME
     const [tabValue, setTabValue] = useState( 1 );
 
-
+    const [cube, setCube] = useState( testCube );
 
     //region Fetch Cube and check for errors
 
     // Fetch the cube
     // TODO implement some sort of transfer from MyCubes possibly
+
+
+
     /*
     const asyncGetCube = useAsync( async () => {
         return await networkCalls.GetWithAuth( `/cube/${handle}` );
@@ -106,8 +109,9 @@ const CubeEdit = ( props ) => {
     */
 
     // const cube = asyncGetCube.result.cube;
-    // DEBUG
-    const cube = testCube;
+    if( !cube ){
+        setCube( testCube );
+    }
 
     // DEBUG
     console.log( 'Cube: ', cube );
@@ -129,6 +133,13 @@ const CubeEdit = ( props ) => {
 
     //endregion
 
+    // Search results don't survive changing tabs
+    // TODO Figure out a way to persist search across tab change
+    let searchResults = null;
+    const setSearchResults = (results) => {
+        searchResults = results;
+    };
+
     const handleDrop = ( result ) => {
         console.log( result );
 
@@ -136,7 +147,10 @@ const CubeEdit = ( props ) => {
         if( result.destination === null ||
             ( result.destination.droppableId === result.source.droppableId
                  && result.destination.index === result.source.index ) ){
+
+            console.log( "Drag action doesn't need any action" );
             return;
+
         }
 
         // TODO
@@ -151,7 +165,7 @@ const CubeEdit = ( props ) => {
                 sourceList = cube.workspace;
                 break;
             case searchDroppableId:
-                // TODO
+                sourceList = searchResults;
                 break;
             default:
                 console.error( 'Droppable ID not linked to list' );
@@ -164,22 +178,27 @@ const CubeEdit = ( props ) => {
                 destinationList = cube.workspace;
                 break;
             case searchDroppableId:
-                // TODO
+                console.error( "Drop target is Search Column. This should not have happened" );
                 break;
             default:
                 console.error( 'Droppable ID not linked to list' );
         }
 
-        let element = result.source.droppableId === searchDroppableId ?
-            // If coming from Search, simply copy element
-            // TODO
-            sourceList[result.source.index]
-            :
+        let element;
+        if( result.source.droppableId === searchDroppableId ){
+            const sourceElement = sourceList[result.source.index];
+            element = {
+                cardId: sourceElement.id,
+                name: sourceElement.name
+            }
+        } else {
             // Remove 1 element at index
-            sourceList.splice( result.source.index, 1 );
+            // NOTE since splice returns an array, have to extract the element
+            element = (sourceList.splice( result.source.index, 1 ))[0];
+        }
 
         // Insert the element to location at index, and remove 0 elements
-        destinationList.splice( result.destination.index, 0, element[0] );
+        destinationList.splice( result.destination.index, 0, element );
 
     };
 
@@ -200,6 +219,7 @@ const CubeEdit = ( props ) => {
 
                 <SearchColumn
                     droppableId={searchDroppableId}
+                    setSearchResults={setSearchResults}
                 />
             </>
         );

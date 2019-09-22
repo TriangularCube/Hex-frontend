@@ -1,9 +1,5 @@
 import React, { useState } from "react";
 
-import useConstant from "use-constant";
-import { useAsyncAbortable } from "react-async-hook";
-import AwesomeDebouncePromise from "awesome-debounce-promise";
-
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
 import clsx from "clsx";
@@ -22,10 +18,7 @@ import {
 import { Search as SearchIcon } from "@material-ui/icons";
 
 
-import networkCalls from "../../../util/networkCalls";
-
-
-
+import useDebouncedSearch from "./useDebouncedSearch";
 
 
 const useStyles = makeStyles( theme => ({
@@ -45,6 +38,53 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
+
+const CubeItems = ({provided, sourceList, listName}) => {
+
+    // Map the output to list items
+    let Output = sourceList.map( (element, index) => {
+        return(
+            <Draggable
+                draggableId={ `${listName}-${index}` }
+                index={ index }
+                key={ index }
+            >
+                { (provided) => (
+                    <ListItem
+                        ref={ provided.innerRef }
+                        { ...provided.draggableProps }
+                        { ...provided.dragHandleProps }
+                    >
+                        <ListItemText>
+                            {element.name}
+                        </ListItemText>
+                    </ListItem>
+                ) }
+            </Draggable>
+        )
+    });
+
+    // If there are no items in the array, use placeholder
+    // without placeholder, there's a very small space for the drop target
+    if( Output.length === 0 ){
+        Output =
+            <ListItem>
+                <ListItemText>
+                    Please add cards here
+                </ListItemText>
+            </ListItem>;
+    }
+
+    return (
+        <List ref={provided.innerRef}>
+            {Output}
+            {provided.placeholder}
+        </List>
+    )
+
+};
+
+
 // Cube List column
 export const CubeList = ({cubeList, droppableId}) => {
 
@@ -63,32 +103,11 @@ export const CubeList = ({cubeList, droppableId}) => {
 
             <Droppable droppableId={droppableId}>
                 { ( provided ) => (
-                    <List ref={ provided.innerRef }>
-                        {
-                            cubeList.map( (element, index) => {
-                                return(
-                                    <Draggable
-                                        draggableId={ `cube-list-${index}` }
-                                        index={ index }
-                                        key={ index }
-                                    >
-                                        { (provided) => (
-                                            <ListItem
-                                                ref={ provided.innerRef }
-                                                { ...provided.draggableProps }
-                                                { ...provided.dragHandleProps }
-                                            >
-                                                <ListItemText>
-                                                    {element.cardId}
-                                                </ListItemText>
-                                            </ListItem>
-                                        ) }
-                                    </Draggable>
-                                )
-                            })
-                        }
-                        {provided.placeholder}
-                    </List>
+                    <CubeItems
+                        provided={provided}
+                        sourceList={cubeList}
+                        listName="cube-list"
+                    />
                 ) }
             </Droppable>
         </div>
@@ -111,33 +130,11 @@ export const Workspace = ({workspaceList, droppableId}) => {
 
             <Droppable droppableId={droppableId}>
                 {( provided ) => (
-
-                    <List ref={provided.innerRef}>
-                        {
-                            workspaceList.map( (element, index) => {
-                                return(
-                                    <Draggable
-                                        draggableId={ `workspace-list-${index}` }
-                                        index={ index }
-                                        key={ index }
-                                    >
-                                        { (provided) => (
-                                            <ListItem
-                                                ref={ provided.innerRef }
-                                                { ...provided.draggableProps }
-                                                { ...provided.dragHandleProps }
-                                            >
-                                                <ListItemText>
-                                                    {element.cardId}
-                                                </ListItemText>
-                                            </ListItem>
-                                        ) }
-                                    </Draggable>
-                                )
-                            })
-                        }
-                        {provided.placeholder}
-                    </List>
+                    <CubeItems
+                        provided={provided}
+                        sourceList={workspaceList}
+                        listName="workspace"
+                    />
                 )}
             </Droppable>
         </div>
@@ -145,33 +142,7 @@ export const Workspace = ({workspaceList, droppableId}) => {
 };
 
 
-// https://github.com/slorber/react-async-hook
-// Hook for debounced card search
-const useDebouncedSearch = () => {
 
-    const [searchText, setSearchText] = useState( '' );
-
-    const debouncedSearch = useConstant(
-        () => AwesomeDebouncePromise( networkCalls.SearchCard, 1000 )
-    );
-
-    const search = useAsyncAbortable(
-        async (abortSignal, text) => {
-            if( text.length < 1 ){
-                return null;
-            }
-            return debouncedSearch( text, abortSignal );
-        },
-        [searchText]
-    );
-
-    return [
-        searchText,
-        setSearchText,
-        search
-    ];
-
-};
 
 const SearchResults = ({search}) => {
     // Display loading spinner while loading
@@ -203,7 +174,9 @@ const SearchResults = ({search}) => {
 
     console.log( search.result );
 
-    const list = search.result.result.data.map( (element, index) => {
+    const results = search.result.result.data;
+
+    const list = results.map( (element, index) => {
         return(
             <Draggable
                 draggableId={`search-${index}`}
@@ -225,6 +198,7 @@ const SearchResults = ({search}) => {
                             { snapshot.isDragging && (
                                 <ListItem>
                                     {/* https://github.com/atlassian/react-beautiful-dnd/issues/216 */}
+                                    {/* https://codesandbox.io/s/vertical-list-with-multiple-drop-targets-xqx8i */}
                                     <ListItemText
                                         primary={element.name}
                                         style={{
@@ -246,11 +220,15 @@ const SearchResults = ({search}) => {
     return list;
 };
 
-export const SearchColumn = ({droppableId}) => {
+export const SearchColumn = ({droppableId, setSearchResults}) => {
 
     const classes = useStyles();
 
     const [searchText, setSearchText, search] = useDebouncedSearch();
+
+    if( !search.loading ){
+        setSearchResults( search.result ? search.result.result.data : null );
+    }
 
     return (
         <div className={classes.flex}>
