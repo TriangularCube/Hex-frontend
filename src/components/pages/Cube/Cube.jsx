@@ -119,9 +119,9 @@ const Cube = ( props ) => {
                             className={classes.coverImage}
                         />
 
-                        <Typography variant='h5'>
-                            {cube.name}
-                        </Typography>
+                        {/*<Typography variant='h5'>*/}
+                        {/*    {cube.name}*/}
+                        {/*</Typography>*/}
 
                     </Paper>
                 </Grid>
@@ -156,7 +156,7 @@ const Cube = ( props ) => {
             <div className={classes.topRowContainer}>
                 {/* Page Title */}
                 <PageTitle>
-                    Cube Name
+                    {cube.name}
                 </PageTitle>
 
                 {/* Spacer to fill row */}

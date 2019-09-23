@@ -226,6 +226,7 @@ export const SearchColumn = ({droppableId, setSearchResults}) => {
 
     const [searchText, setSearchText, search] = useDebouncedSearch();
 
+    // Pass the results back to CubeEdit
     if( !search.loading ){
         setSearchResults( search.result ? search.result.result.data : null );
     }
