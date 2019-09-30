@@ -79,8 +79,10 @@ const CreateNewCube = ( {display, setDisplay, history} ) => {
 
         const res = await networkCalls.Post( '/newCube', body );
 
+        console.log( 'Created new cube ', res );
+
         if( res.success ){
-            history.push( `/cube/${ res.handle }` );
+            history.push( `/cube/${ res.data.handle }` );
         } else {
             // TODO handle error creating cube
             console.error( 'Could not create cube' );
@@ -188,15 +190,15 @@ const CubeCard = ( props ) => {
 
                     <div className={classes.cubeContent}>
 
-                        <CubeLink to={`/cube/${cube.handle}`}>
-                            {cube.name}
+                        <CubeLink to={`/cube/${cube[1]}`}>
+                            {cube[0]}
                         </CubeLink>
 
                         <div className={classes.cubeDescriptionContainer}>
                             <Typography variant='subtitle1' color='textSecondary'>
                                 {
-                                    cube.description ?
-                                        cube.description :
+                                    cube[2] ?
+                                        cube[2] :
                                         'No description'
                                 }
                             </Typography>
@@ -292,7 +294,9 @@ const MyCubes = ( props ) => {
     //endregion
 
     // Convenience
-    const cubes = asyncCubes.result.cubes;
+    const cubes = asyncCubes.result.data;
+
+    console.log( cubes );
 
     return(
         <Container maxWidth='md'>

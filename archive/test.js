@@ -30,6 +30,8 @@ async function CreateUser(){
             }
         });
 
+        console.log( 'done' );
+
     } catch( e ){
         console.log( e.message );
     }

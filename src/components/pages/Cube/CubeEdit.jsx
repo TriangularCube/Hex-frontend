@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-// Redux
-import { useSelector } from "react-redux";
-
 // Amp
 import networkCalls from "../../../util/networkCalls";
 
@@ -24,7 +21,6 @@ import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 
 import { CubeList, Workspace, SearchColumn } from "./CubeEditComponents";
-import useDebouncedSearch from "./useDebouncedSearch";
 
 
 const cubeDroppableId = 'cubeDroppable',
@@ -33,6 +29,7 @@ const cubeDroppableId = 'cubeDroppable',
 
 // DEBUG
 import testCube from "./cubeTestData";
+import useCheckUser from "../../../util/useCheckUser";
 
 const useStyles = makeStyles( theme => ({
     page: {
@@ -64,7 +61,7 @@ const CubeEdit = ( props ) => {
     const handle = props.match.params.handle;
 
     // This is to check...user status?
-    const user = useSelector( state => state.user );
+    const user = useCheckUser( props.history, `/cube/${handle}/edit` );
 
     const classes = useStyles();
 
@@ -72,53 +69,55 @@ const CubeEdit = ( props ) => {
     // FIXME
     const [tabValue, setTabValue] = useState( 1 );
 
+    const [loadingCube, setLoading] = useState( true );
     const [cube, setCube] = useState( testCube );
 
     //region Fetch Cube and check for errors
 
+    const [error, setError] = useState( null );
+
     // Fetch the cube
     // TODO implement some sort of transfer from MyCubes possibly
 
+    useEffect( () => {
+        networkCalls.GetWithAuth( `/cube/${handle}` )
+            .then( (res) => {
 
+                setLoading( false );
 
-    /*
-    const asyncGetCube = useAsync( async () => {
-        return await networkCalls.GetWithAuth( `/cube/${handle}` );
+                if( !res.success ){
+                    setError( 'Unsuccessful retrieval' );
+                } else {
+                    // DEBUG
+                    setCube( res.data );
+                    // console.log( 'Got data from server: ', res.data );
+                }
+
+            }).catch( (err) => {
+                setError( err.message );
+                setLoading( false );
+            });
     }, [] );
 
     // Back out if loading
-    if( asyncGetCube.loading ){
-        return <PageLoading />
+    if( loadingCube ){
+        return <PageLoading />;
     }
 
-    if( asyncGetCube.error ){
+    if( error ){
         // DEBUG
-        console.error( 'Error getting cube, message: ', asyncGetCube.error );
+        console.error( 'Error getting cube, message: ', error );
 
         // TODO
         return null;
-    }
-
-    if( !asyncGetCube.result.success ){
-        // DEBUG
-        console.error( 'Error fetching cube from server, server message: ', asyncGetCube.result.error );
-
-        // TODO
-        return null;
-    }
-    */
-
-    // const cube = asyncGetCube.result.cube;
-    if( !cube ){
-        setCube( testCube );
     }
 
     // DEBUG
     console.log( 'Cube: ', cube );
     // console.log( 'User: ', user );
 
-    /*
     // FIXME This is maybe too naive an implementation?
+    console.log( 'User: ', user );
     if( cube.owner.displayName !== user.displayName ){
         console.error( 'Owner of Cube and current user do not match' );
 
@@ -129,7 +128,6 @@ const CubeEdit = ( props ) => {
             </p>
         )
     }
-    */
 
     //endregion
 

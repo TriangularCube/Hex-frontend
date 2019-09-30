@@ -1,7 +1,5 @@
 import Auth from "@aws-amplify/auth";
 
-import errorCodes from "./errorCodes.json";
-
 import store from "../Redux/store";
 import { setUser } from "../Redux/actionCreators";
 
@@ -23,7 +21,7 @@ const GetWithAuth = async ( path, additionalHeaders = {} ) => {
 
         return {
             success: false,
-            error: errorCodes.notLoggedIn
+            error: 'Not Logged In'
         }
 
     }
@@ -90,7 +88,7 @@ const Post = async ( path, body, additionalHeaders = {} ) => {
 
         return {
             success: false,
-            error: errorCodes.notLoggedIn
+            error: 'Not logged in'
         };
     }
 
@@ -132,11 +130,11 @@ const FetchUserData = async () => {
 
     try{
 
-        const user = await GetWithAuth( '/me' );
+        const res = await GetWithAuth( '/me' );
 
-        if( user.success ){
-            dispatch( setUser( user.user ) );
-            return user.user;
+        if( res.success ){
+            dispatch( setUser( res.data ) );
+            return res.data;
         }
 
         dispatch( setUser( null ) );

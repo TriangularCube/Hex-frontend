@@ -103,7 +103,7 @@ const Cube = ( props ) => {
     }
     //endregion
 
-    const cube = asyncGetCube.result.cube;
+    const cube = asyncGetCube.result.data;
     // TODO
 
     const Description = () => {
