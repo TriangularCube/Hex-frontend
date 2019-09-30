@@ -11,14 +11,25 @@ import {useSelector} from "react-redux";
 
 async function CreateUser(){
     try{
-        const user = await Auth.signUp({
+        await Auth.signUp({
             username: 'michael.liu0@gmail.com',
+            password: 'this is a very long password',
+            attributes: {
+                name: 'Tempest Unbound'
+            }
+        });
+
+        const delay = ms => new Promise( res => setTimeout( res, ms ));
+        await delay( 3000 );
+
+        await Auth.signUp({
+            username: 'bluntweapon@gmail.com',
             password: 'this is a very long password',
             attributes: {
                 name: 'bluntweapon'
             }
         });
-        console.log( user );
+
     } catch( e ){
         console.log( e.message );
     }
