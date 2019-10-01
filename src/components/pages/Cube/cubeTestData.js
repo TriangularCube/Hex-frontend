@@ -1,6 +1,6 @@
 export default {
     lists: {
-        cards: [
+        cube: [
 
         ],
         workspace: [

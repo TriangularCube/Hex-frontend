@@ -86,7 +86,7 @@ const CubeEdit = ( props ) => {
                 setLoading( false );
 
                 if( !res.success ){
-                    setError( 'Unsuccessful retrieval' );
+                    setError( 'Unsuccessful retrieval, ', res.error );
                 } else {
                     // DEBUG
                     setCube( res.data );
@@ -157,10 +157,10 @@ const CubeEdit = ( props ) => {
         // Abstract the lists away so I don't have to worry about calling the right list
         switch ( result.source.droppableId ) {
             case cubeDroppableId:
-                sourceList = cube.cards;
+                sourceList = cube.lists.cube;
                 break;
             case workspaceDroppableId:
-                sourceList = cube.workspace;
+                sourceList = cube.lists.workspace;
                 break;
             case searchDroppableId:
                 sourceList = searchResults;
@@ -170,10 +170,10 @@ const CubeEdit = ( props ) => {
         }
         switch ( result.destination.droppableId ) {
             case cubeDroppableId:
-                destinationList = cube.cards;
+                destinationList = cube.lists.cube;
                 break;
             case workspaceDroppableId:
-                destinationList = cube.workspace;
+                destinationList = cube.lists.workspace;
                 break;
             case searchDroppableId:
                 console.error( "Drop target is Search Column. This should not have happened" );
@@ -206,11 +206,11 @@ const CubeEdit = ( props ) => {
                 {/* Div here to space the top properly to line up with the Search heading */}
                 <div className={classes.listSpacer}>
                     <CubeList
-                        cubeList={cube.cards}
+                        cubeList={cube.lists.cube}
                         droppableId={cubeDroppableId}
                     />
                     <Workspace
-                        workspaceList={cube.workspace}
+                        workspaceList={cube.lists.workspace}
                         droppableId={workspaceDroppableId}
                     />
                 </div>
