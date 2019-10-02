@@ -56,7 +56,7 @@ const CubeItems = ({provided, sourceList, listName}) => {
                         { ...provided.dragHandleProps }
                     >
                         <ListItemText>
-                            {element.name}
+                            {element.cardId}
                         </ListItemText>
                     </ListItem>
                 ) }

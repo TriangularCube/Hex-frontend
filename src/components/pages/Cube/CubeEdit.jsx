@@ -89,8 +89,8 @@ const CubeEdit = ( props ) => {
                     setError( 'Unsuccessful retrieval, ', res.error );
                 } else {
                     // DEBUG
-                    setCube( res.data );
-                    // console.log( 'Got data from server: ', res.data );
+                    // setCube( res.data );
+                    console.log( 'Got data from server: ', res.data );
                 }
 
             }).catch( (err) => {
@@ -112,12 +112,12 @@ const CubeEdit = ( props ) => {
         return null;
     }
 
+
     // DEBUG
     console.log( 'Cube: ', cube );
-    // console.log( 'User: ', user );
+    console.log( 'User: ', user );
 
     // FIXME This is maybe too naive an implementation?
-    console.log( 'User: ', user );
     if( cube.owner.displayName !== user.displayName ){
         console.error( 'Owner of Cube and current user do not match' );
 
@@ -163,7 +163,8 @@ const CubeEdit = ( props ) => {
                 sourceList = cube.lists.workspace;
                 break;
             case searchDroppableId:
-                sourceList = searchResults;
+                // Clone the array so we don't have worry about working on it
+                sourceList = [...searchResults];
                 break;
             default:
                 console.error( 'Droppable ID not linked to list' );
@@ -182,18 +183,7 @@ const CubeEdit = ( props ) => {
                 console.error( 'Droppable ID not linked to list' );
         }
 
-        let element;
-        if( result.source.droppableId === searchDroppableId ){
-            const sourceElement = sourceList[result.source.index];
-            element = {
-                cardId: sourceElement.id,
-                name: sourceElement.name
-            }
-        } else {
-            // Remove 1 element at index
-            // NOTE since splice returns an array, have to extract the element
-            element = (sourceList.splice( result.source.index, 1 ))[0];
-        }
+        const element = (sourceList.splice( result.source.index, 1 ))[0];
 
         // Insert the element to location at index, and remove 0 elements
         destinationList.splice( result.destination.index, 0, element );
