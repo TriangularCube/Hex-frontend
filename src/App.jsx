@@ -57,6 +57,10 @@ import networkCalls from "./util/networkCalls";
 import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
+// Load card database
+import loadCardDatabase from "./util/cardDatabase";
+loadCardDatabase();
+
 
 // Make styles
 const useStyles = makeStyles( theme => ({

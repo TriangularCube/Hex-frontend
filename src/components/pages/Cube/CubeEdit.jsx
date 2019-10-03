@@ -184,9 +184,12 @@ const CubeEdit = ( props ) => {
         }
 
         const element = (sourceList.splice( result.source.index, 1 ))[0];
+        const newElement = {
+            cardId: element.id
+        };
 
         // Insert the element to location at index, and remove 0 elements
-        destinationList.splice( result.destination.index, 0, element );
+        destinationList.splice( result.destination.index, 0, newElement );
 
     };
 
