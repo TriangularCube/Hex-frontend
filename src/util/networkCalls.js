@@ -1,7 +1,7 @@
 import Auth from "@aws-amplify/auth";
 
-import store from "../Redux/store";
-import { setUser } from "../Redux/actionCreators";
+import store from "../redux/store";
+import { setUser } from "../redux/actionCreators";
 
 const dispatch = store.dispatch;
 

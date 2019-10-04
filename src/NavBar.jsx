@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { setMobileDrawer } from "./Redux/actionCreators";
+import { setMobileDrawer } from "./redux/actionCreators";
 
 // Router
 import { Link, withRouter } from "react-router-dom";

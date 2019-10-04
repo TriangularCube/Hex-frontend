@@ -5,7 +5,7 @@ import { useAsync } from "react-async-hook";
 
 // Redux
 import {Provider, useSelector} from "react-redux";
-import store from "./Redux/store";
+import store from "./redux/store";
 
 // Router
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";

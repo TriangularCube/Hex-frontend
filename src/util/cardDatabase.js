@@ -1,6 +1,6 @@
-import { setDatabase } from "../Redux/actionCreators";
+import { setDatabase } from "../redux/actionCreators";
 
-import store from "../Redux/store";
+import store from "../redux/store";
 const dispatch = store.dispatch;
 
 const storageName = 'hex-card-database';
