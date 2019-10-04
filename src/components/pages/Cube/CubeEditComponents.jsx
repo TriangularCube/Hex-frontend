@@ -18,7 +18,7 @@ import {
 import { Search as SearchIcon } from "@material-ui/icons";
 
 
-import useDebouncedSearch from "./useDebouncedSearch";
+import useDebouncedSearch from "../../../util/useDebouncedSearch";
 
 
 const useStyles = makeStyles( theme => ({
@@ -56,7 +56,7 @@ const CubeItems = ({provided, sourceList, listName}) => {
                         { ...provided.dragHandleProps }
                     >
                         <ListItemText>
-                            {element.cardId}
+                            {element.id}
                         </ListItemText>
                     </ListItem>
                 ) }
