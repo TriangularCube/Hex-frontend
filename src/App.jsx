@@ -58,8 +58,8 @@ import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Load card database
-import loadCardDatabase from "./util/cardDatabase";
-loadCardDatabase();
+import loadCardDB from "./util/cardDatabase";
+
 
 
 // Make styles
@@ -162,10 +162,11 @@ const App = () => {
 
     const classes = loadingStyles();
 
+    const asyncDatabase = useAsync( loadCardDB, [] );
     const asyncUser = useAsync( networkCalls.FetchUserData, [] );
 
     // Bail early if we're prepping
-    if( asyncUser.loading ){
+    if( asyncUser.loading || asyncDatabase.loading ){
         // TODO Write something quipy here
         return (
             <>

@@ -20,8 +20,6 @@ export const setDefaultConfig = () => {
 
 export const setConfig = ( configObject ) => {
 
-    console.log( configObject );
-
     configAmplify( configObject );
     configEndpoint( configObject );
 

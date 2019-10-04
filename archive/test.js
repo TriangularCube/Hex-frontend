@@ -8,7 +8,6 @@ import Auth from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
 import {useSelector} from "react-redux";
 
-
 async function CreateUser(){
     try{
         await Auth.signUp({
@@ -125,7 +124,9 @@ async function ChangePassword(){
 function Test(){
 
     const user = useSelector( state => state.user );
+    const cards = useSelector( state => state.cardDatabase );
     console.log( user );
+    console.log( cards );
 
     return(
         <div>

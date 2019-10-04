@@ -33,6 +33,7 @@
     "@material-ui/styles": "^4.4.3",
     "awesome-debounce-promise": "^2.1.0",
     "clsx": "^1.0.4",
+    "idb": "^4.0.4",
     "prop-types": "^15.7.2",
     "react": "^16.10.1",
     "react-async-hook": "^3.6.1",
