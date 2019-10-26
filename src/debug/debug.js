@@ -1,11 +1,8 @@
-import React from "react";
-
 // Material UI
 import Button from "@material-ui/core/Button";
 
 // AWS
 import Auth from "@aws-amplify/auth";
-import API from "@aws-amplify/api";
 import {useSelector} from "react-redux";
 
 async function CreateUser(){
@@ -80,29 +77,6 @@ function Logout(){
         .catch( err => console.log( err ) );
 }
 
-async function CallAPI(){
-
-    let token;
-    try{
-        const user = await Auth.currentAuthenticatedUser();
-        token = user.getSignInUserSession().getIdToken().getJwtToken();
-    } catch( e ){
-        token = 'none';
-    }
-
-    try{
-        const res = await API.get( "hex", "/user/bluntweapon", {
-            headers: {
-                Authorization: token
-            }
-        } );
-        console.log( res );
-    } catch( e ){
-        console.log( e.message );
-    }
-
-}
-
 async function ForgotPassword(){
     try{
         const res = await Auth.forgotPassword( 'michael.liu0@gmail.com' );
@@ -121,12 +95,10 @@ async function ChangePassword(){
     }
 }
 
-function Test(){
+function Debug(){
 
     const user = useSelector( state => state.user );
-    const cards = useSelector( state => state.cardDatabase );
     console.log( user );
-    console.log( cards );
 
     return(
         <div>
@@ -145,9 +117,6 @@ function Test(){
             <Button onClick={ Logout }>
                 Logout
             </Button>
-            <Button onClick={ CallAPI }>
-                Call API
-            </Button>
             <Button onClick={ ForgotPassword }>
                 Forgot Password!
             </Button>
@@ -158,4 +127,4 @@ function Test(){
     );
 }
 
-export default Test;
+export default Debug;

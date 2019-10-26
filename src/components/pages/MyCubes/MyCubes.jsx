@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+const {useEffect, useRef, useState} = React;
 
 // Async hook
 import { useAsync } from "react-async-hook";

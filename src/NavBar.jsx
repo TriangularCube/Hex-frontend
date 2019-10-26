@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+const { useState } = React;
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -184,8 +184,8 @@ const NavBar = ( props ) => {
 
                 <Hidden smDown>
                     {/* Debug Suite */}
-                    <Button color='inherit' component={Link} to='/test'>
-                        Test
+                    <Button color='inherit' component={Link} to='/debug'>
+                        Debug
                     </Button>
 
                     {/* My Cubes */}
