@@ -1,5 +1,5 @@
-import React, {useMemo} from "react";
-import ReactDOM from "react-dom";
+// React and ReactDOM loaded from UMD
+const {useMemo} = React;
 
 import { useAsync } from "react-async-hook";
 
@@ -8,7 +8,8 @@ import {Provider, useSelector} from "react-redux";
 import store from "./redux/store";
 
 // Router
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+const { Switch, Route } = ReactRouterDOM;
+const Router = ReactRouterDOM.BrowserRouter;
 
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -25,21 +26,21 @@ import loadable from "@loadable/component";
 import MenuDrawer from "./MenuDrawer";
 import NavBar from "./NavBar";
 
-const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
+import PageLoading from "./components/common/PageLoading";
 
+const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
 const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
 const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" ) );
+
 //endregion
 
-import PageLoading from "./components/common/PageLoading";
-
 // HACK strictly for debugging
-import Test from "../archive/test";
+const Debug = loadable( () => import( "./debug/debug" ) );
 
-// Font
+// Font (from UMD)
 WebFont.load({
     google: {
         families: [ 'Roboto:300,500,700' ]
@@ -102,7 +103,7 @@ const WithTheme = () => {
 
                 <main className={classes.siteContent}>
                     <Switch>
-                        <Route path='/test' component={Test}/>
+                        <Route path='/debug' component={Debug}/>
 
                         <Route path='/target' component={Target} />
 

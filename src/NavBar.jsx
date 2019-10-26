@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+const { useState } = React;
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
 import clsx from "clsx";

@@ -1,5 +1,3 @@
-import React from "react";
-
 // Material UI
 import Button from "@material-ui/core/Button";
 
@@ -121,7 +119,7 @@ async function ChangePassword(){
     }
 }
 
-function Test(){
+function Debug(){
 
     const user = useSelector( state => state.user );
     const cards = useSelector( state => state.cardDatabase );
@@ -158,4 +156,4 @@ function Test(){
     );
 }
 
-export default Test;
+export default Debug;

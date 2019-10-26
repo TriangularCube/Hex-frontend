@@ -13,7 +13,7 @@ export default {
         ]
     },
     handle: '40-polite-geese-flew-somewhere',
-    name: "Test Cube",
+    name: "Debug Cube",
     owner: {
         displayName: "Tempest Unbound"
     },

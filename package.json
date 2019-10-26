@@ -25,7 +25,9 @@
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-externals": "^0.2.0",
     "react": "^16.11.0",
-    "react-dom": "^16.11.0"
+    "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.4"
   },
   "dependencies": {
     "@aws-amplify/api": "^1.2.3",
@@ -41,11 +43,12 @@
     "react-async-hook": "^3.6.1",
     "react-beautiful-dnd": "^12.0.0-beta.12",
     "react-redux": "^7.1.1",
-    "react-router-dom": "^5.1.1",
-    "redux": "^4.0.4",
     "use-constant": "^1.0.0"
   },
   "externals": {
-    "react": "React"
+    "react": "React",
+    "react-dom": "ReactDOM",
+    "react-router-dom": "ReactRouterDOM",
+    "redux": "Redux"
   }
 }

@@ -1,5 +1,3 @@
-import React from "react";
-
 // Material UI
 import { FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Button, Typography } from "@material-ui/core";
 
