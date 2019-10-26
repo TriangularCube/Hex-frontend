@@ -36,18 +36,23 @@ const updateData = async () => {
         res = await res.json();
 
         // Only fetch Default Cards collection
-        if( res.data[0].name === 'Default Cards' ){
+        const dcObject = res.data.find( element => element.name === 'Default Cards' );
 
-            // Fetch the actual list
-            res = await fetch( res.data[0].permalink_uri );
-            res = await res.json();
-
-            // NOTE can't store card list, seems like it's too big for local storage
-            // localStorage.setItem( storageName, JSON.stringify( res ) );
-            console.log( 'Got Database' );
-            dispatch( setDatabase( res ) );
-
+        if( !dcObject ){
+            // Error
+            console.error( 'Cannot find the Default Cards entry' );
+            return;
         }
+
+        // Fetch the actual list
+        res = await fetch( dcObject.permalink_uri );
+        res = await res.json();
+
+        // NOTE can't store card list, seems like it's too big for local storage
+        // localStorage.setItem( storageName, JSON.stringify( res ) );
+        console.log( 'Got Database' );
+        dispatch( setDatabase( res ) );
+
     } catch ( err ){
         console.error( 'Could not fetch Bulk Data, did not update Card Database.' +
             'Error message: ', err );
