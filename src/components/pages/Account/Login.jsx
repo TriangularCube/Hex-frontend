@@ -82,7 +82,7 @@ const Login = ( props ) => {
         } else {
             // Otherwise, print the error
             // TODO
-            console.log( `Login Unsuccessful, message: ${res.error}` );
+            console.log( `Login Unsuccessful, message: `, res.error );
         }
 
         // DEBUG

@@ -4,7 +4,7 @@ const { useState, useEffect } = React;
 import networkCalls from "../../../util/networkCalls";
 
 // Draggable
-import { DragDropContext } from "react-beautiful-dnd";
+
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";
@@ -19,17 +19,14 @@ import {
 // Hex components
 import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
+import useCheckUser from "../../../util/useCheckUser";
 
 import { CubeList, Workspace, SearchColumn } from "./CubeEditComponents";
 
 
-const cubeDroppableId = 'cubeDroppable',
-      workspaceDroppableId = 'workspaceDroppable',
-      searchDroppableId = 'searchDroppable';
-
 // DEBUG
-import testCube from "../../../../reference/cubeTestData";
-import useCheckUser from "../../../util/useCheckUser";
+import testCube from "../../../../debug/cubeTestData";
+
 
 const useStyles = makeStyles( theme => ({
     page: {
@@ -46,9 +43,9 @@ const useStyles = makeStyles( theme => ({
         // height: '100%',
         // width: '80%'
     },
-    listSpacer: {
+    rightArea: {
         marginTop: 16,
-        flex: 2,
+        width: 400,
         display: 'flex',
         flexDirection: 'row'
     }
@@ -83,20 +80,17 @@ const CubeEdit = ( props ) => {
         networkCalls.GetWithAuth( `/cube/${handle}` )
             .then( (res) => {
 
-                setLoading( false );
-
                 if( !res.success ){
                     setError( 'Unsuccessful retrieval, ', res.error );
                 } else {
-                    // DEBUG
+                    // DEBUG TODO
                     // setCube( res.data );
                     console.log( 'Got data from server: ', res.data );
                 }
 
             }).catch( (err) => {
                 setError( err.message );
-                setLoading( false );
-            });
+            }).finally( () => setLoading( false ) );
     }, [] );
 
     // Back out if loading
@@ -138,6 +132,7 @@ const CubeEdit = ( props ) => {
         searchResults = results;
     };
 
+    /*
     const handleDrop = ( result ) => {
         console.log( result );
 
@@ -189,26 +184,21 @@ const CubeEdit = ( props ) => {
         destinationList.splice( result.destination.index, 0, element );
 
     };
+    */
 
     const SearchAndEdit = () => {
         return (
             <>
-                {/* Div here to space the top properly to line up with the Search heading */}
-                <div className={classes.listSpacer}>
-                    <CubeList
-                        cubeList={cube.lists.cube}
-                        droppableId={cubeDroppableId}
-                    />
-                    <Workspace
-                        workspaceList={cube.lists.workspace}
-                        droppableId={workspaceDroppableId}
-                    />
+                {/* CubeList should take up most of the screen */}
+                <CubeList cubeList={cube.lists.cube} />
+
+                {/* Div here to arrange the Search and Workspace properly */}
+                <div className={classes.rightArea}>
+                    <SearchColumn setSearchResults={setSearchResults} />
+                    <Workspace workspaceList={cube.lists.workspace} />
                 </div>
 
-                <SearchColumn
-                    droppableId={searchDroppableId}
-                    setSearchResults={setSearchResults}
-                />
+
             </>
         );
     };
@@ -251,16 +241,11 @@ const CubeEdit = ( props ) => {
 
             <Divider />
 
-            <DragDropContext
-                onDragEnd={ handleDrop }
-            >
-                <div className={classes.contextSection}>
+            <div className={classes.contextSection}>
 
-                    <TabDisplay/>
+                <TabDisplay/>
 
-                </div>
-
-            </DragDropContext>
+            </div>
         </div>
     )
 };

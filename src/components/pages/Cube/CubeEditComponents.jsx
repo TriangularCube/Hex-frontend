@@ -1,5 +1,3 @@
-import { Draggable, Droppable } from "react-beautiful-dnd";
-
 import clsx from "clsx";
 
 // Material UI
@@ -37,28 +35,16 @@ const useStyles = makeStyles( theme => ({
 }));
 
 
-const CubeItems = ({provided, sourceList, listName}) => {
+const CubeItems = ({sourceList}) => {
 
     // Map the output to list items
     let Output = sourceList.map( (element, index) => {
         return(
-            <Draggable
-                draggableId={ `${listName}-${index}` }
-                index={ index }
-                key={ index }
-            >
-                { (provided) => (
-                    <ListItem
-                        ref={ provided.innerRef }
-                        { ...provided.draggableProps }
-                        { ...provided.dragHandleProps }
-                    >
-                        <ListItemText>
-                            {element.id}
-                        </ListItemText>
-                    </ListItem>
-                ) }
-            </Draggable>
+            <ListItem key={index}>
+                <ListItemText>
+                    {element.id}
+                </ListItemText>
+            </ListItem>
         )
     });
 
@@ -74,9 +60,8 @@ const CubeItems = ({provided, sourceList, listName}) => {
     }
 
     return (
-        <List ref={provided.innerRef}>
+        <List>
             {Output}
-            {provided.placeholder}
         </List>
     )
 
@@ -84,7 +69,7 @@ const CubeItems = ({provided, sourceList, listName}) => {
 
 
 // Cube List column
-export const CubeList = ({cubeList, droppableId}) => {
+export const CubeList = ({cubeList}) => {
 
     const classes = useStyles();
 
@@ -99,22 +84,17 @@ export const CubeList = ({cubeList, droppableId}) => {
 
             <Divider className={classes.columnHeading} />
 
-            <Droppable droppableId={droppableId}>
-                { ( provided ) => (
-                    <CubeItems
-                        provided={provided}
-                        sourceList={cubeList}
-                        listName="cube-list"
-                    />
-                ) }
-            </Droppable>
+            <CubeItems
+                sourceList={cubeList}
+                listName="cube-list"
+            />
         </div>
     )
 };
 
 
 // Workspace column
-export const Workspace = ({workspaceList, droppableId}) => {
+export const Workspace = ({workspaceList}) => {
 
     const classes = useStyles();
 
@@ -126,15 +106,9 @@ export const Workspace = ({workspaceList, droppableId}) => {
 
             <Divider className={classes.columnHeading} />
 
-            <Droppable droppableId={droppableId}>
-                {( provided ) => (
-                    <CubeItems
-                        provided={provided}
-                        sourceList={workspaceList}
-                        listName="workspace"
-                    />
-                )}
-            </Droppable>
+            <CubeItems
+                sourceList={workspaceList}
+            />
         </div>
     )
 };
@@ -176,49 +150,20 @@ const SearchResults = ({search}) => {
 
     const list = results.map( (element, index) => {
         return(
-            <Draggable
-                draggableId={`search-${index}`}
-                index={index}
-                key={index}
-            >
-                { ( provided, snapshot ) => {
-                    return(
-                        <>
-                            <ListItem
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                            >
-                                <ListItemText
-                                    primary={element.name}
-                                />
-                            </ListItem>
-                            { snapshot.isDragging && (
-                                <ListItem>
-                                    {/* https://github.com/atlassian/react-beautiful-dnd/issues/216 */}
-                                    {/* https://codesandbox.io/s/vertical-list-with-multiple-drop-targets-xqx8i */}
-                                    <ListItemText
-                                        primary={element.name}
-                                        style={{
-                                            '~ div': {
-                                                transform: 'none!important',
-                                                backgroundColor: '#ffffff'
-                                            }
-                                        }}
-                                    />
-                                </ListItem>
-                            )}
-                        </>
-                    )
-                }}
-            </Draggable>
+            <>
+                <ListItem>
+                    <ListItemText
+                        primary={element.name}
+                    />
+                </ListItem>
+            </>
         )
     });
 
     return list;
 };
 
-export const SearchColumn = ({droppableId, setSearchResults}) => {
+export const SearchColumn = ({setSearchResults}) => {
 
     const classes = useStyles();
 
@@ -237,7 +182,7 @@ export const SearchColumn = ({droppableId, setSearchResults}) => {
             </Typography>
             */}
 
-            <div className={ clsx( classes.columnHeading, classes.searchColumnHeading ) }>
+            <div className={ classes.searchColumnHeading }>
                 <SearchIcon className={classes.searchIcon}/>
                 <TextField
                     fullWidth
@@ -249,18 +194,9 @@ export const SearchColumn = ({droppableId, setSearchResults}) => {
                 />
             </div>
 
-            <Droppable
-                droppableId={droppableId}
-                isDropDisabled={true}
-            >
-                {( provided ) => (
-
-                    <List ref={provided.innerRef}>
-                        <SearchResults search={search}/>
-                        {provided.placeholder}
-                    </List>
-                )}
-            </Droppable>
+            <List>
+                <SearchResults search={search}/>
+            </List>
         </div>
     )
 };

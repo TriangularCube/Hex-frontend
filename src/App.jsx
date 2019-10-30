@@ -14,10 +14,9 @@ const Router = ReactRouterDOM.BrowserRouter;
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";
 import { makeStyles, ThemeProvider } from "@material-ui/styles";
-import { Typography } from "@material-ui/core";
 
 // Material UI Components
-import { CssBaseline } from "@material-ui/core";
+import { Typography, CssBaseline } from "@material-ui/core";
 
 // Loadable
 import loadable from "@loadable/component";
@@ -38,7 +37,7 @@ const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" 
 //endregion
 
 // HACK strictly for debugging
-const Debug = loadable( () => import( "./debug/debug" ) );
+const Debug = loadable( () => import( "../debug/debug" ) );
 
 // Font (from UMD)
 WebFont.load({
@@ -48,7 +47,7 @@ WebFont.load({
 });
 
 // Configure Amplify
-import { setDefaultConfig } from "./util/config/config";
+import { setDefaultConfig } from "./util/config";
 setDefaultConfig();
 
 // Amplify
