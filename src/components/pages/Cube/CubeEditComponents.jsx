@@ -1,4 +1,6 @@
-import clsx from "clsx";
+// React DND
+import { useDrag, useDrop } from "react-dnd";
+import { cubeCard, searchCard, workspaceCard } from "../../../util/dnd/dragTypes";
 
 // Material UI
 import { makeStyles } from "@material-ui/styles";
@@ -13,8 +15,11 @@ import {
 } from "@material-ui/core";
 import { Search as SearchIcon } from "@material-ui/icons";
 
+import clsx from "clsx";
 
+// Debounce
 import useDebouncedSearch from "../../../util/useDebouncedSearch";
+
 
 
 const useStyles = makeStyles( theme => ({
@@ -31,6 +36,17 @@ const useStyles = makeStyles( theme => ({
     },
     searchIcon: {
         marginTop: theme.spacing( 3 )
+    },
+
+    // Drag Styles
+    isOver: {
+        backgroundColor: 'blue'
+    },
+    canGrab: {
+        cursor: 'grab'
+    },
+    isDragging: {
+        opacity: 0.5
     }
 }));
 
@@ -73,8 +89,23 @@ export const CubeList = ({cubeList}) => {
 
     const classes = useStyles();
 
+    const [{isOver, canDrop}, drop] = useDrop({
+        accept: [searchCard, workspaceCard],
+        drop: item => { console.log( 'Drop Action', item ) },
+        collect: monitor => ({
+            isOver: !!monitor.isOver(),
+            canDrop: !!monitor.canDrop()
+        })
+    });
+
     return (
-        <div className={ classes.flex }>
+        <div
+            // Set class to have background color if Drag is hovering over and can accept drop
+            className={ clsx( classes.flex, isOver && canDrop && classes.isOver ) }
+
+            // Drop reference
+            ref={drop}
+        >
             <Typography
                 variant='h5'
                 className={classes.columnHeading}
@@ -144,23 +175,38 @@ const SearchResults = ({search}) => {
         );
     }
 
-    console.log( search.result );
+    console.log( 'Search result', search.result );
 
     const results = search.result.result.data;
+    const classes = useStyles();
 
-    const list = results.map( (element, index) => {
+    return results.map( (element, index) => {
+        const [{isDragging}, drag] = useDrag({
+            item: {
+                name: element.name,
+                type: searchCard
+            },
+            collect: monitor => ({
+                isDragging: monitor.isDragging()
+            })
+        });
+
         return(
-            <>
-                <ListItem>
-                    <ListItemText
-                        primary={element.name}
-                    />
-                </ListItem>
-            </>
+            <ListItem
+                // TODO Change index to something actually meaningful
+                key={index}
+                ref={drag}
+
+                // CanGrab is just setting the Cursor, otherwise set opacity for dragging
+                className={ clsx( classes.canGrab, isDragging && classes.isDragging ) }
+            >
+                <ListItemText
+                    primary={element.name}
+                />
+            </ListItem>
         )
     });
 
-    return list;
 };
 
 export const SearchColumn = ({setSearchResults}) => {

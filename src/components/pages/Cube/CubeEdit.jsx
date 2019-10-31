@@ -3,8 +3,9 @@ const { useState, useEffect } = React;
 // Amp
 import networkCalls from "../../../util/networkCalls";
 
-// Draggable
-
+// React DND
+import { DndProvider } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";
@@ -243,7 +244,9 @@ const CubeEdit = ( props ) => {
 
             <div className={classes.contextSection}>
 
-                <TabDisplay/>
+                <DndProvider backend={HTML5Backend}>
+                    <TabDisplay/>
+                </DndProvider>
 
             </div>
         </div>

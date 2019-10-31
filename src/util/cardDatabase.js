@@ -5,7 +5,7 @@ const dispatch = store.dispatch;
 
 const storageName = 'hex-card-database';
 
-export default async () => {
+export default () => {
 
     // Check IndexedDB support
     if( !('indexedDB' in window) ){
