@@ -22,7 +22,7 @@ import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 import useCheckUser from "../../../util/useCheckUser";
 
-import { CubeList, Workspace, SearchColumn } from "./CubeEditComponents";
+import { SearchAndEdit } from "./CubeEditComponents";
 
 
 // DEBUG
@@ -43,17 +43,13 @@ const useStyles = makeStyles( theme => ({
         justifyContent: 'center',
         // height: '100%',
         // width: '80%'
-    },
-    rightArea: {
-        marginTop: 16,
-        width: 400,
-        display: 'flex',
-        flexDirection: 'row'
     }
 }));
 
 
 const CubeEdit = ( props ) => {
+
+    // region Hooks and initial properties, Fetch cube
 
     // Cube handle
     const handle = props.match.params.handle;
@@ -70,13 +66,13 @@ const CubeEdit = ( props ) => {
     const [loadingCube, setLoading] = useState( true );
     const [cube, setCube] = useState( testCube );
 
-    //region Fetch Cube and check for errors
-
     const [error, setError] = useState( null );
 
     // Fetch the cube
     // TODO implement some sort of transfer from MyCubes possibly
 
+    // DEBUG
+    /*
     useEffect( () => {
         networkCalls.GetWithAuth( `/cube/${handle}` )
             .then( (res) => {
@@ -108,6 +104,7 @@ const CubeEdit = ( props ) => {
     }
 
 
+
     // DEBUG
     console.log( 'Cube: ', cube );
     console.log( 'User: ', user );
@@ -123,8 +120,11 @@ const CubeEdit = ( props ) => {
             </p>
         )
     }
+    */
 
     //endregion
+
+    // region Search result and Cube List manipulation
 
     // Search results don't survive changing tabs
     // TODO Figure out a way to persist search across tab change
@@ -133,84 +133,16 @@ const CubeEdit = ( props ) => {
         searchResults = results;
     };
 
-    /*
-    const handleDrop = ( result ) => {
-        console.log( result );
+    // endregion
 
-        // Back out early if no action is needed
-        if( result.destination === null ||
-            ( result.destination.droppableId === result.source.droppableId
-                 && result.destination.index === result.source.index ) ){
-
-            console.log( "Drag action doesn't need any action" );
-            return;
-
-        }
-
-        // TODO
-        let sourceList, destinationList;
-
-        // Abstract the lists away so I don't have to worry about calling the right list
-        switch ( result.source.droppableId ) {
-            case cubeDroppableId:
-                sourceList = cube.lists.cube;
-                break;
-            case workspaceDroppableId:
-                sourceList = cube.lists.workspace;
-                break;
-            case searchDroppableId:
-                // Clone the array so we don't have worry about working on it
-                sourceList = [...searchResults];
-                break;
-            default:
-                console.error( 'Droppable ID not linked to list' );
-        }
-        switch ( result.destination.droppableId ) {
-            case cubeDroppableId:
-                destinationList = cube.lists.cube;
-                break;
-            case workspaceDroppableId:
-                destinationList = cube.lists.workspace;
-                break;
-            case searchDroppableId:
-                console.error( "Drop target is Search Column. This should not have happened" );
-                break;
-            default:
-                console.error( 'Droppable ID not linked to list' );
-        }
-
-        const element = (sourceList.splice( result.source.index, 1 ))[0];
-
-        // Insert the element to location at index, and remove 0 elements
-        destinationList.splice( result.destination.index, 0, element );
-
-    };
-    */
-
-    const SearchAndEdit = () => {
-        return (
-            <>
-                {/* CubeList should take up most of the screen */}
-                <CubeList cubeList={cube.lists.cube} />
-
-                {/* Div here to arrange the Search and Workspace properly */}
-                <div className={classes.rightArea}>
-                    <SearchColumn setSearchResults={setSearchResults} />
-                    <Workspace workspaceList={cube.lists.workspace} />
-                </div>
-
-
-            </>
-        );
-    };
-
+    // region Display all Tabs
     const TabDisplay = () => {
         switch ( tabValue ) {
             case 0:
                 // TODO
                 return null;
             case 1:
-                return <SearchAndEdit/>;
+                return <SearchAndEdit cube={cube} />;
             case 2:
                 return null;
             case 3:
@@ -220,6 +152,7 @@ const CubeEdit = ( props ) => {
                 return null;
         }
     };
+    // endregion
 
     return(
         <div className={classes.page}>

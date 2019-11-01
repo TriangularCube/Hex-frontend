@@ -23,12 +23,18 @@ import useDebouncedSearch from "../../../util/useDebouncedSearch";
 
 
 const useStyles = makeStyles( theme => ({
+    // Right area of Search and Edit Tab
+    rightArea: {
+        marginTop: 16,
+        width: 400,
+        display: 'flex',
+        flexDirection: 'row'
+    },
+
+
     columnHeading: {
         marginLeft: theme.spacing( 2 ),
         marginRight: theme.spacing( 2 )
-    },
-    flex: {
-        flex: 1
     },
     searchColumnHeading: {
         display: 'flex',
@@ -36,6 +42,11 @@ const useStyles = makeStyles( theme => ({
     },
     searchIcon: {
         marginTop: theme.spacing( 3 )
+    },
+
+    // General Flex property
+    flex: {
+        flex: 1
     },
 
     // Drag Styles
@@ -51,41 +62,26 @@ const useStyles = makeStyles( theme => ({
 }));
 
 
-const CubeItems = ({sourceList}) => {
+export const SearchAndEdit = ({cube}) => {
 
-    // Map the output to list items
-    let Output = sourceList.map( (element, index) => {
-        return(
-            <ListItem key={index}>
-                <ListItemText>
-                    {element.id}
-                </ListItemText>
-            </ListItem>
-        )
-    });
-
-    // If there are no items in the array, use placeholder
-    // without placeholder, there's a very small space for the drop target
-    if( Output.length === 0 ){
-        Output =
-            <ListItem>
-                <ListItemText>
-                    Please add cards here
-                </ListItemText>
-            </ListItem>;
-    }
+    const classes = useStyles();
 
     return (
-        <List>
-            {Output}
-        </List>
-    )
+        <>
+            {/* CubeList should take up most of the screen */}
+            <CubeList cubeList={cube.lists.cube} />
 
+            {/* Div here to arrange the Search and Workspace properly */}
+            <div className={classes.rightArea}>
+                <SearchColumn/>
+                <Workspace workspaceList={cube.lists.workspace} />
+            </div>
+        </>
+    );
 };
 
-
+const CubeList = ({cubeList}) => {
 // Cube List column
-export const CubeList = ({cubeList}) => {
 
     const classes = useStyles();
 
@@ -122,29 +118,6 @@ export const CubeList = ({cubeList}) => {
         </div>
     )
 };
-
-
-// Workspace column
-export const Workspace = ({workspaceList}) => {
-
-    const classes = useStyles();
-
-    return (
-        <div className={ classes.flex }>
-            <Typography variant='h5' className={classes.columnHeading}>
-                Workspace
-            </Typography>
-
-            <Divider className={classes.columnHeading} />
-
-            <CubeItems
-                sourceList={workspaceList}
-            />
-        </div>
-    )
-};
-
-
 
 
 const SearchResults = ({search}) => {
@@ -209,7 +182,7 @@ const SearchResults = ({search}) => {
 
 };
 
-export const SearchColumn = ({setSearchResults}) => {
+const SearchColumn = ({setSearchResults}) => {
 
     const classes = useStyles();
 
@@ -246,3 +219,63 @@ export const SearchColumn = ({setSearchResults}) => {
         </div>
     )
 };
+
+
+const CubeItems = ({sourceList}) => {
+
+    // Map the output to list items
+    let Output = sourceList.map( (element, index) => {
+        return(
+            <ListItem key={index}>
+                <ListItemText>
+                    {element.id}
+                </ListItemText>
+            </ListItem>
+        )
+    });
+
+    // If there are no items in the array, use placeholder
+    // without placeholder, there's a very small space for the drop target
+    if( Output.length === 0 ){
+        Output =
+            <ListItem>
+                <ListItemText>
+                    Please add cards here
+                </ListItemText>
+            </ListItem>;
+    }
+
+    return (
+        <List>
+            {Output}
+        </List>
+    )
+
+};
+
+
+
+
+// Workspace column
+export const Workspace = ({workspaceList}) => {
+
+    const classes = useStyles();
+
+    return (
+        <div className={ classes.flex }>
+            <Typography variant='h5' className={classes.columnHeading}>
+                Workspace
+            </Typography>
+
+            <Divider className={classes.columnHeading} />
+
+            <CubeItems
+                sourceList={workspaceList}
+            />
+        </div>
+    )
+};
+
+
+
+
