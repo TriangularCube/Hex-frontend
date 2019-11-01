@@ -22,11 +22,12 @@ import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 import useCheckUser from "../../../util/useCheckUser";
 
-import { SearchAndEdit } from "./CubeEditComponents";
+import SearchAndEdit from "./SearchAndEdit";
 
 
 // DEBUG
 import testCube from "../../../../debug/cubeTestData";
+import attachCubeFunctions from "../../../util/attachCubeFunctions";
 
 
 const useStyles = makeStyles( theme => ({
@@ -64,6 +65,9 @@ const CubeEdit = ( props ) => {
     const [tabValue, setTabValue] = useState( 1 );
 
     const [loadingCube, setLoading] = useState( true );
+
+    // DEBUG
+    attachCubeFunctions( testCube );
     const [cube, setCube] = useState( testCube );
 
     const [error, setError] = useState( null );
@@ -124,16 +128,6 @@ const CubeEdit = ( props ) => {
 
     //endregion
 
-    // region Search result and Cube List manipulation
-
-    // Search results don't survive changing tabs
-    // TODO Figure out a way to persist search across tab change
-    let searchResults = null;
-    const setSearchResults = (results) => {
-        searchResults = results;
-    };
-
-    // endregion
 
     // region Display all Tabs
     const TabDisplay = () => {

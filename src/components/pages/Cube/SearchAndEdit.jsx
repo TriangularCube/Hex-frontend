@@ -62,14 +62,14 @@ const useStyles = makeStyles( theme => ({
 }));
 
 
-export const SearchAndEdit = ({cube}) => {
+export default ({cube}) => {
 
     const classes = useStyles();
 
     return (
         <>
             {/* CubeList should take up most of the screen */}
-            <CubeList cubeList={cube.lists.cube} />
+            <CubeList cube={cube} />
 
             {/* Div here to arrange the Search and Workspace properly */}
             <div className={classes.rightArea}>
@@ -80,19 +80,21 @@ export const SearchAndEdit = ({cube}) => {
     );
 };
 
-const CubeList = ({cubeList}) => {
+const CubeList = ({cube}) => {
 // Cube List column
 
     const classes = useStyles();
 
     const [{isOver, canDrop}, drop] = useDrop({
         accept: [searchCard, workspaceCard],
-        drop: item => { console.log( 'Drop Action', item ) },
+        drop: item => cube.addCardToCube( item ),
         collect: monitor => ({
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop()
         })
     });
+
+    const cubeList = cube.lists.cube;
 
     return (
         <div
@@ -111,10 +113,23 @@ const CubeList = ({cubeList}) => {
 
             <Divider className={classes.columnHeading} />
 
-            <CubeItems
-                sourceList={cubeList}
-                listName="cube-list"
-            />
+            {
+                cubeList.map( (element, index) => {
+                    return (
+                        <ListItem key={`Cube-List-${index}`}>
+                            <ListItemText>
+                                {/* TODO */}
+                                {
+                                    element.name ?
+                                        element.name
+                                        :
+                                        element.id
+                                }
+                            </ListItemText>
+                        </ListItem>
+                    )
+                })
+            }
         </div>
     )
 };
@@ -148,8 +163,6 @@ const SearchResults = ({search}) => {
         );
     }
 
-    console.log( 'Search result', search.result );
-
     const results = search.result.result.data;
     const classes = useStyles();
 
@@ -157,6 +170,7 @@ const SearchResults = ({search}) => {
         const [{isDragging}, drag] = useDrag({
             item: {
                 name: element.name,
+                id: element.id,
                 type: searchCard
             },
             collect: monitor => ({
@@ -182,16 +196,12 @@ const SearchResults = ({search}) => {
 
 };
 
-const SearchColumn = ({setSearchResults}) => {
+const SearchColumn = () => {
 
     const classes = useStyles();
 
     const [searchText, setSearchText, search] = useDebouncedSearch();
 
-    // Pass the results back to CubeEdit
-    if( !search.loading ){
-        setSearchResults( search.result ? search.result.result.data : null );
-    }
 
     return (
         <div className={classes.flex}>
@@ -257,7 +267,7 @@ const CubeItems = ({sourceList}) => {
 
 
 // Workspace column
-export const Workspace = ({workspaceList}) => {
+const Workspace = ({workspaceList}) => {
 
     const classes = useStyles();
 

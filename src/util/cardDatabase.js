@@ -1,9 +1,6 @@
-import { setDatabase } from "../redux/actionCreators";
-
-import store from "../redux/store";
-const dispatch = store.dispatch;
-
 const storageName = 'hex-card-database';
+
+import { openDB } from 'idb';
 
 export default () => {
 
@@ -51,7 +48,8 @@ const updateData = async () => {
         // NOTE can't store card list, seems like it's too big for local storage
         // localStorage.setItem( storageName, JSON.stringify( res ) );
         console.log( 'Got Database' );
-        dispatch( setDatabase( res ) );
+
+        db = openDB()
 
     } catch ( err ){
         console.error( 'Could not fetch Bulk Data, did not update Card Database.' +
