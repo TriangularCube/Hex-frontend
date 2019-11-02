@@ -1,4 +1,6 @@
 // React and ReactDOM loaded from UMD
+import { useEffect } from "react";
+
 const {useMemo} = React;
 
 import { useAsync } from "react-async-hook";
@@ -17,6 +19,9 @@ import { makeStyles, ThemeProvider } from "@material-ui/styles";
 
 // Material UI Components
 import { Typography, CssBaseline } from "@material-ui/core";
+
+// Snackbar
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 // Loadable
 import loadable from "@loadable/component";
@@ -50,14 +55,14 @@ WebFont.load({
 import { setDefaultConfig } from "./util/config";
 setDefaultConfig();
 
-// Amplify
+// Network Calls
 import networkCalls from "./util/networkCalls";
 
 // Load Theme
 import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
-// Load card database
+// Card database
 import loadCardDB from "./util/cardDatabase";
 
 
@@ -127,9 +132,23 @@ const WithTheme = () => {
 
 };
 
-const WithStore = () => {
+const loadingStyles = makeStyles({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
+    }
+});
 
-    // Figure out what theme to use
+const WithSnack = () => {
+
+    const classes = loadingStyles();
+
+    const asyncUser = useAsync( networkCalls.FetchUserData, [] );
+    const snackbar = useSnackbar();
+    useEffect( () => { loadCardDB( snackbar ) }, [] );
+
+    //region Figure out what theme to use
 
     // Grab the user from Redux
     const user = useSelector( state => state.user );
@@ -140,33 +159,10 @@ const WithStore = () => {
         useMemo( () => createMuiTheme( user.theme ), [ user.theme ] ) :
         // Otherwise just use the default theme
         defaultTheme;
-
-    return(
-        <ThemeProvider theme={ useTheme }>
-            <CssBaseline/>
-            <WithTheme/>
-        </ThemeProvider>
-    );
-
-};
-
-const loadingStyles = makeStyles({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh'
-    }
-});
-
-const App = () => {
-
-    const classes = loadingStyles();
-
-    const asyncDatabase = useAsync( loadCardDB, [] );
-    const asyncUser = useAsync( networkCalls.FetchUserData, [] );
+    //endregion
 
     // Bail early if we're prepping
-    if( asyncUser.loading || asyncDatabase.loading ){
+    if( asyncUser.loading ){
         // TODO Write something quipy here
         return (
             <>
@@ -179,10 +175,21 @@ const App = () => {
     }
 
     return(
-        <Provider store={store}>
-            <WithStore/>
-        </Provider>
+        <ThemeProvider theme={ useTheme }>
+            <CssBaseline/>
+            <WithTheme/>
+        </ThemeProvider>
     );
+};
+
+const App = () => {
+    return(
+        <Provider store={store}>
+            <SnackbarProvider>
+                <WithSnack/>
+            </SnackbarProvider>
+        </Provider>
+    )
 };
 
 ReactDOM.render( <App />, document.getElementById( 'root' ) );

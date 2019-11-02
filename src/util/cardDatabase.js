@@ -8,7 +8,7 @@ import { openDB } from 'idb';
 let isUsingIDB = false;
 let idbLoading = true;
 
-export default () => {
+export default ( snackbar ) => {
 
     // Check IndexedDB support
     if( !('indexedDB' in window) ){
@@ -17,14 +17,14 @@ export default () => {
         // TODO Use other ways to keep DB around
     } else {
         isUsingIDB = true;
-        updateData();
+        updateData( snackbar );
     }
 
     // TODO
 
 };
 
-const updateData = async () => {
+const updateData = async ( snackbar ) => {
 
     // TODO Add backup handlers in case this operation fails
 
@@ -79,17 +79,17 @@ const updateData = async () => {
 
         // If data is not newer
         if( dbUpdatedAt && dbUpdatedAt >= updatedAt ){
-            console.log( 'DB doesn\'t need an update' );
+            snackbar.enqueueSnackbar( `DB Doesn't need an update` );
             return;
         }
 
-        console.log( 'Fetching Bulk Data' );
+        const updateKey = snackbar.enqueueSnackbar( `Updating DB` );
 
         // Fetch the actual list
         res = await fetch( dcObject.permalink_uri );
         res = await res.json();
 
-        console.log( 'Updating DB' );
+        console.log( 'Fetch complete, injecting into DB' );
 
         const tx = db.transaction( storeName, 'readwrite' );
         tx.store.put( updatedAt, lastUpdatedKeyName );
@@ -98,7 +98,8 @@ const updateData = async () => {
         });
         await tx.done;
 
-        console.log( 'Done update' );
+        snackbar.closeSnackbar( updateKey );
+        snackbar.enqueueSnackbar( `Update Complete` );
 
     } catch ( err ){
         console.error( 'Could not update Card Database.' +

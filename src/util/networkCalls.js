@@ -137,6 +137,7 @@ const FetchUserData = async () => {
             return res.data;
         }
 
+        // Otherwise set user to null
         dispatch( setUser( null ) );
 
     } catch( e ){
@@ -177,6 +178,8 @@ const GetUserCredentials = async () => {
 //endregion
 
 //region Scryfall
+
+// TODO Replace with local search
 
 const SearchCard = async ( query, abortSignal, page = 1 ) => {
 
