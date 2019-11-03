@@ -3,7 +3,7 @@ import AwesomeDebouncePromise from "awesome-debounce-promise";
 import { useAsyncAbortable } from "react-async-hook";
 import useConstant from "use-constant";
 
-import networkCalls from "./networkCalls";
+import networkCalls from "../../../util/networkCalls";
 
 // https://github.com/slorber/react-async-hook
 // Hook for debounced card search

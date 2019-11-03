@@ -63,7 +63,7 @@ import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Card database
-import loadCardDB from "./util/cardDatabase";
+import loadCardDB from "./util/cardDatabase/cardDatabase";
 
 
 

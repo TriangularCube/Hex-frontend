@@ -1,33 +1,21 @@
-const dbName = 'hex-database';
-const storeName = 'hex-cards';
-const version = 1;
-const lastUpdatedKeyName = 'last-updated';
-
+import { dbName, storeName, version, lastUpdatedKeyName } from "./constants";
 import { openDB } from 'idb';
 
-let isUsingIDB = false;
-let idbLoading = true;
+// Take incoming messages
+onmessage = (e) => {
+    const cmd = e.data;
 
-export default ( snackbar ) => {
-
-    // Check IndexedDB support
-    if( !('indexedDB' in window) ){
-        // No indexedDB support
-        console.log( 'This browser does not support IndexedDB' );
-        // TODO Use other ways to keep DB around
-    } else {
-        isUsingIDB = true;
-        updateData( snackbar );
+    switch ( cmd.action ) {
+        case 'update':
+            update();
+            break;
+        default:
+            console.log( 'Worker received action ' + cmd.action );
+            break;
     }
-
-    // TODO
-
 };
 
-const updateData = async ( snackbar ) => {
-
-    // TODO Add backup handlers in case this operation fails
-
+const update = async () => {
     try {
         // Try to fetch the latest database
         let res = await fetch( 'https://api.scryfall.com/bulk-data' );
@@ -39,13 +27,13 @@ const updateData = async ( snackbar ) => {
 
         if( !dcObject ){
             // Error
-            console.error( 'Cannot find the Default Cards entry' );
+            postMessage( { message: 'error' } );
+            self.close();
             return;
         }
 
         const updatedAt = new Date( dcObject.updated_at );
-        console.log( 'Bulk Data updated at', updatedAt );
-
+        console.log( 'WORKER: Bulk Data updated at', updatedAt );
 
         // Open the DB
         const db = await openDB( dbName, version, {
@@ -61,51 +49,60 @@ const updateData = async ( snackbar ) => {
                         break;
                 }
             },
-            /*
-            blocked:
-            blocking:
-            */
+            // blocked:
+            // blocking:
         });
 
         // See if there's already data in it
         const dbUpdatedAt = await db.get( storeName, lastUpdatedKeyName );
-        console.log( 'DB Updated at', dbUpdatedAt );
+        console.log( 'WORKER: DB Updated at', dbUpdatedAt );
 
         // If there already exists some data
         if( dbUpdatedAt ){
             // Let the rest of the app load and not hang on this
-            idbLoading = false;
+            postMessage( { message: 'canBeUsed' });
         }
 
         // If data is not newer
         if( dbUpdatedAt && dbUpdatedAt >= updatedAt ){
-            snackbar.enqueueSnackbar( `DB Doesn't need an update` );
+            postMessage( { message: `noUpdate` });
+
+            // Close the worker
+            self.close();
             return;
         }
 
-        const updateKey = snackbar.enqueueSnackbar( `Updating DB` );
+        postMessage( { message: 'updating' } );
 
         // Fetch the actual list
+        // NOTE This is LARGE, so it takes a while
         res = await fetch( dcObject.permalink_uri );
         res = await res.json();
 
-        console.log( 'Fetch complete, injecting into DB' );
+        console.log( 'WORKER: Fetch complete, injecting into DB' );
 
+        // Open a transaction to save it all to the DB
         const tx = db.transaction( storeName, 'readwrite' );
+
+        // Update the Time
         tx.store.put( updatedAt, lastUpdatedKeyName );
+
+        // Save all elements
         res.map( element => {
             tx.store.put( element, element.id );
         });
+
+        // Wait for the transaction to be done
         await tx.done;
 
-        snackbar.closeSnackbar( updateKey );
-        snackbar.enqueueSnackbar( `Update Complete` );
+        postMessage( { message: 'finished' } );
 
-    } catch ( err ){
-        console.error( 'Could not update Card Database.' +
+    } catch( err ){
+        console.error( 'WORKER: Could not update Card Database.' +
             'Error message: ', err.message );
+        postMessage( { message: 'error' } );
     }
 
+    // Close this worker
+    self.close();
 };
-
-// TODO Implement interface to the DB
