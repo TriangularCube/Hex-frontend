@@ -1,18 +1,28 @@
 import { useSnackbar } from "notistack";
 
-const { useState, useEffect } = React;
+const { useState } = React;
+const { useHistory, useLocation } = ReactRouterDOM;
+
+let initialised = false;
+let isUsingIDB = false;
 
 export default () => {
 
     const [isLoading, updateLoading] = useState( true );
-    const [isUsingIDB, updateUsingIDB] = useState( false );
 
     const snackbar = useSnackbar();
 
+    const history = useHistory();
+    const location = useLocation();
+
     // First time this code is run, initialize the DB
-    useEffect( () => {
-        initializeDB( updateLoading, updateUsingIDB, snackbar );
-    }, [] );
+    if( !initialised ){
+        console.log( 'Initialize DB' );
+        initializeDB( updateLoading, snackbar, history, location );
+
+        // DEBUG
+        initialised = true;
+    }
 
     // TODO Implement interface to the DB
     const getCard = ( id ) => {
@@ -24,31 +34,25 @@ export default () => {
 
     return {
         isLoading,
-        isUsingIDB,
         getCard
     }
 
 };
 
-const initializeDB = ( updateLoading, updateUsingIDB, snackbar ) => {
+const initializeDB = ( updateLoading, snackbar, history, location ) => {
 
     // Check IndexedDB support
     if( !('indexedDB' in window) ){
         // No indexedDB support
         console.log( 'This browser does not support IndexedDB' );
 
-        // TODO Use other ways to keep DB around
-        // NOTE Maybe we won't use a local database then?
-
-        fetchWithoutIDB();
-
+        // Redirect to Fetch Data so fetch can happen synchronously
+        history.push( '/fetch-data', { referrer: location.pathname } );
         return;
 
     }
 
-    // There is IndexedDB Support
-    updateUsingIDB( true );
-
+    // Otherwise check if web worker support exists
     if( typeof( Worker ) !== 'undefined' ){
         // We have access to Web Worker!
         console.log( 'Updating DB with worker!' );
@@ -62,10 +66,6 @@ const initializeDB = ( updateLoading, updateUsingIDB, snackbar ) => {
     // NOTE This is wrong
     // updateLoading( false );
     // TODO
-};
-
-const fetchWithoutIDB = () => {
-
 };
 
 const updateUsingWebWorker = ( updateLoading, snackbar ) => {

@@ -263,7 +263,9 @@ const MyCubes = ( props ) => {
     }, [] );
 
     // Fire off an async request
-    const asyncCubes = useAsync( async () => networkCalls.GetWithAuth( '/myCubes' ), [] );
+    const asyncCubes = useAsync(
+        async () => networkCalls.GetWithAuth( '/myCubes' ),
+    []);
     // FIXME this is a leak as the component will redirect away when the user logs out,
     //  but the function will return on an unmounted component
 
@@ -292,6 +294,8 @@ const MyCubes = ( props ) => {
         return null;
     }
     //endregion
+
+    console.log( 'Incoming Data', asyncCubes.result );
 
     // Convenience
     const cubes = asyncCubes.result.data;

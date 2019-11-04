@@ -1,5 +1,5 @@
+//region Imports
 // React and ReactDOM loaded from UMD
-import { useEffect } from "react";
 
 const {useMemo} = React;
 
@@ -21,7 +21,7 @@ import { makeStyles, ThemeProvider } from "@material-ui/styles";
 import { Typography, CssBaseline } from "@material-ui/core";
 
 // Snackbar
-import { SnackbarProvider, useSnackbar } from "notistack";
+import { SnackbarProvider } from "notistack";
 
 // Loadable
 import loadable from "@loadable/component";
@@ -34,6 +34,7 @@ import PageLoading from "./components/common/PageLoading";
 
 const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
 const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
+const FetchData = loadable( () => import( "./components/pages/Splash/FetchData" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
@@ -65,16 +66,11 @@ const defaultTheme = createMuiTheme( defaultThemeObject );
 // Card database
 import useCardDB from "./util/cardDatabase/useCardDatabase";
 
+//endregion
 
 
 // Make styles
 const useStyles = makeStyles( theme => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        // https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
-        minHeight: '100vh'
-    },
     siteContent: {
         flex: '1 0 auto',
         display: 'flex',
@@ -91,63 +87,59 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-
 // The inner most Component, after all the context is passed through
-const WithTheme = () => {
+const WithThemeAndRouter = () => {
 
-    // Get style classes
     const classes = useStyles();
 
-    // Otherwise, render page
+    // Initialise the Card DB
+    useCardDB();
+
     return (
-        <div className={ classes.root }>
-            <Router>
-                <MenuDrawer />
-                <NavBar/>
+        <>
+            <MenuDrawer />
+            <NavBar/>
 
-                <main className={classes.siteContent}>
-                    <Switch>
-                        <Route path='/debug' component={Debug}/>
+            <main className={classes.siteContent}>
+                <Switch>
+                    <Route path='/debug' component={Debug}/>
+                    <Route path='/fetch-data' component={FetchData}/>
 
-                        <Route path='/target' component={Target} />
+                    <Route path='/target' component={Target} />
 
-                        <Route path='/login' component={Login} />
-                        <Route path='/myCubes' component={MyCubes} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/myCubes' component={MyCubes} />
 
-                        <Route path='/cube/:handle/edit' component={EditCubePage} />
-                        <Route path='/cube/:handle' component={ViewCubePage} />
+                    <Route path='/cube/:handle/edit' component={EditCubePage} />
+                    <Route path='/cube/:handle' component={ViewCubePage} />
 
-                        <Route exact path='/' component={Splash} />
-                    </Switch>
-                </main>
+                    <Route exact path='/' component={Splash} />
+                </Switch>
+            </main>
 
-                <footer className={ classes.footer }>
-                    <Typography variant='body1' color='inherit'>
-                        This is a footer
-                    </Typography>
-                </footer>
-            </Router>
-        </div>
-    );
-
+            <footer className={ classes.footer }>
+                <Typography variant='body1' color='inherit'>
+                    This is a footer
+                </Typography>
+            </footer>
+        </>
+    )
 };
 
 const loadingStyles = makeStyles({
     root: {
         display: 'flex',
         flexDirection: 'column',
+        // https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
         minHeight: '100vh'
-    }
+    },
 });
 
-const WithSnack = () => {
+const WithSnackAndRedux = () => {
 
     const classes = loadingStyles();
 
     const asyncUser = useAsync( networkCalls.FetchUserData, [] );
-
-    // First off the initialize event
-    useCardDB();
 
     //region Figure out what theme to use
 
@@ -178,7 +170,11 @@ const WithSnack = () => {
     return(
         <ThemeProvider theme={ useTheme }>
             <CssBaseline/>
-            <WithTheme/>
+            <div className={ classes.root }>
+                <Router>
+                    <WithThemeAndRouter/>
+                </Router>
+            </div>
         </ThemeProvider>
     );
 };
@@ -187,7 +183,7 @@ const App = () => {
     return(
         <Provider store={store}>
             <SnackbarProvider>
-                <WithSnack/>
+                <WithSnackAndRedux/>
             </SnackbarProvider>
         </Provider>
     )
