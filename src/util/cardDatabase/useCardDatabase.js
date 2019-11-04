@@ -1,7 +1,36 @@
-export let isUsingIDB = false;
-export let idbLoading = true;
+import { useSnackbar } from "notistack";
 
-export default ( snackbar ) => {
+const { useState, useEffect } = React;
+
+export default () => {
+
+    const [isLoading, updateLoading] = useState( true );
+    const [isUsingIDB, updateUsingIDB] = useState( false );
+
+    const snackbar = useSnackbar();
+
+    // First time this code is run, initialize the DB
+    useEffect( () => {
+        initializeDB( updateLoading, updateUsingIDB, snackbar );
+    }, [] );
+
+    // TODO Implement interface to the DB
+    const getCard = ( id ) => {
+
+        // DEBUG
+        console.log( `Trying to get card ${id}` );
+
+    };
+
+    return {
+        isLoading,
+        isUsingIDB,
+        getCard
+    }
+
+};
+
+const initializeDB = ( updateLoading, updateUsingIDB, snackbar ) => {
 
     // Check IndexedDB support
     if( !('indexedDB' in window) ){
@@ -11,34 +40,35 @@ export default ( snackbar ) => {
         // TODO Use other ways to keep DB around
         // NOTE Maybe we won't use a local database then?
 
-    } else {
+        fetchWithoutIDB();
 
-        // There is IndexedDB Support
-        isUsingIDB = true;
+        return;
 
-        updateData( snackbar );
     }
 
-    // TODO
-
-};
-
-const updateData = ( snackbar ) => {
+    // There is IndexedDB Support
+    updateUsingIDB( true );
 
     if( typeof( Worker ) !== 'undefined' ){
         // We have access to Web Worker!
         console.log( 'Updating DB with worker!' );
-        updateUsingWebWorker( snackbar );
+        updateUsingWebWorker( updateLoading, snackbar );
     } else {
         // No web workers, have to use another method
         console.log( 'No access to web workers. NOT IMPLEMENTED.')
-
-        // TODO
     }
+
+
+    // NOTE This is wrong
+    // updateLoading( false );
+    // TODO
+};
+
+const fetchWithoutIDB = () => {
 
 };
 
-const updateUsingWebWorker = ( snackbar ) => {
+const updateUsingWebWorker = ( updateLoading, snackbar ) => {
 
     // Make worker
     const worker = new Worker( './updateDBWorker.js' );
@@ -50,21 +80,24 @@ const updateUsingWebWorker = ( snackbar ) => {
 
         switch ( msg.message ) {
             case 'error':
+                updateLoading( false );
                 snackbar.enqueueSnackbar( 'Error updating Database' );
                 break;
             case 'canBeUsed':
-                idbLoading = false;
+                updateLoading( false );
                 break;
             case 'noUpdate':
+                updateLoading( false );
                 snackbar.enqueueSnackbar( 'No Database Update Needed' );
                 break;
             case 'updating':
                 snackKey = snackbar.enqueueSnackbar( 'Database Updating' );
                 break;
             case 'finished':
+                updateLoading( false );
                 snackbar.closeSnackbar( snackKey );
                 snackbar.enqueueSnackbar( 'Database Updated' );
-                break;
+                return;
         }
     };
 
@@ -72,4 +105,5 @@ const updateUsingWebWorker = ( snackbar ) => {
 
 };
 
-// TODO Implement interface to the DB
+
+

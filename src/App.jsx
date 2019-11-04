@@ -63,7 +63,7 @@ import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
 // Card database
-import loadCardDB from "./util/cardDatabase/cardDatabase";
+import useCardDB from "./util/cardDatabase/useCardDatabase";
 
 
 
@@ -145,8 +145,9 @@ const WithSnack = () => {
     const classes = loadingStyles();
 
     const asyncUser = useAsync( networkCalls.FetchUserData, [] );
-    const snackbar = useSnackbar();
-    useEffect( () => { loadCardDB( snackbar ) }, [] );
+
+    // First off the initialize event
+    useCardDB();
 
     //region Figure out what theme to use
 
