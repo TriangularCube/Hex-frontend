@@ -296,8 +296,6 @@ const MyCubes = ( props ) => {
     // Convenience
     const cubes = asyncCubes.result.data;
 
-    console.log( cubes );
-
     return(
         <Container maxWidth='md'>
 

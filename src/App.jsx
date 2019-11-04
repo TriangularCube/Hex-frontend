@@ -37,7 +37,7 @@ const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
 const Login = loadable( () => import( "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
 const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
-const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" ) );
+const EditCubePage = loadable( () => import( "./components/pages/MyCubes/CubeEdit" ) );
 
 //endregion
 
