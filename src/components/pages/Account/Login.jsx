@@ -51,9 +51,11 @@ const useStyles = makeStyles(theme => ({
 
 const Login = ( props ) => {
 
-    // DEBUG Log if referred from somewhere
+    // Find if there is a referrer
+    let referrer = null;
     if( props.location.state && props.location.state.referrer ){
-        console.log( `Login referred from ${props.location.state.referrer}` )
+        console.log( `Login referred from ${props.location.state.referrer}` );
+        referrer = props.location.state.referrer;
     }
 
     // Refs for inputs
@@ -66,18 +68,25 @@ const Login = ( props ) => {
     // Check if user is already logged in
     const user = useSelector( state => state.user );
 
-    // Setup Async Login Handlers
+    if( user && referrer ){
+        // If already logged in, redirect back to referrer
+        props.history.push( referrer );
+    }
+
+    //region Setup Async Login Handlers
     const login = async () => {
         const res = await networkCalls.Login( emailRef.current.value, passwordRef.current.value );
 
         if( res.success ){
             // If login is successful, redirect
 
-            if( props.location.state && props.location.state.referrer ){
-                props.history.push( props.location.state.referrer );
+            if( referrer ){
+                // If there is a referrer, redirect there
+                props.history.push( referrer );
                 return;
             }
 
+            // Otherwise redirect to splash
             props.history.push( '/' );
         } else {
             // Otherwise, print the error
@@ -95,6 +104,7 @@ const Login = ( props ) => {
         event.preventDefault();
         asyncLogin.execute();
     };
+    //endregion
 
     // Set the styles
     const classes = useStyles();
