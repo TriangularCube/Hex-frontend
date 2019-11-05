@@ -54,6 +54,8 @@ const initializeDB = ( updateLoading, snackbar, history, location ) => {
 
     }
 
+    isUsingIDB = true;
+
     // Otherwise check if web worker support exists
     if( typeof( Worker ) !== 'undefined' ){
         // We have access to Web Worker!
