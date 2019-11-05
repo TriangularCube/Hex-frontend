@@ -1,8 +1,7 @@
+import { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+
 import { useSnackbar } from "notistack";
-
-
-const { useState } = React;
-const { useHistory, useLocation } = ReactRouterDOM;
 
 let initialised = false;
 let isUsingIDB = false;
@@ -88,7 +87,7 @@ const initializeDB = ( updateLoading, snackbar, history, location ) => {
 const updateUsingWebWorker = ( updateLoading, snackbar ) => {
 
     // Make worker
-    const worker = new Worker( './updateDBWorker.js' );
+    const worker = new Worker( './updateDBWorker.js', { type: "module" } );
 
     let snackKey;
 

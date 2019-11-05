@@ -4,10 +4,9 @@
   "description": "React front-end for Hexahedron.io",
   "main": "src/index.html",
   "scripts": {
-    "start": "parcel src/index.html --out-dir build/dev",
-    "dev-no-cache": "parcel src/index.html --out-dir build/dev --no-cache",
-    "deploy": "parcel build src/index.html --out-dir build --no-minify",
-    "deploy-prod": "parcel build src/index.html --out-dir build --no-source-maps"
+    "start": "webpack-dev-server",
+    "deploy": "webpack --mode development",
+    "deploy-prod": "webpack --mode production"
   },
   "keywords": [
     "mtg",
@@ -20,13 +19,19 @@
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
+    "babel-loader": "^8.0.6",
     "babel-plugin-transform-imports": "^2.0.0",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-externals": "^0.2.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
-    "redux": "^4.0.4"
+    "redux": "^4.0.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0",
+    "worker-plugin": "^3.2.0"
   },
   "dependencies": {
     "@aws-amplify/auth": "^1.5.0",
@@ -44,11 +49,5 @@
     "react-dnd-html5-backend": "^9.4.0",
     "react-redux": "^7.1.1",
     "use-constant": "^1.0.0"
-  },
-  "externals": {
-    "react": "React",
-    "react-dom": "ReactDOM",
-    "react-router-dom": "ReactRouterDOM",
-    "redux": "Redux"
   }
 }

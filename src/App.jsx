@@ -32,13 +32,13 @@ import NavBar from "./NavBar";
 
 import PageLoading from "./components/common/PageLoading";
 
-const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
-const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
-const FetchData = loadable( () => import( "./components/pages/Splash/FetchData" ) );
-const Login = loadable( () => import( "./components/pages/Account/Login" ) );
-const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
-const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
-const EditCubePage = loadable( () => import( "./components/pages/MyCubes/CubeEdit" ) );
+const Target = loadable( () => import( /* webpackChunkName: "Target" */ "./components/pages/TargetSelect/Target" ) );
+const Splash = loadable( () => import( /* webpackChunkName: "Splash" */ "./components/pages/Splash/Splash" ) );
+const FetchData = loadable( () => import( /* webpackChunkName: "FetchData" */ "./components/pages/Splash/FetchData" ) );
+const Login = loadable( () => import( /* webpackChunkName: "Login" */ "./components/pages/Account/Login" ) );
+const MyCubes = loadable( () => import( /* webpackChunkName: "MyCubes" */ "./components/pages/MyCubes/MyCubes" ) );
+const ViewCubePage = loadable( () => import( /* webpackChunkName: "ViewCube" */ "./components/pages/Cube/Cube" ) );
+const EditCubePage = loadable( () => import( /* webpackChunkName: "EditCube" */ "./components/pages/MyCubes/CubeEdit" ) );
 
 //endregion
 
