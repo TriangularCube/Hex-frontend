@@ -1,5 +1,6 @@
 import { useSnackbar } from "notistack";
 
+
 const { useState } = React;
 const { useHistory, useLocation } = ReactRouterDOM;
 
@@ -17,25 +18,37 @@ export default () => {
 
     // First time this code is run, initialize the DB
     if( !initialised ){
-        console.log( 'Initialize DB' );
+        console.log( 'Initialise DB' );
         initializeDB( updateLoading, snackbar, history, location );
 
         // DEBUG
         initialised = true;
     }
 
-    // TODO Implement interface to the DB
-    const getCard = ( id ) => {
-
-        // DEBUG
-        console.log( `Trying to get card ${id}` );
-
-    };
-
     return {
         isLoading,
-        getCard
+        getCard,
+        searchForCard
     }
+
+};
+
+// TODO Implement interface to the DB
+const getCard = ( id ) => {
+
+    // DEBUG
+    console.log( `Trying to get card ${id}` );
+
+};
+const searchForCard = async ( term ) => {
+
+    console.log( 'Searching for term: ', term );
+
+    if( term.length < 1 ){
+        return null;
+    }
+
+    return [];
 
 };
 

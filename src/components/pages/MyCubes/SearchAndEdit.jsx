@@ -1,3 +1,5 @@
+const { useState } = React;
+
 // React DND
 import { useDrag, useDrop } from "react-dnd";
 import { cubeCard, searchCard, workspaceCard } from "../../../util/dnd/dragTypes";
@@ -19,6 +21,8 @@ import clsx from "clsx";
 
 // Debounce
 import useDebouncedSearch from "./useDebouncedSearch";
+
+import useCardDatabase from "../../../util/cardDatabase/useCardDatabase";
 
 
 
@@ -135,7 +139,8 @@ const CubeList = ({cube}) => {
 };
 
 
-const SearchResults = ({search}) => {
+const SearchResults = ({ search }) => {
+
     // Display loading spinner while loading
     if( search.loading ){
         return (
@@ -144,6 +149,8 @@ const SearchResults = ({search}) => {
             </div>
         );
     }
+
+    console.log( 'Search Result', search.result );
 
     // If nothing
     if( !search.result ){
@@ -154,8 +161,10 @@ const SearchResults = ({search}) => {
         );
     }
 
+    const results = search.result;
+
     // If no cards found
-    if( !search.result.success ){
+    if( results.length < 1 ){
         return (
             <Typography>
                 No cards found for that search
@@ -163,10 +172,9 @@ const SearchResults = ({search}) => {
         );
     }
 
-    const results = search.result.result.data;
     const classes = useStyles();
 
-    return results.map( (element, index) => {
+    return search.map( (element, index) => {
         const [{isDragging}, drag] = useDrag({
             item: {
                 name: element.name,
@@ -200,8 +208,8 @@ const SearchColumn = () => {
 
     const classes = useStyles();
 
-    const [searchText, setSearchText, search] = useDebouncedSearch();
-
+    const { searchForCard } = useCardDatabase();
+    const [searchText, setSearchText, search] = useDebouncedSearch( searchForCard );
 
     return (
         <div className={classes.flex}>

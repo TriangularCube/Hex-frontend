@@ -7,12 +7,12 @@ import networkCalls from "../../../util/networkCalls";
 
 // https://github.com/slorber/react-async-hook
 // Hook for debounced card search
-export default () => {
+export default ( searchFunction ) => {
 
     const [searchText, setSearchText] = useState( '' );
 
     const debouncedSearch = useConstant(
-        () => AwesomeDebouncePromise( networkCalls.SearchCard, 1000 )
+        () => AwesomeDebouncePromise( searchFunction, 1000 )
     );
 
     const search = useAsyncAbortable(
