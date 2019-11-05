@@ -46,6 +46,8 @@ const initializeDB = ( updateLoading, snackbar, history, location ) => {
         // No indexedDB support
         console.log( 'This browser does not support IndexedDB' );
 
+        isUsingIDB = false;
+
         // Redirect to Fetch Data so fetch can happen synchronously
         history.push( '/fetch-data', { referrer: location.pathname } );
         return;
