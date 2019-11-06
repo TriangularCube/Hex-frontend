@@ -7,6 +7,8 @@ const { useHistory, useLocation } = ReactRouterDOM;
 let initialised = false;
 let isUsingIDB = false;
 
+import { open } from "./constants";
+
 export default () => {
 
     const [isLoading, updateLoading] = useState( true );

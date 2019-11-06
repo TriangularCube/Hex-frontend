@@ -1,5 +1,5 @@
-import { dbName, storeName, version, lastUpdatedKeyName } from "./constants";
-import { openDB } from 'idb';
+import { dbName, storeName, version, lastUpdatedKeyName, open } from "./constants";
+
 
 // Take incoming messages
 onmessage = (e) => {
@@ -36,22 +36,7 @@ const update = async () => {
         console.log( 'WORKER: Bulk Data updated at', updatedAt );
 
         // Open the DB
-        const db = await openDB( dbName, version, {
-            upgrade: (db, lastVersion) => {
-                switch( lastVersion ){
-                    case 0:
-                        const store = db.createObjectStore( storeName );
-
-                        store.createIndex( 'name', 'name' );
-                        break;
-                    case 1:
-                        // NOTE This isn't needed at the moment
-                        break;
-                }
-            },
-            // blocked:
-            // blocking:
-        });
+        const db = open();
 
         // See if there's already data in it
         const dbUpdatedAt = await db.get( storeName, lastUpdatedKeyName );
