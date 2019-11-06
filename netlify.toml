@@ -12,7 +12,7 @@
 [context.production]
     publish = "build"
     command = "npm run deploy-prod"
-    # Environment is specifiec in .env.production as parcel uses dotenv
+    environment = { NODE_ENV = "production"}
 
 [context.staging]
     publish = "build"
