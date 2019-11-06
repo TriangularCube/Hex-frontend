@@ -43,7 +43,7 @@ const EditCubePage = loadable( () => import( /* webpackChunkName: "EditCube" */ 
 //endregion
 
 // HACK strictly for debugging
-const Debug = loadable( () => import( "../debug/debug" ) );
+const Debug = loadable( () => import( /* webpackChunkName: "debug" */ "../debug/debug" ) );
 
 // Font (from UMD)
 WebFont.load({

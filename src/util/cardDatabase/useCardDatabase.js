@@ -87,7 +87,11 @@ const initializeDB = ( updateLoading, snackbar, history, location ) => {
 const updateUsingWebWorker = ( updateLoading, snackbar ) => {
 
     // Make worker
-    const worker = new Worker( './updateDBWorker.js', { type: "module" } );
+    const worker = new Worker(
+        './updateDBWorker.js',
+        // https://github.com/GoogleChromeLabs/worker-plugin/issues/43
+        { name: 'UpdateDB', type: "module" }
+    );
 
     let snackKey;
 

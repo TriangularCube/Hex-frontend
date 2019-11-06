@@ -6,7 +6,7 @@ const path = require( 'path' );
 module.exports = {
     entry: './src/App.jsx',
     output: {
-        filename: '[name].bundle.js',
+        filename: process.env.production ? '[name].[contenthash].js' : '[name].js',
         path: path.resolve( __dirname, 'build' ),
         publicPath: "/"
     },
@@ -51,13 +51,16 @@ module.exports = {
         hot: true
     },
     optimization: {
+        moduleIds: 'hashed',
         runtimeChunk: "single",
         splitChunks: {
+            chunks: "all",
             cacheGroups: {
                 vendor: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: "all"
+                    // https://medium.com/hackernoon/the-100-correct-way-to-split-your-chunks-with-webpack-f8a9df5b7758
                 }
             }
         }
