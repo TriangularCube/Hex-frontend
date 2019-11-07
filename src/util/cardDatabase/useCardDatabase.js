@@ -47,6 +47,9 @@ const searchForCard = async ( term ) => {
         return null;
     }
 
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    await delay(5000);
+
     return [];
 
 };

@@ -1,34 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useCardDatabase from "../../../util/cardDatabase/useCardDatabase";
+
 import AwesomeDebouncePromise from "awesome-debounce-promise";
-import { useAsyncAbortable } from "react-async-hook";
-import useConstant from "use-constant";
+const debouncedSearch = AwesomeDebouncePromise(async ( searchText, setLoading, setResult, searchForCard ) => {
+        setLoading( true );
+        const res = await searchForCard( searchText );
 
-import networkCalls from "../../../util/networkCalls";
+        setResult( res );
+        setLoading( false );
+    },
+    1000
+);
 
-// https://github.com/slorber/react-async-hook
-// Hook for debounced card search
-export default ( searchFunction ) => {
+export default () => {
 
     const [searchText, setSearchText] = useState( '' );
+    const [loading, setLoading] = useState( false );
+    const [result, setResult] = useState( [] );
 
-    const debouncedSearch = useConstant(
-        () => AwesomeDebouncePromise( searchFunction, 1000 )
-    );
+    const cardDB = useCardDatabase();
 
-    const search = useAsyncAbortable(
-        async (abortSignal, text) => {
-            if( text.length < 1 ){
-                return null;
-            }
-            return debouncedSearch( text, abortSignal );
-        },
-        [searchText]
-    );
+    useEffect( () => {
+        debouncedSearch( searchText, setLoading, setResult, cardDB.searchForCard )();
+    }, [searchText] );
+
 
     return [
         searchText,
         setSearchText,
-        search
+        loading,
+        result
     ];
 
 };

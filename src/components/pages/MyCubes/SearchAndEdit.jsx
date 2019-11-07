@@ -139,10 +139,10 @@ const CubeList = ({cube}) => {
 };
 
 
-const SearchResults = ({ search }) => {
+const SearchResults = ({ loading, result }) => {
 
     // Display loading spinner while loading
-    if( search.loading ){
+    if( loading ){
         return (
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <CircularProgress/>
@@ -150,10 +150,10 @@ const SearchResults = ({ search }) => {
         );
     }
 
-    console.log( 'Search Result', search.result );
+    console.log( 'Search Result', result );
 
     // If nothing
-    if( !search.result ){
+    if( !result ){
         return (
             <Typography>
                 Please enter a search term
@@ -161,10 +161,8 @@ const SearchResults = ({ search }) => {
         );
     }
 
-    const results = search.result;
-
     // If no cards found
-    if( results.length < 1 ){
+    if( result.length < 1 ){
         return (
             <Typography>
                 No cards found for that search
@@ -174,7 +172,7 @@ const SearchResults = ({ search }) => {
 
     const classes = useStyles();
 
-    return search.map( (element, index) => {
+    return result.map( (element, index) => {
         const [{isDragging}, drag] = useDrag({
             item: {
                 name: element.name,
@@ -208,8 +206,7 @@ const SearchColumn = () => {
 
     const classes = useStyles();
 
-    const { searchForCard } = useCardDatabase();
-    const [searchText, setSearchText, search] = useDebouncedSearch( searchForCard );
+    const [searchText, setSearchText, loading, result] = useDebouncedSearch();
 
     return (
         <div className={classes.flex}>
@@ -232,7 +229,7 @@ const SearchColumn = () => {
             </div>
 
             <List>
-                <SearchResults search={search}/>
+                <SearchResults loading={loading} result={result}/>
             </List>
         </div>
     )
