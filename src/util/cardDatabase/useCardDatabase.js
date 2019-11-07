@@ -3,6 +3,9 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { useSnackbar } from "notistack";
 
+import { openDB, storeName } from "./dbUtil";
+import store from "../../redux/store";
+
 let initialised = false;
 let isUsingIDB = false;
 
@@ -39,18 +42,35 @@ const getCard = ( id ) => {
     console.log( `Trying to get card ${id}` );
 
 };
+
+// NOTE Searching through IndexedDB is VERY slow
+// Perhaps should default to Scryfall for search unless there's no connection
 const searchForCard = async ( term ) => {
 
-    console.log( 'Searching for term: ', term );
-
+    // Extra precaution
     if( term.length < 1 ){
         return null;
     }
 
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-    await delay(5000);
+    console.log( 'Searching for term: ', term );
+    term = term.toLowerCase();
 
-    return [];
+    const response = [];
+
+    const db = await openDB();
+
+    let cursor = await db.transaction( storeName ).store.openCursor();
+
+    while( cursor ){
+        if( cursor.value.name && cursor.value.name.toLowerCase().includes( term ) ){
+            response.push( cursor.value );
+        }
+        cursor = await cursor.continue();
+    }
+
+    console.log( 'Response', response );
+
+    return response;
 
 };
 
