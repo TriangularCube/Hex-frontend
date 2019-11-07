@@ -21,34 +21,12 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
     "babel-plugin-transform-imports": "^2.0.0",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-externals": "^0.2.0",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "react-router-dom": "^5.1.2",
-    "redux": "^4.0.4"
+    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^1.5.0",
     "@loadable/component": "^5.10.3",
-    "@material-ui/core": "^4.5.2",
-    "@material-ui/icons": "^4.5.1",
-    "@material-ui/styles": "^4.5.2",
-    "awesome-debounce-promise": "^2.1.0",
-    "clsx": "^1.0.4",
-    "idb": "^4.0.5",
-    "notistack": "^0.9.5",
-    "prop-types": "^15.7.2",
-    "react-async-hook": "^3.6.1",
-    "react-dnd": "^9.4.0",
-    "react-dnd-html5-backend": "^9.4.0",
-    "react-redux": "^7.1.1",
-    "use-constant": "^1.0.0"
-  },
-  "externals": {
-    "react": "React",
-    "react-dom": "ReactDOM",
-    "react-router-dom": "ReactRouterDOM",
-    "redux": "Redux"
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2"
   }
 }

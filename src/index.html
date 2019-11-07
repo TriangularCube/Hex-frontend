@@ -9,56 +9,8 @@
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
     >
 
-    <!-- Loading Spinner -->
-    <style type="text/css">
-        .loading:empty {
-            position: absolute;
-            content: " ";
-            display: block;
-            width: 80px;
-            height: 80px;
-            top: 50%;
-            left: 50%;
-            margin-left: -40px;
-            margin-top: -40px;
-            border-radius: 50%;
-            border: 5px solid;
-            border-color: #f46e42 transparent #f46e42 transparent;
-            animation: loading 1.2s linear infinite;
-        }
-        @keyframes loading {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>-->
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css" rel="stylesheet" />-->
-
 </head>
 <body>
-
-    <!--
-        crossorigin attribute should be applied to following CDN packages
-        but, UNPKG breaks occasionally
-    -->
-
-    <!-- React Dev -->
-    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-
-    <!-- React Router -->
-    <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.js"></script>
-
-    <!-- Redux -->
-    <script src="https://unpkg.com/redux@4/dist/redux.js"></script>
-
-    <!-- Web Font Loader -->
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
 
     <div id="root" class="loading"></div>
     <script src="App.jsx"></script>
