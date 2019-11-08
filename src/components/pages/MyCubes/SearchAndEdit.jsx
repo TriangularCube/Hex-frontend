@@ -22,8 +22,6 @@ import clsx from "clsx";
 // Debounce
 import useDebouncedSearch from "./useDebouncedSearch";
 
-import useCardDatabase from "../../../util/cardDatabase/useCardDatabase";
-
 
 
 const useStyles = makeStyles( theme => ({

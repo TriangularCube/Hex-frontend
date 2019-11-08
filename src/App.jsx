@@ -63,8 +63,9 @@ import networkCalls from "./util/networkCalls";
 import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
-// Card database
-import useCardDB from "./util/cardDatabase/useCardDatabase";
+// Initialize the Card database
+import { initializeDB } from "./util/cardDatabase/cardDatabase";
+initializeDB();
 
 //endregion
 
@@ -91,9 +92,6 @@ const useStyles = makeStyles( theme => ({
 const WithThemeAndRouter = () => {
 
     const classes = useStyles();
-
-    // Initialise the Card DB
-    useCardDB();
 
     return (
         <>
