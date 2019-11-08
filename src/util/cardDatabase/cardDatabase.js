@@ -1,6 +1,5 @@
 import networkCalls from "../networkCalls";
 
-let initialised = false;
 let loading = true;
 let useIDB = false;
 
