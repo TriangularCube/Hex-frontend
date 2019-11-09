@@ -40,6 +40,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/styles": "^4.6.0",
     "awesome-debounce-promise": "^2.1.0",
+    "clone-deep": "^4.0.1",
     "clsx": "^1.0.4",
     "idb": "^4.0.5",
     "notistack": "^0.9.5",

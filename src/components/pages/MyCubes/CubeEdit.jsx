@@ -1,3 +1,5 @@
+import React from "react";
+
 const { useState, useEffect } = React;
 
 // Amp
@@ -22,15 +24,22 @@ import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 import useCheckUser from "../../../util/useCheckUser";
 
-import SearchAndEdit from "./SearchAndEdit";
+import { CubeList, SearchColumn, Workspace } from "./SearchAndEdit";
 
 
 // DEBUG
 import testCube from "../../../../debug/cubeTestData";
-import attachCubeFunctions from "../../../util/attachCubeFunctions";
 
 
 const useStyles = makeStyles( theme => ({
+    // Right area of Search and Edit Tab
+    rightArea: {
+        marginTop: 16,
+        width: 400,
+        display: 'flex',
+        flexDirection: 'row'
+    },
+
     page: {
         flex: 1,
         height: '100%',
@@ -67,7 +76,6 @@ const CubeEdit = ( props ) => {
     const [loadingCube, setLoading] = useState( true );
 
     // DEBUG
-    attachCubeFunctions( testCube );
     const [cube, setCube] = useState( testCube );
 
     const [error, setError] = useState( null );
@@ -136,7 +144,18 @@ const CubeEdit = ( props ) => {
                 // TODO
                 return null;
             case 1:
-                return <SearchAndEdit cube={cube} />;
+                return (
+                    <>
+                        {/* CubeList should take up most of the screen */}
+                        <CubeList cube={cube} setCube={setCube} />
+
+                        {/* Div here to arrange the Search and Workspace properly */}
+                        <div className={classes.rightArea}>
+                            <SearchColumn/>
+                            <Workspace cube={cube} />
+                        </div>
+                    </>
+                );
             case 2:
                 return null;
             case 3:

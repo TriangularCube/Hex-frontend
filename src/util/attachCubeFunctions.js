@@ -1,35 +1,31 @@
+export const AddCardToCube = (cube, card) => {
+    // DEBUG
+    console.log( 'Adding Card to Cube', card );
 
-// Add the necessary functions onto the Cube object
-export default (cube) => {
-    cube.addCardToCube = ( card ) => {
+    cube.lists.cube.push( card );
+    // TODO Sort
 
-        // DEBUG
-        console.log( 'Adding Card to Cube', card );
+    cube.lists.cube.sort( (a, b) => {
+        if( a.name > b.name ){
+            return -1;
+        }
+        if( b.name > a.name ){
+            return 1;
+        }
+        return 0;
+    });
+};
 
-        cube.lists.cube.push( card );
-        // TODO Sort
+export const RemoveCardFromCube = ( cube, card /* etc. */ ) => {
 
-        cube.lists.cube.sort( (a, b) => {
-            if( a.name > b.name ){
-                return -1;
-            }
-            if( b.name > a.name ){
-                return 1;
-            }
-            return 0;
-        });
+};
 
-    };
+export const AddCardToWorkspace = ( cube, card ) => {
+    // TODO
+    console.log( 'Adding Card to Workspace', card );
+};
 
-    cube.addCardToWorkspace = ( card ) => {
-
-        console.log( 'Adding Card to Workspace', card );
-
-        // TODO
-
-    };
-
-    cube.removeCardFromCube = ( index ) => {
-
-    };
-}
+export const RemoveCardFromWorkspace = ( cube, card ) => {
+    // TODO
+    console.log( 'Removing Card from Workspace', card );
+};

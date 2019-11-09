@@ -1,8 +1,11 @@
-const { useState } = React;
+import React from "react";
 
 // React DND
 import { useDrag, useDrop } from "react-dnd";
 import { cubeCard, searchCard, workspaceCard } from "../../../util/dnd/dragTypes";
+
+// Clone
+import clone from 'clone-deep';
 
 // Material UI
 import { makeStyles } from "@material-ui/styles";
@@ -22,18 +25,15 @@ import clsx from "clsx";
 // Debounce
 import useDebouncedSearch from "./useDebouncedSearch";
 
+// Async get card
+import { useAsync } from "react-async-hook";
+import { getCard } from "../../../util/cardDatabase/cardDatabase";
+
+// Cube Utils
+import { AddCardToCube } from "../../../util/attachCubeFunctions";
 
 
 const useStyles = makeStyles( theme => ({
-    // Right area of Search and Edit Tab
-    rightArea: {
-        marginTop: 16,
-        width: 400,
-        display: 'flex',
-        flexDirection: 'row'
-    },
-
-
     columnHeading: {
         marginLeft: theme.spacing( 2 ),
         marginRight: theme.spacing( 2 )
@@ -63,33 +63,39 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
+// Whole Search and Edit page
+// export default ({cube, setCube}) => {
+//
+//     const classes = useStyles();
+//
+//     return (
+//         <>
+//             {/* CubeList should take up most of the screen */}
+//             <CubeList cube={cube} setCube={setCube} />
+//
+//             {/* Div here to arrange the Search and Workspace properly */}
+//             <div className={classes.rightArea}>
+//                 <SearchColumn/>
+//                 <Workspace cube={cube} />
+//             </div>
+//         </>
+//     );
+//
+// };
 
-export default ({cube}) => {
+//region Cube List section
+export const CubeList = ({cube, setCube}) => {
 
     const classes = useStyles();
 
-    return (
-        <>
-            {/* CubeList should take up most of the screen */}
-            <CubeList cube={cube} />
-
-            {/* Div here to arrange the Search and Workspace properly */}
-            <div className={classes.rightArea}>
-                <SearchColumn/>
-                <Workspace workspaceList={cube.lists.workspace} />
-            </div>
-        </>
-    );
-};
-
-const CubeList = ({cube}) => {
-// Cube List column
-
-    const classes = useStyles();
-
+    // Drop setup
     const [{isOver, canDrop}, drop] = useDrop({
         accept: [searchCard, workspaceCard],
-        drop: item => cube.addCardToCube( item ),
+        drop: item => {
+            const cubeClone = clone( cube );
+            AddCardToCube( cubeClone, item );
+            setCube( cubeClone );
+        },
         collect: monitor => ({
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop()
@@ -97,6 +103,8 @@ const CubeList = ({cube}) => {
     });
 
     const cubeList = cube.lists.cube;
+
+    // TODO Display the Cube properly
 
     return (
         <div
@@ -106,6 +114,7 @@ const CubeList = ({cube}) => {
             // Drop reference
             ref={drop}
         >
+            {/* TODO There might need to be some spacing here */}
             <Typography
                 variant='h5'
                 className={classes.columnHeading}
@@ -117,15 +126,37 @@ const CubeList = ({cube}) => {
 
             {
                 cubeList.map( (element, index) => {
+                    // Drag setup
+                    const [{isDragging}, drag] = useDrag({
+                        item: {
+                            name: element.name,
+                            id: element.id,
+                            type: cubeCard
+                        },
+                        collect: monitor => ({
+                            isDragging: monitor.isDragging()
+                        })
+                    });
+
+                    const card = useAsync( getCard, [element.id] );
+
                     return (
-                        <ListItem key={`Cube-List-${index}`}>
+                        <ListItem
+                            key={`Cube-List-${index}`}
+                            ref={drag}
+
+                            className={ clsx( classes.canGrab, isDragging && classes.isDragging ) }
+                        >
                             <ListItemText>
                                 {/* TODO */}
                                 {
-                                    element.name ?
-                                        element.name
+                                    card.loading ?
+                                        null
                                         :
-                                        element.id
+                                        card.error ?
+                                            'There has been an error'
+                                            :
+                                            card.result.name
                                 }
                             </ListItemText>
                         </ListItem>
@@ -135,8 +166,9 @@ const CubeList = ({cube}) => {
         </div>
     )
 };
+//endregion
 
-
+//region Search Section
 const SearchResults = ({ search }) => {
 
     // Display loading spinner while loading
@@ -151,8 +183,6 @@ const SearchResults = ({ search }) => {
     if( search.error ){
         console.log( search.error );
     }
-
-    console.log( 'Search Result', search.result );
 
     // If nothing
     if( !search.result ){
@@ -206,7 +236,7 @@ const SearchResults = ({ search }) => {
 
 };
 
-const SearchColumn = () => {
+export const SearchColumn = () => {
 
     const classes = useStyles();
 
@@ -238,63 +268,85 @@ const SearchColumn = () => {
         </div>
     )
 };
+//endregion
 
-
-const CubeItems = ({sourceList}) => {
-
-    // Map the output to list items
-    let Output = sourceList.map( (element, index) => {
-        return(
-            <ListItem key={index}>
-                <ListItemText>
-                    {element.id}
-                </ListItemText>
-            </ListItem>
-        )
-    });
-
-    // If there are no items in the array, use placeholder
-    // without placeholder, there's a very small space for the drop target
-    if( Output.length === 0 ){
-        Output =
-            <ListItem>
-                <ListItemText>
-                    Please add cards here
-                </ListItemText>
-            </ListItem>;
-    }
-
-    return (
-        <List>
-            {Output}
-        </List>
-    )
-
-};
-
-
-
-
-// Workspace column
-const Workspace = ({workspaceList}) => {
+//region Workspace Section
+export const Workspace = ({cube}) => {
 
     const classes = useStyles();
 
+    // Drop setup
+    const [{isOver, canDrop}, drop] = useDrop({
+        accept: [searchCard, cubeCard],
+        drop: item => cube.addCardToWorkspace( item ),
+        collect: monitor => ({
+            isOver: !!monitor.isOver(),
+            canDrop: !!monitor.canDrop()
+        })
+    });
+
     return (
-        <div className={ classes.flex }>
+        <div
+            // Set class to have background color if Drag is hovering over and can accept drop
+            className={ clsx( classes.flex, isOver && canDrop && classes.isOver ) }
+
+            // Drop Reference
+            ref={drop}
+        >
             <Typography variant='h5' className={classes.columnHeading}>
                 Workspace
             </Typography>
 
             <Divider className={classes.columnHeading} />
 
-            <CubeItems
-                sourceList={workspaceList}
-            />
+            { (() => {
+                // Map the workspace list
+                let Output = cube.lists.workspace.map( (element, index) => {
+
+                    // Drag setup
+                    const [{isDragging}, drag] = useDrag({
+                        item: {
+                            name: element.name,
+                            id: element.id,
+                            type: workspaceCard
+                        },
+                        collect: monitor => ({
+                            isDragging: monitor.isDragging()
+                        })
+                    });
+
+                    return(
+                        <ListItem
+                            key={`Workspace-List-${index}`}
+                            ref={drag}
+
+                            className={ clsx( classes.canGrab, isDragging && classes.isDragging ) }
+                        >
+                            <ListItemText>
+                                {element.id}
+                            </ListItemText>
+                        </ListItem>
+                    )
+                });
+
+                // If there are no items in the array, use placeholder
+                // without placeholder, there's a very small space for the drop target
+                if( Output.length === 0 ){
+                    Output =
+                        <ListItem>
+                            <ListItemText>
+                                Please add cards here
+                            </ListItemText>
+                        </ListItem>;
+                }
+
+                return (
+                    <List>
+                        {Output}
+                    </List>
+                )
+            })() }
         </div>
     )
 };
-
-
-
-
+//endregion

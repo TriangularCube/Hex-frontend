@@ -1,14 +1,20 @@
 import networkCalls from "../networkCalls";
+import { openDB, storeName } from "./dbUtil";
 
 let loading = true;
 let useIDB = false;
 
 
 // TODO Implement interface to the DB
-export const getCard = ( id ) => {
+export const getCard = async ( id ) => {
 
     // DEBUG
     console.log( `Trying to get card ${id}` );
+
+    const db = await openDB();
+    const res = await db.get( storeName, id );
+
+    return res;
 
 };
 
