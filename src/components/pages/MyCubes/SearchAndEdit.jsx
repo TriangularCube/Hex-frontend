@@ -138,7 +138,7 @@ export const CubeList = ({cube, setCube}) => {
                         })
                     });
 
-                    
+                    // TODO Work on a way to not have to fetch every card from the DB
                     const card = useAsync( getCard, [element.id] );
 
                     return (
