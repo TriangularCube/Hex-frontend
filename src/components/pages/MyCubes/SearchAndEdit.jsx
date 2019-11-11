@@ -138,6 +138,7 @@ export const CubeList = ({cube, setCube}) => {
                         })
                     });
 
+                    
                     const card = useAsync( getCard, [element.id] );
 
                     return (
@@ -151,7 +152,7 @@ export const CubeList = ({cube, setCube}) => {
                                 {/* TODO */}
                                 {
                                     card.loading ?
-                                        null
+                                        'Card is loading'
                                         :
                                         card.error ?
                                             'There has been an error'

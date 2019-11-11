@@ -9,6 +9,8 @@ export default () => {
 
     const [searchText, setSearchText] = useState( '' );
 
+    // console.log( searchText );
+
     const debouncedSearch = useConstant(
         () => AwesomeDebouncePromise( searchUsingTerm, 1000 )
     );

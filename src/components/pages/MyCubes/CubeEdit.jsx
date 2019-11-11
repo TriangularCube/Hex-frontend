@@ -80,6 +80,7 @@ const CubeEdit = ( props ) => {
 
     const [error, setError] = useState( null );
 
+
     // Fetch the cube
     // TODO implement some sort of transfer from MyCubes possibly
 
@@ -138,33 +139,39 @@ const CubeEdit = ( props ) => {
 
 
     // region Display all Tabs
-    const TabDisplay = () => {
-        switch ( tabValue ) {
-            case 0:
-                // TODO
-                return null;
-            case 1:
-                return (
-                    <>
-                        {/* CubeList should take up most of the screen */}
-                        <CubeList cube={cube} setCube={setCube} />
 
-                        {/* Div here to arrange the Search and Workspace properly */}
-                        <div className={classes.rightArea}>
-                            <SearchColumn/>
-                            <Workspace cube={cube} />
-                        </div>
-                    </>
-                );
-            case 2:
-                return null;
-            case 3:
-                return null;
-            default:
-                console.error( 'Tab request unknown' );
-                return null;
-        }
-    };
+    let TabDisplay;
+    switch ( tabValue ) {
+        case 0:
+            // TODO
+            break;
+        case 1:
+            // NOTE Apparently I need to explicitly re-make the two lists when the cube changes
+            //  since I use hooks
+            let CubeDisplay = () => <CubeList cube={cube} setCube={setCube} />;
+            let WorkspaceDisplay = () => <Workspace cube={cube} setCube={setCube} />;
+
+            TabDisplay = (
+                <>
+                    {/* CubeList should take up most of the screen */}
+                    <CubeDisplay/>
+
+                    {/* Div here to arrange the Search and Workspace properly */}
+                    <div className={classes.rightArea}>
+                        <SearchColumn/>
+                        <WorkspaceDisplay/>
+                    </div>
+                </>
+            );
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            console.error( 'Tab request unknown' );
+            break;
+    }
     // endregion
 
     return(
@@ -191,7 +198,7 @@ const CubeEdit = ( props ) => {
             <div className={classes.contextSection}>
 
                 <DndProvider backend={HTML5Backend}>
-                    <TabDisplay/>
+                    {TabDisplay}
                 </DndProvider>
 
             </div>
