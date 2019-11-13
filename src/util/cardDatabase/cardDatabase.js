@@ -6,13 +6,13 @@ let useIDB = false;
 
 
 // TODO Implement interface to the DB
-export const getCard = async ( id ) => {
+export const getCard = async ( card ) => {
 
     // DEBUG
-    console.log( `Trying to get card ${id}` );
+    console.log( `Trying to get card ${card.id}` );
 
     const db = await openDB();
-    const res = await db.get( storeName, id );
+    const res = await db.get( storeName, card.id );
 
     return res;
 

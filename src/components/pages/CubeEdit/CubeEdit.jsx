@@ -31,6 +31,9 @@ import { CubeList, SearchColumn, Workspace } from "./SearchAndEdit";
 import testCube from "../../../../debug/cubeTestData";
 
 
+import { getCard } from "../../../util/cardDatabase/cardDatabase";
+
+
 const useStyles = makeStyles( theme => ({
     // Right area of Search and Edit Tab
     rightArea: {
@@ -70,7 +73,6 @@ const CubeEdit = ( props ) => {
     const classes = useStyles();
 
     // Tabs
-    // FIXME
     const [tabValue, setTabValue] = useState( 1 );
 
     const [loadingCube, setLoading] = useState( true );
@@ -102,6 +104,30 @@ const CubeEdit = ( props ) => {
                 setError( err.message );
             }).finally( () => setLoading( false ) );
     }, [] );
+    */
+
+    // DEBUG
+    // Fetch all cube cards from DB
+    useEffect( () => {
+        // Promisify all of cube prepping
+        Promise.all(
+            // Map all of cube
+            cube.lists.cube.map( async (element,index) => {
+                // So that we get the card from DB
+                cube.lists.cube[index] = await getCard(element);
+            })
+        ).then( () => {
+            // This doesn't really need to be here
+            console.log( 'Done prepping cube.', cube.lists.cube );
+        }).catch( err => {
+            // Catch errors, obviously
+            console.error( err );
+            setError( true );
+        }).finally( () => {
+            // Finally, display the page
+            setLoading( false );
+        })
+    }, [] );
 
     // Back out if loading
     if( loadingCube ){
@@ -117,7 +143,7 @@ const CubeEdit = ( props ) => {
     }
 
 
-
+    /*
     // DEBUG
     console.log( 'Cube: ', cube );
     console.log( 'User: ', user );
@@ -138,7 +164,7 @@ const CubeEdit = ( props ) => {
     //endregion
 
 
-    // region Display all Tabs
+    // region Build the tab to be displayed
 
     let TabDisplay;
     switch ( tabValue ) {

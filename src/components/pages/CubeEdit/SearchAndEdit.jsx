@@ -25,12 +25,8 @@ import clsx from "clsx";
 // Debounce
 import useDebouncedSearch from "./useDebouncedSearch";
 
-// Async get card
-import { useAsync } from "react-async-hook";
-import { getCard } from "../../../util/cardDatabase/cardDatabase";
-
 // Cube Utils
-import { AddCardToCube } from "../../../util/attachCubeFunctions";
+import { AddCardToCube } from "../../../util/cubeFunctions";
 
 
 const useStyles = makeStyles( theme => ({
@@ -63,26 +59,6 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-// Whole Search and Edit page
-// export default ({cube, setCube}) => {
-//
-//     const classes = useStyles();
-//
-//     return (
-//         <>
-//             {/* CubeList should take up most of the screen */}
-//             <CubeList cube={cube} setCube={setCube} />
-//
-//             {/* Div here to arrange the Search and Workspace properly */}
-//             <div className={classes.rightArea}>
-//                 <SearchColumn/>
-//                 <Workspace cube={cube} />
-//             </div>
-//         </>
-//     );
-//
-// };
-
 //region Cube List section
 export const CubeList = ({cube, setCube}) => {
 
@@ -92,9 +68,12 @@ export const CubeList = ({cube, setCube}) => {
     const [{isOver, canDrop}, drop] = useDrop({
         accept: [searchCard, workspaceCard],
         drop: item => {
+
+            // Deep cloning required here
             const cubeClone = clone( cube );
             AddCardToCube( cubeClone, item );
             setCube( cubeClone );
+
         },
         collect: monitor => ({
             isOver: !!monitor.isOver(),
@@ -125,12 +104,12 @@ export const CubeList = ({cube, setCube}) => {
             <Divider className={classes.columnHeading} />
 
             {
-                cubeList.map( (element, index) => {
+                cubeList.map( (card, index) => {
                     // Drag setup
                     const [{isDragging}, drag] = useDrag({
                         item: {
-                            name: element.name,
-                            id: element.id,
+                            name: card.name,
+                            id: card.id,
                             type: cubeCard
                         },
                         collect: monitor => ({
@@ -139,7 +118,7 @@ export const CubeList = ({cube, setCube}) => {
                     });
 
                     // TODO Work on a way to not have to fetch every card from the DB
-                    const card = useAsync( getCard, [element.id] );
+
 
                     return (
                         <ListItem
@@ -150,15 +129,7 @@ export const CubeList = ({cube, setCube}) => {
                         >
                             <ListItemText>
                                 {/* TODO */}
-                                {
-                                    card.loading ?
-                                        'Card is loading'
-                                        :
-                                        card.error ?
-                                            'There has been an error'
-                                            :
-                                            card.result.name
-                                }
+                                { card.name }
                             </ListItemText>
                         </ListItem>
                     )

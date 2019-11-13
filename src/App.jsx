@@ -38,7 +38,7 @@ const FetchData = loadable( () => import( /* webpackChunkName: "FetchData" */ ".
 const Login = loadable( () => import( /* webpackChunkName: "Login" */ "./components/pages/Account/Login" ) );
 const MyCubes = loadable( () => import( /* webpackChunkName: "MyCubes" */ "./components/pages/MyCubes/MyCubes" ) );
 const ViewCubePage = loadable( () => import( /* webpackChunkName: "ViewCube" */ "./components/pages/Cube/Cube" ) );
-const EditCubePage = loadable( () => import( /* webpackChunkName: "EditCube" */ "./components/pages/MyCubes/CubeEdit" ) );
+const EditCubePage = loadable( () => import( /* webpackChunkName: "EditCube" */ "./components/pages/CubeEdit/CubeEdit" ) );
 
 //endregion
 
