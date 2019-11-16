@@ -112,13 +112,13 @@ const CubeEdit = ( props ) => {
         // Promisify all of cube prepping
         Promise.all(
             // Map all of cube
-            cube.lists.cube.map( async (element,index) => {
+            cube.cubeList.default.map( async (element,index) => {
                 // So that we get the card from DB
-                cube.lists.cube[index] = await getCard(element);
+                cube.cubeList.default[index].data = await getCard(element);
             })
         ).then( () => {
             // This doesn't really need to be here
-            console.log( 'Done prepping cube.', cube.lists.cube );
+            console.log( 'Done prepping cube.', cube.cubeList.default );
         }).catch( err => {
             // Catch errors, obviously
             console.error( err );
@@ -148,7 +148,7 @@ const CubeEdit = ( props ) => {
     console.log( 'Cube: ', cube );
     console.log( 'User: ', user );
 
-    // FIXME This is maybe too naive an implementation?
+    // FIXME This check really should be done Server Side
     if( cube.owner.displayName !== user.displayName ){
         console.error( 'Owner of Cube and current user do not match' );
 

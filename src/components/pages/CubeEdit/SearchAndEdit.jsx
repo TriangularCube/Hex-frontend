@@ -26,7 +26,7 @@ import clsx from "clsx";
 import useDebouncedSearch from "./useDebouncedSearch";
 
 // Cube Utils
-import { AddCardToCube } from "../../../util/cubeFunctions";
+import { AddCardToCube, AddCardToWorkspace } from "../../../util/cubeFunctions";
 
 
 const useStyles = makeStyles( theme => ({
@@ -81,7 +81,7 @@ export const CubeList = ({cube, setCube}) => {
         })
     });
 
-    const cubeList = cube.lists.cube;
+    const cubeList = cube.cubeList.default;
 
     // TODO Display the Cube properly
 
@@ -108,7 +108,7 @@ export const CubeList = ({cube, setCube}) => {
                     // Drag setup
                     const [{isDragging}, drag] = useDrag({
                         item: {
-                            name: card.name,
+                            name: card.data.name,
                             id: card.id,
                             type: cubeCard
                         },
@@ -116,9 +116,6 @@ export const CubeList = ({cube, setCube}) => {
                             isDragging: monitor.isDragging()
                         })
                     });
-
-                    // TODO Work on a way to not have to fetch every card from the DB
-
 
                     return (
                         <ListItem
@@ -129,7 +126,7 @@ export const CubeList = ({cube, setCube}) => {
                         >
                             <ListItemText>
                                 {/* TODO */}
-                                { card.name }
+                                { card.data.name }
                             </ListItemText>
                         </ListItem>
                     )
@@ -250,7 +247,7 @@ export const Workspace = ({cube}) => {
     // Drop setup
     const [{isOver, canDrop}, drop] = useDrop({
         accept: [searchCard, cubeCard],
-        drop: item => cube.addCardToWorkspace( item ),
+        drop: item => AddCardToWorkspace( cube, item ),
         collect: monitor => ({
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop()
@@ -273,7 +270,7 @@ export const Workspace = ({cube}) => {
 
             { (() => {
                 // Map the workspace list
-                let Output = cube.lists.workspace.map( (element, index) => {
+                let Output = cube.workspace.map( (element, index) => {
 
                     // Drag setup
                     const [{isDragging}, drag] = useDrag({
