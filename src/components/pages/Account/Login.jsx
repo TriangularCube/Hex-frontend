@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+const {useRef} = React;
 
 // Async Hook
 import { useAsync, useAsyncCallback } from "react-async-hook";
@@ -10,7 +10,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Amp
-import amp from "../../../util/config/api";
+import networkCalls from "../../../util/networkCalls";
 
 // Material UI utils
 import { makeStyles } from "@material-ui/styles";
@@ -51,9 +51,11 @@ const useStyles = makeStyles(theme => ({
 
 const Login = ( props ) => {
 
-    // DEBUG Log if referred from somewhere
+    // Find if there is a referrer
+    let referrer = null;
     if( props.location.state && props.location.state.referrer ){
-        console.log( `Login referred from ${props.location.state.referrer}` )
+        console.log( `Login referred from ${props.location.state.referrer}` );
+        referrer = props.location.state.referrer;
     }
 
     // Refs for inputs
@@ -61,28 +63,35 @@ const Login = ( props ) => {
     const passwordRef = useRef( null );
 
     // Check the Login Status
-    const fetchingUser = useAsync( amp.FetchUserData, [] );
+    const fetchingUser = useAsync( networkCalls.FetchUserData, [] );
 
     // Check if user is already logged in
     const user = useSelector( state => state.user );
 
-    // Setup Async Login Handlers
+    if( user && referrer ){
+        // If already logged in, redirect back to referrer
+        props.history.push( referrer );
+    }
+
+    //region Setup Async Login Handlers
     const login = async () => {
-        const res = await amp.Login( emailRef.current.value, passwordRef.current.value );
+        const res = await networkCalls.Login( emailRef.current.value, passwordRef.current.value );
 
         if( res.success ){
             // If login is successful, redirect
 
-            if( props.location.state && props.location.state.referrer ){
-                props.history.push( props.location.state.referrer );
+            if( referrer ){
+                // If there is a referrer, redirect there
+                props.history.push( referrer );
                 return;
             }
 
+            // Otherwise redirect to splash
             props.history.push( '/' );
         } else {
             // Otherwise, print the error
             // TODO
-            console.log( `Login Unsuccessful, message: ${res.error}` );
+            console.log( `Login Unsuccessful, message: `, res.error );
         }
 
         // DEBUG
@@ -95,6 +104,7 @@ const Login = ( props ) => {
         event.preventDefault();
         asyncLogin.execute();
     };
+    //endregion
 
     // Set the styles
     const classes = useStyles();

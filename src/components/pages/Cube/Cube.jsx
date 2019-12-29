@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+const {useState} = React;
 
 import {useAsync} from "react-async-hook";
 
-import amp from "../../../util/config/api";
+import networkCalls from "../../../util/networkCalls";
 
 // Material UI Util
 import { makeStyles } from "@material-ui/styles";
@@ -72,7 +72,7 @@ const Cube = ( props ) => {
 
     // Get the cube
     const asyncGetCube = useAsync( async () => {
-        return await amp.Get( `/cube/${handle}` );
+        return await networkCalls.Get( `/cube/${handle}` );
     }, [] );
 
     const classes = useStyles();
@@ -103,7 +103,7 @@ const Cube = ( props ) => {
     }
     //endregion
 
-    const cube = asyncGetCube.result.cube;
+    const cube = asyncGetCube.result.data;
     // TODO
 
     const Description = () => {
@@ -114,14 +114,14 @@ const Cube = ( props ) => {
 
                         {/* HACK */}
                         <img
-                            src='http://placekitten.com/400/400'
+                            src='https://placekitten.com/400/400'
                             alt='Cube Image'
                             className={classes.coverImage}
                         />
 
-                        <Typography variant='h5'>
-                            {cube.name}
-                        </Typography>
+                        {/*<Typography variant='h5'>*/}
+                        {/*    {cube.name}*/}
+                        {/*</Typography>*/}
 
                     </Paper>
                 </Grid>
@@ -156,7 +156,7 @@ const Cube = ( props ) => {
             <div className={classes.topRowContainer}>
                 {/* Page Title */}
                 <PageTitle>
-                    Cube Name
+                    {cube.name}
                 </PageTitle>
 
                 {/* Spacer to fill row */}

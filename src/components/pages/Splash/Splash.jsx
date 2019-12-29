@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+const {useEffect} = React;
 
 // Material UI Utils
 import { makeStyles } from "@material-ui/styles";

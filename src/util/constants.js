@@ -4,7 +4,7 @@ export const isLarge = 'md';
 // Drawer Width
 export const drawerWidth = 200;
 
-// Page Width
+// TODO Page Width
 export const pageWidth = 1150;
 
 // Page Side Padding

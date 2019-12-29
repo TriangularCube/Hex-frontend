@@ -1,6 +1,4 @@
-import {SET_DRAWER, SET_MOBILE_DRAWER, SET_USER} from './actionTypes'
-
-import { saveStateName } from "../util/constants";
+import { SET_DATABASE, SET_MOBILE_DRAWER, SET_USER } from './actionTypes'
 
 /*
 Reducers are combined in Store
@@ -24,6 +22,16 @@ export const mobileDrawerOpen = ( state = false, action ) => {
 
     if( action.type === SET_MOBILE_DRAWER ){
         return action.drawerOpen;
+    }
+
+    return state;
+
+};
+
+export const cardDatabase = ( state = null, action ) => {
+
+    if( action.type === SET_DATABASE ){
+        return action.database;
     }
 
     return state;

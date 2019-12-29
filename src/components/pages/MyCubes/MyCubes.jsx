@@ -1,10 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
+const {useEffect, useRef, useState} = React;
 
 // Async hook
 import { useAsync } from "react-async-hook";
 
 // Router
-import { Link as RouterLink, Redirect } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 // Material UI
 import {
@@ -16,7 +16,7 @@ import {
     IconButton,
     Link,
     Button,
-    Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions
+    Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, CircularProgress
 } from "@material-ui/core";
 
 // Icon
@@ -25,18 +25,113 @@ import { Edit as EditIcon, Close as CloseIcon } from "@material-ui/icons";
 // Components
 import PageTitle from "../../common/PageTitle";
 import PageLoading from "../../common/PageLoading";
+import useCheckUser from "../../../util/useCheckUser";
 
 // Amp
-import api from "../../../util/config/api";
+import networkCalls from "../../../util/networkCalls";
 
 // Styles
 import { makeStyles } from "@material-ui/styles";
 
-// Error codes
-import errorCodes from "../../../util/errorCodes";
+
+const pageName = 'My Cubes';
 
 
+//region Create New Cube
+const createCubeStyles = makeStyles( theme => ({
+    dialogTitle: {
+        padding: theme.spacing( 2 )
+    },
+    dialogContent: {
+        padding: `${theme.spacing( 2 )}px ${theme.spacing( 2 )}px 0`
+    },
+    dialogActions: {
+        padding: theme.spacing( 2 )
+    },
+    closeIcon: {
+        position: 'absolute',
+        right: theme.spacing( 1 ),
+        top: theme.spacing( 1 )
+    }
+}));
+const CreateNewCube = ( {display, setDisplay, history} ) => {
 
+    const classes = createCubeStyles();
+
+    const [loading, setLoading] = useState( false );
+
+    let newCubeNameRef = useRef( null );
+    const handleNewCube = async () => {
+
+        const cubeName = newCubeNameRef.current.value;
+
+        if( cubeName.length < 1 ){
+            // TODO deal with empty name
+            console.log( 'Name too short' );
+            return;
+        }
+
+        setLoading( true );
+
+        const body = {
+            name: cubeName
+        };
+
+        const res = await networkCalls.Post( '/newCube', body );
+
+        console.log( 'Created new cube ', res );
+
+        if( res.success ){
+            history.push( `/cube/${ res.data.handle }` );
+        } else {
+            // TODO handle error creating cube
+            console.error( 'Could not create cube' );
+            setLoading( false );
+        }
+
+    };
+
+    return (
+        <Dialog
+            open={display}
+            onClose={ () => setDisplay(false) }
+            fullWidth
+            maxWidth={ 'sm' }
+        >
+            <DialogTitle disableTypography className={classes.dialogTitle}>
+                <Typography variant='h6'>
+                    Create New Cube
+                </Typography>
+                <IconButton className={classes.closeIcon} onClick={ () => setDisplay( false ) }>
+                    <CloseIcon/>
+                </IconButton>
+            </DialogTitle>
+            <DialogContent className={classes.dialogContent}>
+                <DialogContentText>
+                    Please specify a name for the new Cube:
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    fullWidth
+                    label='Cube Name'
+                    inputRef={newCubeNameRef}
+                />
+            </DialogContent>
+            <DialogActions className={classes.dialogActions}>
+                {
+                    loading ?
+                        // TODO make better looking
+                        <CircularProgress/>
+                        :
+                        <Button color='primary' onClick={handleNewCube}>
+                            Create
+                        </Button>
+                }
+            </DialogActions>
+        </Dialog>
+    )
+};
+//endregion
 
 //region Cube Card
 const cubeCardStyles = makeStyles( theme => ({
@@ -95,15 +190,15 @@ const CubeCard = ( props ) => {
 
                     <div className={classes.cubeContent}>
 
-                        <CubeLink to={`/cube/${cube.handle}`}>
-                            {cube.name}
+                        <CubeLink to={`/cube/${cube[1]}`}>
+                            {cube[0]}
                         </CubeLink>
 
                         <div className={classes.cubeDescriptionContainer}>
                             <Typography variant='subtitle1' color='textSecondary'>
                                 {
-                                    cube.description ?
-                                        cube.description :
+                                    cube[2] ?
+                                        cube[2] :
                                         'No description'
                                 }
                             </Typography>
@@ -147,31 +242,18 @@ const cubePageStyles = makeStyles(theme => ({
         height: theme.fontSize,
         alignSelf: 'center'
     },
-
-    //region Create Cube Dialog
-    dialogTitle: {
-        padding: theme.spacing( 2 )
-    },
-    dialogContent: {
-        padding: `${theme.spacing( 2 )}px ${theme.spacing( 2 )}px 0`
-    },
-    dialogActions: {
-        padding: theme.spacing( 2 )
-    },
-    closeIcon: {
-        position: 'absolute',
-        right: theme.spacing( 1 ),
-        top: theme.spacing( 1 )
-    },
     createButton: {
         right: theme.spacing( 1 ),
         top: theme.spacing( 1 )
     }
-    //endregion
 }));
 
-const pageName = 'My Cubes';
+
 const MyCubes = ( props ) => {
+
+    useCheckUser( props.history, '/myCubes' );
+
+    const [openNewCubeDialog, setNewCubeDialog] = useState( false );
 
     const classes = cubePageStyles();
 
@@ -180,38 +262,10 @@ const MyCubes = ( props ) => {
         document.title = pageName;
     }, [] );
 
-    //region New Cube handling
-    const [openNewCubeDialog, setNewCubeDialog] = useState( false );
-    let newCubeNameRef = useRef( null );
-    const handleNewCube = async () => {
-
-        const cubeName = newCubeNameRef.current.value;
-
-        if( cubeName.length < 1 ){
-            // TODO deal with empty name
-            console.log( 'Name too short' );
-            return;
-        }
-
-        const body = {
-            name: cubeName
-        };
-
-        const res = await api.Post( '/newCube', body );
-
-        if( res.success ){
-            props.history.push( `/cube/${ res.handle }` );
-        } else {
-            // TODO handle error creating cube
-            console.error( 'Could not create cube' );
-        }
-
-    };
-    //endregion
-
-
     // Fire off an async request
-    const asyncCubes = useAsync( async () => api.GetWithAuth( '/myCubes' ), [] );
+    const asyncCubes = useAsync(
+        async () => networkCalls.GetWithAuth( '/myCubes' ),
+    []);
     // FIXME this is a leak as the component will redirect away when the user logs out,
     //  but the function will return on an unmounted component
 
@@ -233,14 +287,6 @@ const MyCubes = ( props ) => {
 
     if( !asyncCubes.result.success ){
 
-        if( asyncCubes.result.error === errorCodes.notLoggedIn ){
-
-            // This should not happen and should have been guarded against. This is here as a sanity check only
-            console.error( 'Not Logged In error from API on MyCubes, redirecting to login' );
-            return <Redirect to={'/login'}/>
-
-        }
-
         // Otherwise Log the error
         console.error( `My Cubes fetch unsuccessful, error: ${asyncCubes.result.error}` );
 
@@ -249,43 +295,19 @@ const MyCubes = ( props ) => {
     }
     //endregion
 
+    console.log( 'Incoming Data', asyncCubes.result );
+
     // Convenience
-    const cubes = asyncCubes.result.cubes;
+    const cubes = asyncCubes.result.data;
 
     return(
         <Container maxWidth='md'>
 
-            <Dialog
-                open={openNewCubeDialog}
-                onClose={ () => setNewCubeDialog(false) }
-                fullWidth
-                maxWidth={ 'sm' }
-            >
-                <DialogTitle disableTypography className={classes.dialogTitle}>
-                    <Typography variant='h6'>
-                        Create New Cube
-                    </Typography>
-                    <IconButton className={classes.closeIcon} onClick={ () => setNewCubeDialog( false ) }>
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent className={classes.dialogContent}>
-                    <DialogContentText>
-                        Please specify a name for the new Cube:
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        fullWidth
-                        label='Cube Name'
-                        inputRef={newCubeNameRef}
-                    />
-                </DialogContent>
-                <DialogActions className={classes.dialogActions}>
-                    <Button color='primary' onClick={handleNewCube}>
-                        Create
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <CreateNewCube
+                display={openNewCubeDialog}
+                setDisplay={setNewCubeDialog}
+                history={props.history}
+            />
 
             {/* The Top Row */}
             <div className={classes.topRowContainer}>

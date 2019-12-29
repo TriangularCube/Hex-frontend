@@ -1,9 +1,7 @@
 import Auth from "@aws-amplify/auth";
 
-import errorCodes from "../errorCodes.json";
-
-import store from "../../Redux/store";
-import { setUser } from "../../Redux/actionCreators";
+import store from "../redux/store";
+import { setUser } from "../redux/actionCreators";
 
 const dispatch = store.dispatch;
 
@@ -23,7 +21,7 @@ const GetWithAuth = async ( path, additionalHeaders = {} ) => {
 
         return {
             success: false,
-            error: errorCodes.notLoggedIn
+            error: 'Not Logged In'
         }
 
     }
@@ -90,7 +88,7 @@ const Post = async ( path, body, additionalHeaders = {} ) => {
 
         return {
             success: false,
-            error: errorCodes.notLoggedIn
+            error: 'Not logged in'
         };
     }
 
@@ -132,13 +130,14 @@ const FetchUserData = async () => {
 
     try{
 
-        const user = await GetWithAuth( '/me' );
+        const res = await GetWithAuth( '/me' );
 
-        if( user.success ){
-            dispatch( setUser( user.user ) );
-            return user.user;
+        if( res.success ){
+            dispatch( setUser( res.data ) );
+            return res.data;
         }
 
+        // Otherwise set user to null
         dispatch( setUser( null ) );
 
     } catch( e ){
@@ -180,12 +179,20 @@ const GetUserCredentials = async () => {
 
 //region Scryfall
 
-const SearchCard = async ( query, page = 1 ) => {
+// TODO Replace with local search
+
+const SearchCard = async ( query, abortSignal, page = 1 ) => {
+
+    console.log( `Searching for card using query ${query}` );
 
     try {
 
         const res =
-            await fetch( `https://api.scryfall.com/cards/search?q=${query}&page=${page}` );
+            await fetch( `https://api.scryfall.com/cards/search?q=${query}&page=${page}`,
+                {
+                    signal: abortSignal
+                }
+            );
 
         if( !res.ok ){
             return {

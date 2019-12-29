@@ -1,22 +1,27 @@
-import React, {useMemo} from "react";
-import ReactDOM from "react-dom";
+//region Imports
+// React and ReactDOM loaded from UMD
+
+const {useMemo} = React;
 
 import { useAsync } from "react-async-hook";
 
 // Redux
 import {Provider, useSelector} from "react-redux";
-import store from "./Redux/store";
+import store from "./redux/store";
 
 // Router
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+const { Switch, Route } = ReactRouterDOM;
+const Router = ReactRouterDOM.BrowserRouter;
 
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";
 import { makeStyles, ThemeProvider } from "@material-ui/styles";
-import { Typography } from "@material-ui/core";
 
 // Material UI Components
-import { CssBaseline } from "@material-ui/core";
+import { Typography, CssBaseline } from "@material-ui/core";
+
+// Snackbar
+import { SnackbarProvider } from "notistack";
 
 // Loadable
 import loadable from "@loadable/component";
@@ -25,21 +30,22 @@ import loadable from "@loadable/component";
 import MenuDrawer from "./MenuDrawer";
 import NavBar from "./NavBar";
 
-const Target = loadable( () => import( "./components/pages/TargetSelect/Target" ) );
-
-const Splash = loadable( () => import( "./components/pages/Splash/Splash" ) );
-const Login = loadable( () => import( "./components/pages/Account/Login" ) );
-const MyCubes = loadable( () => import( "./components/pages/MyCubes/MyCubes" ) );
-const ViewCubePage = loadable( () => import( "./components/pages/Cube/Cube" ) );
-const EditCubePage = loadable( () => import( "./components/pages/Cube/CubeEdit" ) );
-//endregion
-
 import PageLoading from "./components/common/PageLoading";
 
-// HACK strictly for debugging
-import Test from "../archive/test";
+const Target = loadable( () => import( /* webpackChunkName: "Target" */ "./components/pages/TargetSelect/Target" ) );
+const Splash = loadable( () => import( /* webpackChunkName: "Splash" */ "./components/pages/Splash/Splash" ) );
+const FetchData = loadable( () => import( /* webpackChunkName: "FetchData" */ "./components/pages/Splash/FetchData" ) );
+const Login = loadable( () => import( /* webpackChunkName: "Login" */ "./components/pages/Account/Login" ) );
+const MyCubes = loadable( () => import( /* webpackChunkName: "MyCubes" */ "./components/pages/MyCubes/MyCubes" ) );
+const ViewCubePage = loadable( () => import( /* webpackChunkName: "ViewCube" */ "./components/pages/Cube/Cube" ) );
+const EditCubePage = loadable( () => import( /* webpackChunkName: "EditCube" */ "./components/pages/CubeEdit/CubeEdit" ) );
 
-// Font
+//endregion
+
+// HACK strictly for debugging
+const Debug = loadable( () => import( /* webpackChunkName: "debug" */ "../debug/debug" ) );
+
+// Font (from UMD)
 WebFont.load({
     google: {
         families: [ 'Roboto:300,500,700' ]
@@ -47,25 +53,25 @@ WebFont.load({
 });
 
 // Configure Amplify
-import { setDefaultConfig } from "./util/config/config";
+import { setDefaultConfig } from "./util/config";
 setDefaultConfig();
 
-// Amplify
-import amp from "./util/config/api";
+// Network Calls
+import networkCalls from "./util/networkCalls";
 
 // Load Theme
 import defaultThemeObject from "./util/defaultTheme";
 const defaultTheme = createMuiTheme( defaultThemeObject );
 
+// Initialize the Card database
+import { initializeDB } from "./util/cardDatabase/cardDatabase";
+initializeDB();
+
+//endregion
+
 
 // Make styles
 const useStyles = makeStyles( theme => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        // https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
-        minHeight: '100vh'
-    },
     siteContent: {
         flex: '1 0 auto',
         display: 'flex',
@@ -82,50 +88,58 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-
 // The inner most Component, after all the context is passed through
-const WithTheme = () => {
+const WithThemeAndRouter = () => {
 
-    // Get style classes
     const classes = useStyles();
 
-    // Otherwise, render page
     return (
-        <div className={ classes.root }>
-            <Router>
-                <MenuDrawer />
-                <NavBar/>
+        <>
+            <MenuDrawer />
+            <NavBar/>
 
-                <main className={classes.siteContent}>
-                    <Switch>
-                        <Route path='/test' component={Test}/>
+            <main className={classes.siteContent}>
+                <Switch>
+                    <Route path='/debug' component={Debug}/>
+                    <Route path='/fetch-data' component={FetchData}/>
 
-                        <Route path='/target' component={Target} />
+                    <Route path='/target' component={Target} />
 
-                        <Route path='/login' component={Login} />
-                        <Route path='/myCubes' component={MyCubes} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/myCubes' component={MyCubes} />
 
-                        <Route path='/cube/:handle/edit' component={EditCubePage} />
-                        <Route path='/cube/:handle' component={ViewCubePage} />
+                    <Route path='/cube/:handle/edit' component={EditCubePage} />
+                    <Route path='/cube/:handle' component={ViewCubePage} />
 
-                        <Route exact path='/' component={Splash} />
-                    </Switch>
-                </main>
+                    <Route exact path='/' component={Splash} />
+                </Switch>
+            </main>
 
-                <footer className={ classes.footer }>
-                    <Typography variant='body1' color='inherit'>
-                        This is a footer
-                    </Typography>
-                </footer>
-            </Router>
-        </div>
-    );
-
+            <footer className={ classes.footer }>
+                <Typography variant='body1' color='inherit'>
+                    This is a footer
+                </Typography>
+            </footer>
+        </>
+    )
 };
 
-const WithStore = () => {
+const loadingStyles = makeStyles({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        // https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
+        minHeight: '100vh'
+    },
+});
 
-    // Figure out what theme to use
+const WithSnackAndRedux = () => {
+
+    const classes = loadingStyles();
+
+    const asyncUser = useAsync( networkCalls.FetchUserData, [] );
+
+    //region Figure out what theme to use
 
     // Grab the user from Redux
     const user = useSelector( state => state.user );
@@ -136,29 +150,7 @@ const WithStore = () => {
         useMemo( () => createMuiTheme( user.theme ), [ user.theme ] ) :
         // Otherwise just use the default theme
         defaultTheme;
-
-    return(
-        <ThemeProvider theme={ useTheme }>
-            <CssBaseline/>
-            <WithTheme/>
-        </ThemeProvider>
-    );
-
-};
-
-const loadingStyles = makeStyles({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh'
-    }
-});
-
-const App = () => {
-
-    const classes = loadingStyles();
-
-    const asyncUser = useAsync( amp.FetchUserData, [] );
+    //endregion
 
     // Bail early if we're prepping
     if( asyncUser.loading ){
@@ -174,10 +166,25 @@ const App = () => {
     }
 
     return(
-        <Provider store={store}>
-            <WithStore/>
-        </Provider>
+        <ThemeProvider theme={ useTheme }>
+            <CssBaseline/>
+            <div className={ classes.root }>
+                <Router>
+                    <WithThemeAndRouter/>
+                </Router>
+            </div>
+        </ThemeProvider>
     );
+};
+
+const App = () => {
+    return(
+        <Provider store={store}>
+            <SnackbarProvider>
+                <WithSnackAndRedux/>
+            </SnackbarProvider>
+        </Provider>
+    )
 };
 
 ReactDOM.render( <App />, document.getElementById( 'root' ) );

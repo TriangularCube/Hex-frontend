@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+const { useState } = React;
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { setMobileDrawer } from "./Redux/actionCreators";
+import { setMobileDrawer } from "./redux/actionCreators";
 
 // Router
 import { Link, withRouter } from "react-router-dom";
 
 // Amp, for Logout
-import amp from "./util/config/api";
+import networkCalls from "./util/networkCalls";
 
 // Material UI Utils
 import { fade } from "@material-ui/core/styles";
@@ -123,7 +123,7 @@ const NavBar = ( props ) => {
 
     const handleLogout = async () => {
         // Initiate logout
-        const res = await amp.Logout();
+        const res = await networkCalls.Logout();
 
         if( res ){
             // If successful, close menu and redirect to homepage
@@ -184,8 +184,8 @@ const NavBar = ( props ) => {
 
                 <Hidden smDown>
                     {/* Debug Suite */}
-                    <Button color='inherit' component={Link} to='/test'>
-                        Test
+                    <Button color='inherit' component={Link} to='/debug'>
+                        Debug
                     </Button>
 
                     {/* My Cubes */}

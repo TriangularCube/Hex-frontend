@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+const {useEffect} = React;
 
 // Redux
 import {useDispatch, useSelector} from "react-redux";
-import { setMobileDrawer } from "./Redux/actionCreators";
+import { setMobileDrawer } from "./redux/actionCreators";
 
 // Router
 import { Link } from "react-router-dom";

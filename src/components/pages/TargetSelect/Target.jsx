@@ -1,10 +1,8 @@
-import React from "react";
-
 // Material UI
 import { FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Button, Typography } from "@material-ui/core";
 
 // Config
-import { targetName, setConfig } from "../../../util/config/config";
+import { targetName, setConfig } from "../../../util/config";
 import { targets } from "../../../util/constants";
 
 const Target = () => {
