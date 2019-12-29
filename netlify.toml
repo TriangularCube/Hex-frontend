@@ -16,7 +16,7 @@
 
 [context.staging]
     publish = "/build"
-    command = "npm run deploy"
+    command = "npm run deploy-prod"
     environment = { NODE_ENV = "staging" }
 
 [context."dev/master"]
