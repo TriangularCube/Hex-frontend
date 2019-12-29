@@ -10,17 +10,17 @@
 # Production context: all deploys from the Production branch set in your site's
 # deploy contexts will inherit these settings.
 [context.production]
-    publish = "build"
+    publish = "/build"
     command = "npm run deploy-prod"
-    environment = { NODE_ENV = "production"}
+    environment = { NODE_ENV = "production" }
 
 [context.staging]
-    publish = "build"
+    publish = "/build"
     command = "npm run deploy"
     environment = { NODE_ENV = "staging" }
 
 [context."dev/master"]
-    publish = "build"
+    publish = "/build"
     command = "npm run deploy"
     environment = { NODE_ENV = "development" }
 
