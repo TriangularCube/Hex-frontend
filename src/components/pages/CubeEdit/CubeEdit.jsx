@@ -112,13 +112,13 @@ const CubeEdit = ( props ) => {
         // Promisify all of cube prepping
         Promise.all(
             // Map all of cube
-            cube.cubeList.default.map( async (element,index) => {
+            cube.list.map( async (element,index) => {
                 // So that we get the card from DB
-                cube.cubeList.default[index].data = await getCard(element);
+                cube.list[index].data = await getCard(element);
             })
         ).then( () => {
             // This doesn't really need to be here
-            console.log( 'Done prepping cube.', cube.cubeList.default );
+            console.log( 'Done prepping cube.', cube.list );
         }).catch( err => {
             // Catch errors, obviously
             console.error( err );
@@ -129,7 +129,7 @@ const CubeEdit = ( props ) => {
         })
     }, [] );
 
-    // Back out if loading
+    // TODO Back out if loading
     if( loadingCube ){
         return <PageLoading />;
     }

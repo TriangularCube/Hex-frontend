@@ -81,7 +81,7 @@ export const CubeList = ({cube, setCube}) => {
         })
     });
 
-    const cubeList = cube.cubeList.default;
+    const cubeList = cube.list;
 
     // TODO Display the Cube properly
 
