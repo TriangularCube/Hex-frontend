@@ -24,7 +24,9 @@ import PageLoading from "../../common/PageLoading";
 import PageTitle from "../../common/PageTitle";
 import useCheckUser from "../../../util/useCheckUser";
 
-import { CubeList, SearchColumn, Workspace } from "./SearchAndEdit";
+import CubeDisplay from "./CubeDisplay";
+import SearchDisplay from "./SearchDisplay";
+import WorkspaceDisplay from "./WorkspaceDisplay";
 
 
 // DEBUG
@@ -35,10 +37,28 @@ import { getCard } from "../../../util/cardDatabase/cardDatabase";
 
 
 const useStyles = makeStyles( theme => ({
-    // Right area of Search and Edit Tab
-    rightArea: {
+    // Context section is the whole page after the Cube Name and Spacer
+    contextSection: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        // height: '100%',
+        // width: '80%'
+    },
+
+    // Left side houses List and Workspace
+    leftSide: {
+        // position: 'absolute',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column'
+    },
+
+    // Right Side houses Changelist and Search
+    rightSide: {
         marginTop: 16,
-        width: 400,
+        width: 450,
         display: 'flex',
         flexDirection: 'row'
     },
@@ -48,15 +68,11 @@ const useStyles = makeStyles( theme => ({
         height: '100%',
         width: '100%',
         paddingRight: theme.spacing( 3 ),
-        paddingLeft: theme.spacing( 3 )
-    },
-    contextSection: {
+        paddingLeft: theme.spacing( 3 ),
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        // height: '100%',
-        // width: '80%'
-    }
+        flexDirection: 'column'
+    },
+
 }));
 
 
@@ -65,6 +81,7 @@ const CubeEdit = ( props ) => {
     // region Hooks and initial properties, Fetch cube
 
     // Cube handle
+    // TODO Switch to hook
     const handle = props.match.params.handle;
 
     // This is to check...user status?
@@ -163,42 +180,10 @@ const CubeEdit = ( props ) => {
 
     //endregion
 
-
-    // region Build the tab to be displayed
-
-    let TabDisplay;
-    switch ( tabValue ) {
-        case 0:
-            // TODO
-            break;
-        case 1:
-            // NOTE Apparently I need to explicitly re-make the two lists when the cube changes
-            //  since I use hooks
-            let CubeDisplay = () => <CubeList cube={cube} setCube={setCube} />;
-            let WorkspaceDisplay = () => <Workspace cube={cube} setCube={setCube} />;
-
-            TabDisplay = (
-                <>
-                    {/* CubeList should take up most of the screen */}
-                    <CubeDisplay/>
-
-                    {/* Div here to arrange the Search and Workspace properly */}
-                    <div className={classes.rightArea}>
-                        <SearchColumn/>
-                        <WorkspaceDisplay/>
-                    </div>
-                </>
-            );
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        default:
-            console.error( 'Tab request unknown' );
-            break;
-    }
-    // endregion
+    // NOTE Apparently I need to explicitly re-make the two lists when the cube changes
+    //  since I use hooks
+    let Cube = () => <CubeDisplay cube={cube} setCube={setCube} />;
+    let Workspace = () => <WorkspaceDisplay cube={cube} setCube={setCube} />;
 
     return(
         <div className={classes.page}>
@@ -207,24 +192,32 @@ const CubeEdit = ( props ) => {
                 {cube.name}
             </PageTitle>
 
-            <Tabs
-                value={tabValue}
-                onChange={ (evt, newValue) => setTabValue( newValue ) }
-                aria-label='View Editing Tabs'
-                variant='fullWidth'
-            >
-                <Tab label='Description' />
-                <Tab label='Search' />
-                <Tab label='Workspace' />
-                <Tab label='Update' />
-            </Tabs>
 
             <Divider />
+
+            {/* Spacer */}
+            <div style={{ height: 10 }} />
 
             <div className={classes.contextSection}>
 
                 <DndProvider backend={HTML5Backend}>
-                    {TabDisplay}
+                    <>
+                        <div className={classes.leftSide}>
+                            {/* Left side takes up much of the screen, and
+                                includes the Cube List and Workspace List*/}
+
+                            <Cube/>
+
+                            <Workspace/>
+                        </div>
+
+
+                        {/* Div here to arrange the Search and Workspace properly */}
+                        <div className={classes.rightSide}>
+                            <SearchDisplay/>
+
+                        </div>
+                    </>
                 </DndProvider>
 
             </div>

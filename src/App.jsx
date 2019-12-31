@@ -1,7 +1,6 @@
 //region Imports
-// React and ReactDOM loaded from UMD
-
-const {useMemo} = React;
+import React, { useMemo } from 'react';
+import ReactDOM from 'react-dom';
 
 import { useAsync } from "react-async-hook";
 
@@ -10,8 +9,7 @@ import {Provider, useSelector} from "react-redux";
 import store from "./redux/store";
 
 // Router
-const { Switch, Route } = ReactRouterDOM;
-const Router = ReactRouterDOM.BrowserRouter;
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // Material UI utils
 import { createMuiTheme } from "@material-ui/core/styles";

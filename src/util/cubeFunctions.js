@@ -7,10 +7,10 @@ export const AddCardToCube = (cube, card) => {
         data: card
     };
 
-    cube.cubeList.default.push( newCard );
+    cube.list.push( newCard );
 
     // TODO Sort
-    cube.cubeList.default.sort( (a, b) => {
+    cube.list.sort( (a, b) => {
         if( a.data.name > b.data.name ){
             return 1;
         }
