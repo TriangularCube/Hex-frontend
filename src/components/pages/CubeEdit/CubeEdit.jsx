@@ -85,7 +85,7 @@ const CubeEdit = ( props ) => {
     const handle = props.match.params.handle;
 
     // This is to check...user status?
-    const user = useCheckUser( props.history, `/cube/${handle}/edit` );
+    // const user = useCheckUser( props.history, `/cube/${handle}/edit` );
 
     const classes = useStyles();
 
